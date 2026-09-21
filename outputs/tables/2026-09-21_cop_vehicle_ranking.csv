@@ -1,0 +1,15 @@
+vehicle_id,vehicle_name,vehicle_type,nominal_yield_pct,real_yield_pct,risk_level,fogafin_guaranteed,cop_score
+bbva_cdt_360,BBVA CDT 360 Days,cdt,10.5,4.739336492891,minimal,TRUE,2.9
+bcol_cdt_360,Bancolombia CDT 360 Days,cdt,10.2,4.454976303317548,minimal,TRUE,2.78
+tes_5y,TES Colombia 5-Year Government Bond,government_bond,11.2,5.402843601895757,low,FALSE,2.76
+tes_30y,TES Colombia 30-Year Government Bond,government_bond,12,6.161137440758302,low,FALSE,2.76
+ecopetrol_bond,Ecopetrol Corporate Bond (COP),corporate_bond,13,7.109004739336489,moderate,FALSE,2.74
+bbva_cdt_180,BBVA CDT 180 Days,cdt,10,4.2654028436019065,minimal,TRUE,2.71
+bcol_bond,Bancolombia Senior Bond,corporate_bond,12.5,6.635071090047395,moderate,FALSE,2.55
+bbva_cdt_90,BBVA CDT 90 Days,cdt,9.5,3.791469194312791,minimal,TRUE,2.52
+tes_1y,TES Colombia 1-Year Government Bond,government_bond,10.5,4.739336492891,low,FALSE,2.5
+bbva_savings,BBVA Savings Account,savings,4,-1.421800947867291,minimal,TRUE,0.73
+bcol_savings,Bancolombia Savings Account,savings,3.8,-1.6113744075829328,minimal,TRUE,0.66
+ecopetrol_equity,Ecopetrol S.A. Common Shares (EC / BVC),equity,5,-0.4739336492890933,high,FALSE,-0.59
+colcap_etf,COLCAP Index Fund (via local broker),equity,2.5,-2.8436018957346043,high,FALSE,-1.54
+tes_10y,TES Colombia 10-Year Government Bond,government_bond,11.5,5.687203791469209,low,FALSE,NA

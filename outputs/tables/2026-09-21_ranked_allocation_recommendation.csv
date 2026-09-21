@@ -1,0 +1,21 @@
+symbol,country_or_region,category,weighted_score,conviction_bucket,theme,indicator_modifier,adjusted_score,adjusted_conviction
+SPY,United States,Benchmark,3,Watchlist or tactical,NA,0,3,Watchlist
+VEA,Developed markets ex-U.S.,Benchmark,3,Watchlist or tactical,NA,0,3,Watchlist
+VWO,Emerging markets,Benchmark,3,Watchlist or tactical,NA,0,3,Watchlist
+EWJ,Japan,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWU,United Kingdom,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWG,Germany,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWQ,France,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWI,Italy,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWP,Spain,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWN,Netherlands,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWL,Switzerland,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWC,Canada,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWA,Australia,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWS,Singapore,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWH,Hong Kong,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWY,South Korea,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWT,Taiwan,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+INDA,India,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+MCHI,China,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
+EWZ,Brazil,Country ETF,3,Watchlist or tactical,NA,0,3,Watchlist
