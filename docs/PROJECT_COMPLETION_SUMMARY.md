@@ -405,10 +405,10 @@ The infrastructure is ready. The next phase is **execution**:
 
 ---
 
-**Project Status:** ✅ Phase 1 Complete · ✅ Phase 2 Complete · 🔄 Phase 3 In Progress  
+**Project Status:** ✅ Phase 1 Complete · ✅ Phase 2 Complete · 🔄 Phase 3 Parts 1–3 Complete / Part 4 Next  
 **Phase 1 Deliverables:** 4 of 4 Completed  
 **Phase 2 Deliverables:** 5 of 5 Completed  
-**Phase 3 Deliverables:** 0 of 5 Completed (approved; implementation beginning)  
+**Phase 3 Deliverables:** 4 of 5 Completed (Part 4 script 09 next)  
 **Last Updated:** September 21, 2026
 
 ---
@@ -570,8 +570,8 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 |---|---|
 | Part 1: Global Indicators Framework | ✅ Complete (Sep 21, 2026) |
 | Part 2: Colombia Investment System | ✅ Complete (Sep 21, 2026) |
-| Part 3: Dual-Currency Monitoring | 🔲 Not started |
-| Part 4: Indicator-Driven Prioritization | 🔲 Not started |
+| Part 3: Dual-Currency Monitoring | ✅ Complete (Sep 21, 2026) |
+| Part 4: Indicator-Driven Prioritization | 🔲 Next |
 | Part 5: Data Source Management | ✅ Complete — included in Part 1 (Sep 21, 2026) |
 
 ### Phase 3, Part 1 Deliverables (Complete)
@@ -651,5 +651,45 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 - `calculate_fx_adjusted_yield()`: bear 0.4%, base 5.7%, bull 8.9% for TES 10Y
 - `screen_colombian_bonds()`: 14 vehicles ranked; TES 5Y beats USD risk-free in base case
 - `generate_colombia_income_forecast()`: 5-year COP income projections correct across all 3 scenarios
+
+---
+
+### Phase 3, Part 3 Deliverables (Complete)
+
+**Completed:** September 21, 2026
+
+**4 new functions added to `R/personal_wealth_monitoring.R`:**
+
+| Function | Purpose |
+|---|---|
+| `calculate_dual_currency_net_worth()` | 8-row consolidated balance sheet: USD cash, USD investments, USD other, COP home (illiquid), COP bank, COP investments, liabilities, total |
+| `calculate_currency_exposure()` | Investable-asset currency split vs. 80/20 USD/COP target; drift, action flag, summary string |
+| `project_dual_currency_growth()` | 5-year multi-scenario projection (bear/base/bull FX) for USD + COP portfolios combined |
+| `assess_fx_rebalancing_need()` | Monthly contribution split guidance to close USD/COP exposure gap |
+
+**`scripts/08_quarterly_dual_currency_review.R`** — 10-section quarterly review:
+- Loads QIF → COP/USD rate → dual-currency balance sheet → currency exposure → contribution guidance
+- Colombia macro snapshot + bond screen
+- 5-year projection under bear/base/bull FX scenarios
+- 2 ggplot charts exported to `outputs/charts/`
+- 3 timestamped CSVs exported to `data/processed/`
+- Fully runnable from clean session: `source("scripts/08_quarterly_dual_currency_review.R")`
+
+**`reports/investment_dashboard_2026-09-21.html`** — 25KB self-contained HTML dashboard:
+- Chart.js interactive 5-year projection (bear/base/bull)
+- Dual-currency balance sheet table
+- Currency exposure bars (current vs. target)
+- All 14 COP vehicles ranked by yield (bear/base/bull color-coded)
+- 6 priority action items (numbered, color-coded by urgency)
+- 8-item risk dashboard (HIGH/MEDIUM/LOW)
+- 4 falsification triggers
+- Required investment disclaimer
+
+**Live results (Sep 21, 2026):**
+- Combined net worth (all assets including COP home): **~$943k USD equivalent**
+- Investable assets: $359,149 (USD $349,755 + COP $9,394)
+- Current exposure: 97.4% USD / 2.6% COP vs. 80/20 target
+- USD overweight by 17.4pp → redirect all contributions to COP for ~11 months
+- 5-year investable asset projection: bear $913k, **base $926k**, bull $937k
 
 ---

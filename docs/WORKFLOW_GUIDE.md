@@ -344,21 +344,24 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 
 ---
 
-## Phase 5: Colombia Investment Analysis *(Phase 3 — Coming)*
+## Phase 5: Colombia Investment Analysis
 
 ### 06_colombia_economic_snapshot.R
 
 **Purpose:** Generate a Colombia-specific economic dashboard: COP/USD exchange rate, inflation, policy rate, TES yield curve, and local savings rates.
 
+**Status:** ✅ Complete (Sep 21, 2026)
+
 **Data Sources:**
-- Banco de la República API — COP/USD, policy rate, reserves
-- DANE — Monthly CPI, unemployment
-- BVC (Bolsa de Valores Colombia) — TES yield curve, COLCAP index
-- BBVA/Bancolombia — Savings account rates
+- Yahoo Finance — Daily COP/USD (COP=X) and COLCAP index (^COLCAP)
+- World Bank WDI — Colombia GDP growth, CPI, unemployment, current account
 
 **Outputs:**
-- `data/processed/colombia_snapshot_[DATE].csv`
-- Console dashboard with current indicators
+- `data/processed/cop_rate_[DATE].csv`
+- `data/processed/colombia_macro_[DATE].csv`
+- `data/processed/bond_screen_[DATE].csv`
+- `outputs/charts/cop_usd_rate_[DATE].png`
+- Console dashboard via `print_colombia_snapshot()`
 
 **Run Instructions:**
 ```r
@@ -367,35 +370,63 @@ source("scripts/06_colombia_economic_snapshot.R")
 
 ### 07_evaluate_colombia_investments.R
 
-**Purpose:** Rank COP-denominated investment vehicles by real yield (net of Colombian inflation and USD/COP FX movement).
+**Purpose:** Rank 14 COP-denominated investment vehicles by real yield (net of Colombian inflation and USD/COP FX movement); generate 5-year income forecast.
 
-**Key Functions:**
-- `calculate_real_yield()` — Nominal yield minus inflation adjustment
-- `screen_colombian_bonds()` — Rank TES + corporate bonds
-- `generate_colombia_income_forecast()` — Projected annual COP cash flow
+**Status:** ✅ Complete (Sep 21, 2026)
 
-**Output:** Ranked vehicle table with nominal yield, real yield, FX-adjusted yield, and recommendation.
+**Key Functions Used:**
+- `get_colombia_investment_universe()` — 14-vehicle reference tibble
+- `calculate_real_yield()` — Fisher equation (nominal – inflation)
+- `calculate_fx_adjusted_yield()` — Real yield ± expected COP/USD change
+- `screen_colombian_bonds()` — Rank all 14 vehicles across bear/base/bull FX scenarios
+- `generate_colombia_income_forecast()` — 5-year COP + USD income projection
+
+**Outputs:**
+- Console ranked vehicle table with all yield columns
+- 2 ggplot charts: yield comparison + cumulative income scenarios
+
+**Run Instructions:**
+```r
+source("scripts/07_evaluate_colombia_investments.R")
+```
 
 ---
 
-## Phase 6: Dual-Currency Quarterly Review *(Phase 3 — Coming)*
+## Phase 6: Dual-Currency Quarterly Review
 
 ### 08_quarterly_dual_currency_review.R
 
 **Purpose:** Full quarterly review combining USD portfolio and COP assets into a single consolidated balance sheet.
 
+**Status:** ✅ Complete (Sep 21, 2026)
+
 **Key Steps:**
 1. Load latest USD account data (from Banktivity QIF)
-2. Load COP account balances (BBVA + Bancolombia)
-3. Convert COP to USD at current exchange rate
-4. Calculate combined net worth and currency exposure
-5. Compare to target USD/COP allocation split
-6. Generate rebalancing recommendations
-7. Project dual-currency growth under 3 FX scenarios (COP appreciates, stable, depreciates)
+2. Fetch current COP/USD rate from Yahoo Finance
+3. Compute dual-currency balance sheet (8 categories including COP home)
+4. Calculate currency exposure vs. 80/20 USD/COP target
+5. Generate monthly contribution guidance to close USD/COP gap
+6. Run Colombia macro snapshot and bond screen
+7. Project dual-currency growth under 3 FX scenarios (bear/base/bull)
+8. Export 2 charts and 3 CSVs
+
+**Outputs:**
+- `outputs/charts/dual_currency_projection_[DATE].png`
+- `outputs/charts/currency_exposure_[DATE].png`
+- `data/processed/dual_currency_balance_sheet_[DATE].csv`
+- `data/processed/dual_currency_projection_[DATE].csv`
+- `data/processed/cop_bond_screen_[DATE].csv`
+
+**Run Instructions:**
+```r
+source("scripts/08_quarterly_dual_currency_review.R")
+```
+
+**Recommended schedule:** January, April, July, October (same as quarterly wealth dashboard)
 
 ---
 
-## Phase 7: Indicator-Driven Portfolio Prioritization *(Phase 3 — Coming)*
+## Phase 7: Indicator-Driven Portfolio Prioritization *(Phase 3 Part 4 — Next)*
 
 ### 05_collect_global_indicators.R
 
@@ -445,11 +476,9 @@ date | geography | indicator_code | indicator_name | value | unit | source
 | `R/screening.R` | Universe construction, conviction scoring, ranking |
 | `R/portfolio_tools.R` | Portfolio weights, correlation, volatility, risk metrics |
 | `R/plotting.R` | Reusable ggplot functions for charts and exports |
-| `R/personal_wealth_monitoring.R` | Net worth, allocation tracking, goal progress, projections, quarterly dashboard |
-| `R/economic_indicators.R` | [Phase 3] 30+ source loaders, standardized storage |
-| `R/colombia_indicators.R` | [Phase 3] COP/USD, TES, COLCAP, DANE, Banco de la República |
-| `R/climate_geopolitical.R` | [Phase 3] ESG, political risk, climate indicators |
-| `R/indicator_dashboard.R` | [Phase 3] Aggregate and normalize all sources |
+| `R/personal_wealth_monitoring.R` | Net worth, allocation, goal tracking, projections; dual-currency monitoring (4 functions) |
+| `R/economic_indicators.R` | ✅ [Phase 3] FRED (33 series), WDI (16 indicators, 27 countries), FX (19 pairs) |
+| `R/colombia_indicators.R` | ✅ [Phase 3] COP/USD, 14-vehicle bond screener, income forecaster, yield analytics |
 
 ### Script Responsibilities
 
@@ -458,11 +487,11 @@ date | geography | indicator_code | indicator_name | value | unit | source
 | `01_collect_market_data.R` | ✅ Complete | Download prices for 48 ETFs + GID macro data |
 | `02_screen_global_assets.R` | ✅ Complete | Rank ETFs by conviction score |
 | `04_quarterly_wealth_dashboard.R` | ✅ Complete | Quarterly personal wealth report |
-| `05_collect_global_indicators.R` | [Phase 3] | Pull 30+ macro/climate/political indicators |
-| `06_colombia_economic_snapshot.R` | [Phase 3] | Colombia dashboard |
-| `07_evaluate_colombia_investments.R` | [Phase 3] | Rank COP vehicles by real yield |
-| `08_quarterly_dual_currency_review.R` | [Phase 3] | USD + COP consolidated quarterly review |
-| `09_indicator_driven_portfolio_ranking.R` | [Phase 3] | Dynamic conviction reweighting |
+| `05_collect_global_indicators.R` | ✅ Complete | Pull FRED, WDI, FX indicators; 5 CSV outputs |
+| `06_colombia_economic_snapshot.R` | ✅ Complete | Colombia dashboard: FX, macro, TES, bond screen |
+| `07_evaluate_colombia_investments.R` | ✅ Complete | Rank 14 COP vehicles by real + FX-adjusted yield |
+| `08_quarterly_dual_currency_review.R` | ✅ Complete | USD + COP consolidated quarterly review |
+| `09_indicator_driven_portfolio_ranking.R` | 🔲 Next | Dynamic conviction reweighting by live indicators |
 
 ---
 
@@ -476,4 +505,4 @@ For personal wealth plan details, see `data/external/personal_wealth_plan_comple
 
 ---
 
-**Last Updated:** September 21, 2026
+**Last Updated:** September 21, 2026 (Phase 3 Parts 1–3 complete; Part 4 next)

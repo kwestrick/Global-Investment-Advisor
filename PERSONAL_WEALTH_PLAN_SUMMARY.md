@@ -24,13 +24,25 @@ Your personal financial planning system is complete and operational. You have:
 
 ### Net Worth (as of September 21, 2026)
 
+**USD accounts (Banktivity):**
+
 | Category | Amount | % of Assets |
 |---|---|---|
 | **Checking/Savings** | $309,908 | 55% |
 | **Investments** | $39,847 | 7% |
 | **Real Estate & Other** | $218,206 | 38% |
 | **Credit Cards** | ($9,967) | (2%) |
-| **TOTAL NET WORTH** | **$557,994** | **100%** |
+| **USD NET WORTH** | **$557,994** | **100%** |
+
+**Colombian assets (COP, converted at 3,193 COP/USD):**
+
+| Category | COP | USD Equivalent |
+|---|---|---|
+| Colombian home (illiquid) | 1,200,000,000 | ~$375,808 |
+| BBVA + Bancolombia accounts | 30,000,000 | ~$9,394 |
+| **COP TOTAL** | **1,230,000,000** | **~$385,202** |
+
+**Combined net worth (all assets): ~$943k USD equivalent**
 
 ### Income & Expense Profile
 
@@ -88,8 +100,14 @@ Monthly allocation:
 
 ### Phase 3: Maintenance & Review (Ongoing)
 - **Monthly:** Verify investment transfers processed
-- **Quarterly:** Run dashboard (see below)
+- **Quarterly:** Run USD dashboard + dual-currency review (see below)
 - **Annually:** Full rebalancing review (target drift: ≤5%)
+
+### Phase 4: Dual-Currency COP Investment (Active)
+- **Current USD exposure:** 97.4% (target: 80%) — redirect contributions to COP
+- **COP vehicles:** TES bonds (10–12% nominal), CDTs (9.5–10.5%), savings (3.8–4.0%)
+- **Monthly COP target:** Redirect $5,200/month surplus to COP instruments for ~11 months
+- **Run quarterly:** `source("scripts/08_quarterly_dual_currency_review.R")`
 
 ---
 
@@ -148,11 +166,14 @@ Check if any asset class drifts >5% from target:
 ### Main Documents
 - `data/external/personal_wealth_plan_complete.md` — Full plan (12,000+ words)
 - `PERSONAL_WEALTH_PLAN_SUMMARY.md` — This document
+- `reports/investment_dashboard_2026-09-21.html` — Interactive dual-currency dashboard
 
 ### R Functions
 - `R/data_import.R::import_qif_accounts()` — Parse Banktivity QIF exports
-- `R/personal_wealth_monitoring.R` — All monitoring & analysis functions
-- `scripts/04_quarterly_wealth_dashboard.R` — Automated quarterly report
+- `R/personal_wealth_monitoring.R` — All monitoring & analysis functions (incl. dual-currency)
+- `R/colombia_indicators.R` — COP yield analytics, bond screener, income forecaster
+- `scripts/04_quarterly_wealth_dashboard.R` — Automated quarterly USD report
+- `scripts/08_quarterly_dual_currency_review.R` — Automated quarterly USD + COP review
 
 ### Data Files
 - `data/processed/2026-09-21_accounts_from_banktivity.csv` — Current account export

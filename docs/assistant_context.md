@@ -8,6 +8,8 @@ This document gives Posit AI, RStudio assistants, and other coding agents quick 
 
 This is not just a code repository. It is a reproducible research system for global investment analysis. Code changes should support better research discipline, better data quality, better investment memo generation, or clearer global opportunity screening.
 
+Commodity-specific work has moved to the separate **Global Commodity Platform** project at `/Users/kwestrick/Library/CloudStorage/Dropbox/MyBusiness/Development/RCode/Global-Commodity-Platform`. Do not add commodity ingestion, forecasting, Shiny dashboards, or commodity-specific skills back into this repository unless explicitly requested. Use commodity-cycle outputs from that project as inputs to investment analysis when relevant.
+
 ## Primary User Workflow
 
 The expected workflow is:

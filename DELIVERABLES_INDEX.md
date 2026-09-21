@@ -33,11 +33,20 @@ A complete, operational personal financial planning system has been built and de
 
 ### 💻 R Code & Functions
 
-| File | Purpose | Status |
-|---|---|---|
-| `R/data_import.R::import_qif_accounts()` | Parse Banktivity QIF exports | ✅ Tested |
-| `R/personal_wealth_monitoring.R` | All monitoring & analysis functions | ✅ Tested |
-| `scripts/04_quarterly_wealth_dashboard.R` | Automated quarterly reporting (10-section) | ✅ Tested |
+| File | Purpose | Phase | Status |
+|---|---|---|---|
+| `R/data_import.R::import_qif_accounts()` | Parse Banktivity QIF exports | 2 | ✅ Tested |
+| `R/personal_wealth_monitoring.R` | Net worth, allocation, goal, projections, dual-currency monitoring | 2 + 3 | ✅ Tested |
+| `scripts/04_quarterly_wealth_dashboard.R` | Automated quarterly wealth report (10-section) | 2 | ✅ Tested |
+| `R/economic_indicators.R` | FRED (33 series), WDI (16 indicators, 27 countries), FX (19 pairs) | 3 | ✅ Tested |
+| `R/colombia_indicators.R` | 14-vehicle COP bond screener, yield analytics, income forecaster | 3 | ✅ Tested |
+| `data/external/data_source_registry.csv` | 30 data sources with API metadata | 3 | ✅ Complete |
+| `scripts/05_collect_global_indicators.R` | Collect FRED, WDI, FX data; save 5 timestamped CSVs | 3 | ✅ Tested |
+| `scripts/06_colombia_economic_snapshot.R` | Colombia dashboard: FX, macro, TES, bond screen | 3 | ✅ Tested |
+| `scripts/07_evaluate_colombia_investments.R` | Rank 14 COP vehicles; 5-year income forecast; 2 charts | 3 | ✅ Tested |
+| `scripts/08_quarterly_dual_currency_review.R` | USD + COP quarterly review; 2 charts; 3 CSV exports | 3 | ✅ Tested |
+| `notebooks/colombia_investment_analysis.qmd` | 8-section Colombia Quarto notebook | 3 | ✅ Complete |
+| `reports/investment_dashboard_2026-09-21.html` | Interactive dual-currency HTML dashboard (Chart.js) | 3 | ✅ Generated |
 
 ### 📊 Data Files (Generated)
 
@@ -48,6 +57,10 @@ A complete, operational personal financial planning system has been built and de
 | `data/processed/2026-09-21_quarterly_accounts.csv` | Current accounts (from dashboard) | ✅ Generated |
 | `data/processed/2026-09-21_quarterly_projection.csv` | 5-year projection (6 rows) | ✅ Generated |
 | `data/processed/2026-09-21_quarterly_summary.csv` | 7-metric summary | ✅ Generated |
+| `data/processed/cop_rate_[DATE].csv` | Daily COP/USD history | ✅ Generated |
+| `data/processed/colombia_macro_[DATE].csv` | WDI macro snapshot for Colombia | ✅ Generated |
+| `data/processed/bond_screen_[DATE].csv` | 14-vehicle COP bond screen with yields | ✅ Generated |
+| `data/processed/global_indicators_[DATE].csv` | Combined FRED + WDI + FX indicators | ✅ Generated |
 
 ---
 

@@ -19,6 +19,14 @@ Help build a reproducible research system that can:
 
 The project should not assume that non-U.S. assets will outperform. It should search for global opportunities that plausibly offer better forward risk/reward than U.S. alternatives, while clearly stating when U.S. assets remain superior.
 
+Commodity-specific research, forecasting, ingestion, Shiny dashboards, and commodity project skills have been separated into the standalone **Global Commodity Platform** project:
+
+```text
+/Users/kwestrick/Library/CloudStorage/Dropbox/MyBusiness/Development/RCode/Global-Commodity-Platform
+```
+
+Do not recreate commodity platform folders or commodity-specific skills inside this repository. Commodity cycles, energy markets, and commodity-linked economies remain valid inputs to global investment analysis, but commodity-specific code should live in Global Commodity Platform.
+
 ## User Preferences
 
 - Preferred language: **R**
