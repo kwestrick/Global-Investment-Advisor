@@ -1,0 +1,468 @@
+---
+title: "Financial Snapshot"
+subtitle: "Personal Wealth Overview — September 2026"
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    toc: true
+    toc-depth: 2
+    toc-title: "On This Page"
+    fig-width: 9
+    fig-height: 5
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(gt)
+library(scales)
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+accounts    <- read_csv("data/processed/2026-09-21_accounts_from_banktivity.csv",
+                        show_col_types = FALSE)
+spending    <- read_csv("data/processed/2026-09-21_spending_by_category.csv",
+                        show_col_types = FALSE)
+nw_stmt     <- read_csv("data/processed/2026-09-21_net_worth_statement.csv",
+                        show_col_types = FALSE) |> filter(!is.na(balance))
+large_items <- read_csv("data/processed/2026-09-21_large_one_time_items.csv",
+                        show_col_types = FALSE)
+
+# ── Constants ─────────────────────────────────────────────────────────────────
+MONTHLY_INCOME  <- 7488          # SS $3,100 + VA Disability $4,388
+MONTHLY_SPEND   <- 8315          # 12-month recurring average
+NET_FLOW        <- MONTHLY_INCOME - MONTHLY_SPEND   # –$827
+ANNUAL_FLOW     <- NET_FLOW * 12                    # –$9,924
+USD_NW          <- 557994
+COP_HOME_USD    <- 375000        # 1.2B COP ÷ 3,200 COP/USD
+COP_BANK_USD    <-   9375        # 30M COP ÷ 3,200 COP/USD
+COMBINED_NW     <- USD_NW + COP_HOME_USD + COP_BANK_USD
+LIQUID_RESERVE  <- 309908
+
+# ── Palette ───────────────────────────────────────────────────────────────────
+CLR_NAVY  <- "#1e3a5f"
+CLR_GREEN <- "#4a9e7a"
+CLR_AMBER <- "#c97d25"
+CLR_RED   <- "#c94040"
+CLR_GRAY  <- "#6c757d"
+```
+
+```{=html}
+<style>
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 1rem;
+  margin: 0.5rem 0 2.5rem 0;
+}
+.kpi-card {
+  background: #f8f9fa;
+  border-left: 4px solid #1e3a5f;
+  border-radius: 6px;
+  padding: 1.1rem 1.3rem 0.9rem;
+}
+.kpi-value {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  line-height: 1.1;
+}
+.kpi-label {
+  font-size: 0.72rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.3rem;
+}
+.kpi-sub {
+  font-size: 0.78rem;
+  color: #adb5bd;
+  margin-top: 0.2rem;
+}
+.kpi-card.green  { border-left-color: #4a9e7a; }
+.kpi-card.green  .kpi-value { color: #4a9e7a; }
+.kpi-card.amber  { border-left-color: #c97d25; }
+.kpi-card.amber  .kpi-value { color: #c97d25; }
+.kpi-card.red    { border-left-color: #c94040; }
+.kpi-card.red    .kpi-value { color: #c94040; }
+.note-box {
+  background: #f0f7f4;
+  border-left: 4px solid #4a9e7a;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  color: #333;
+  margin: 1rem 0;
+}
+.warn-box {
+  background: #fff8f0;
+  border-left: 4px solid #c97d25;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  color: #333;
+  margin: 1rem 0;
+}
+hr { border-color: #dee2e6; margin: 2rem 0; }
+</style>
+```
+
+## Key Metrics {.unnumbered}
+
+::: kpi-grid
+<div class="kpi-card">
+<div class="kpi-value">$558K</div>
+<div class="kpi-label">US Net Worth</div>
+<div class="kpi-sub">As of Sep 21, 2026</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">$942K</div>
+<div class="kpi-label">Combined Net Worth</div>
+<div class="kpi-sub">Includes Colombian assets</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">$7,488</div>
+<div class="kpi-label">Monthly Income</div>
+<div class="kpi-sub">Guaranteed / permanent</div>
+</div>
+<div class="kpi-card amber">
+<div class="kpi-value">$8,315</div>
+<div class="kpi-label">Monthly Spending</div>
+<div class="kpi-sub">12-month recurring avg</div>
+</div>
+<div class="kpi-card red">
+<div class="kpi-value">−$827</div>
+<div class="kpi-label">Net Monthly Cash Flow</div>
+<div class="kpi-sub">Funded by liquid reserve</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">37+ mos</div>
+<div class="kpi-label">Liquid Runway</div>
+<div class="kpi-sub">$310K ÷ $8,315/mo</div>
+</div>
+:::
+
+---
+
+## Balance Sheet
+
+```{r balance-sheet-table}
+accounts |>
+  arrange(account_category, desc(balance)) |>
+  select(Account = account_name, Type = account_category, Balance = balance) |>
+  gt(groupname_col = "Type") |>
+  fmt_currency(columns = Balance, decimals = 0) |>
+  summary_rows(
+    groups = everything(),
+    columns = Balance,
+    fns    = list(label = "Subtotal", fn = "sum"),
+    fmt    = ~ fmt_currency(., decimals = 0)
+  ) |>
+  grand_summary_rows(
+    columns = Balance,
+    fns     = list(label = "NET WORTH", fn = "sum"),
+    fmt     = ~ fmt_currency(., decimals = 0)
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_row_groups()
+  ) |>
+  tab_style(
+    style     = list(cell_fill(color = "#f0f7f4"), cell_text(weight = "bold")),
+    locations = cells_grand_summary()
+  ) |>
+  tab_style(
+    style     = cell_text(color = CLR_RED),
+    locations = cells_body(columns = Balance, rows = Balance < 0)
+  ) |>
+  tab_header(title = "Account Balances — September 21, 2026") |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+```{r asset-breakdown-chart}
+nw_stmt |>
+  filter(category != "NET WORTH") |>
+  mutate(
+    category = factor(category, levels = rev(c(
+      "Checking/Savings", "Investments", "Other Assets",
+      "Credit Cards", "Other Liabilities"
+    ))),
+    color = if_else(balance >= 0, CLR_NAVY, CLR_RED),
+    label_x = if_else(balance >= 0, balance + 3000, balance - 3000),
+    hjust   = if_else(balance >= 0, 0, 1),
+    label   = dollar(abs(balance), accuracy = 1, scale = 1/1000, suffix = "K")
+  ) |>
+  ggplot(aes(x = balance, y = category, fill = color)) +
+  geom_col(width = 0.55) +
+  geom_text(aes(x = label_x, label = label, hjust = hjust),
+            size = 3.5, color = "#333") +
+  scale_fill_identity() +
+  scale_x_continuous(
+    labels = dollar_format(scale = 1/1000, suffix = "K"),
+    expand = expansion(mult = c(0.12, 0.18))
+  ) +
+  labs(title = "Assets and Liabilities Summary", x = NULL, y = NULL) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor   = element_blank(),
+    axis.text.x        = element_text(color = CLR_GRAY)
+  )
+```
+
+::: note-box
+**Colombia assets (not in balance sheet above):** Home ≈ **$375K** (1.2B COP at 3,200 COP/USD) +
+bank accounts ≈ **$9K** (30M COP). These are illiquid or abroad; the combined net worth including
+them is approximately **$942K**. The investment plan focuses on building *income-generating*
+COP assets (CDTs, TES bonds) rather than relying on home equity.
+:::
+
+---
+
+## Income and Spending
+
+```{r income-spend-chart}
+tibble(
+  item   = c("Social Security", "VA Disability", "Household", "Travel",
+             "Dining & Restaurants", "Miscellaneous", "Groceries",
+             "Electronics", "Clothing & Shoes", "Web & Internet",
+             "Telephone", "Utilities", "Medical", "Other"),
+  amount = c(3100, 4388, -1492, -1167, -1016, -839, -582,
+             -466, -395, -395, -361, -351, -341, -910),
+  type   = c("Income", "Income", rep("Spending", 12))
+) |>
+  mutate(
+    item   = factor(item, levels = rev(item)),
+    color  = if_else(type == "Income", CLR_GREEN, CLR_NAVY)
+  ) |>
+  ggplot(aes(x = amount, y = item, fill = color)) +
+  geom_col(width = 0.65) +
+  geom_vline(xintercept = 0, linewidth = 0.5, color = "#666") +
+  geom_text(
+    aes(
+      x     = if_else(amount >= 0, amount + 60, amount - 60),
+      label = dollar(abs(amount)),
+      hjust = if_else(amount >= 0, 0, 1)
+    ),
+    size = 3.1, color = "#333"
+  ) +
+  scale_fill_identity() +
+  scale_x_continuous(labels = dollar_format(),
+                     expand = expansion(mult = c(0.18, 0.18))) +
+  labs(
+    title    = "Monthly Income vs Spending Breakdown",
+    subtitle = "Income is guaranteed/permanent; spending is 12-month average (recurring only)",
+    x = "Monthly Amount ($)", y = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor   = element_blank())
+```
+
+::: warn-box
+**Cash flow note:** Monthly income ($7,488) falls $827 short of recurring spending ($8,315).
+The $5,200/month invested via Wealthfront is drawn from the $310K liquid reserve — it is
+*relocation of assets*, not a cash surplus. The reserve provides 37+ months of runway at current
+burn and 50+ months without the investment contributions.
+:::
+
+```{r large-items-table}
+large_items |>
+  filter(!is_transfer, abs(amount) >= 1000) |>
+  arrange(desc(abs(amount))) |>
+  head(12) |>
+  mutate(Date = format(as.Date(date), "%b %d, %Y")) |>
+  select(Date, Payee = payee, Category = category, Amount = amount) |>
+  gt() |>
+  fmt_currency(columns = Amount, decimals = 0) |>
+  tab_header(
+    title    = "Major One-Time Purchases",
+    subtitle = "Sep 2025 – Aug 2026 (transactions > $1,000)"
+  ) |>
+  tab_style(
+    style     = cell_text(color = CLR_RED),
+    locations = cells_body(columns = Amount, rows = Amount > 0)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+*These large one-time items ($23.9K Colombia car, $9.7K Windstar cruise, $9.4K American Airlines, $6.4K Oceania cruise, $5K NuStep equipment) added ~$6,700/month on top of the recurring baseline and are not included in the $8,315/month recurring figure.*
+
+---
+
+## Asset Allocation
+
+```{r allocation-chart}
+investable <- 309908 + 39847  # liquid + investments = $349,755
+
+current <- tibble(
+  asset_class   = c("Bonds / Ladder", "Cash / Liquid Reserve",
+                    "U.S. Large Cap", "Intl. Developed",
+                    "Emerging Markets", "Infrastructure", "Commodities"),
+  current_pct   = c(39847 / investable * 100,
+                    309908 / investable * 100, 0, 0, 0, 0, 0),
+  target_pct    = c(25, 10, 20, 15, 15, 10, 5)
+)
+
+current |>
+  pivot_longer(c(current_pct, target_pct),
+               names_to = "type", values_to = "pct") |>
+  mutate(
+    type        = if_else(type == "target_pct", "Target", "Current"),
+    type        = factor(type, levels = c("Current", "Target")),
+    asset_class = factor(asset_class, levels = rev(current$asset_class))
+  ) |>
+  ggplot(aes(x = pct, y = asset_class, fill = type)) +
+  geom_col(position = "dodge", width = 0.65) +
+  geom_text(
+    aes(label = paste0(round(pct, 0), "%")),
+    position = position_dodge(width = 0.65),
+    hjust = -0.1, size = 3.2
+  ) +
+  scale_fill_manual(values = c("Target" = CLR_NAVY, "Current" = CLR_AMBER),
+                    name = NULL) +
+  scale_x_continuous(
+    labels = percent_format(scale = 1),
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title    = "Asset Allocation: Current vs Target",
+    subtitle = paste0("Investable assets ≈ $", round(investable/1000, 0), "K  |  ",
+                      "Target is the 7-class long-run allocation"),
+    x = "Allocation (%)", y = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    legend.position    = "top"
+  )
+```
+
+The portfolio is currently concentrated in cash and a short bond ladder. Full deployment to the
+7-class target requires a phased transition over 2–3 months (see Investment Plan for details).
+
+---
+
+## Currency Exposure
+
+```{r currency-chart}
+tibble(
+  Scenario = rep(c("Current", "Target"), each = 2),
+  Currency = rep(c("USD", "COP"), 2),
+  Pct      = c(97.4, 2.6, 80.0, 20.0)
+) |>
+  mutate(
+    Scenario = factor(Scenario, levels = c("Current", "Target")),
+    Currency = factor(Currency, levels = c("COP", "USD"))
+  ) |>
+  ggplot(aes(x = Scenario, y = Pct, fill = Currency)) +
+  geom_col(width = 0.45, position = "stack") +
+  geom_text(
+    aes(label = paste0(Pct, "%")),
+    position  = position_stack(vjust = 0.5),
+    size = 5, fontface = "bold", color = "white"
+  ) +
+  scale_fill_manual(values = c("USD" = CLR_NAVY, "COP" = CLR_GREEN),
+                    name = "Currency") +
+  scale_y_continuous(labels = percent_format(scale = 1)) +
+  labs(
+    title    = "Currency Allocation: Current vs Target",
+    subtitle = "COP is underweight by 17.4 percentage points vs the 80/20 target",
+    x = NULL, y = "Allocation (%)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.major.x = element_blank())
+```
+
+The 80/20 USD/COP target is set to hedge currency risk while keeping the bulk of the portfolio
+in the more liquid USD market. Closing the 17.4pp COP gap requires approximately $62K in
+new COP-denominated income-generating investments (CDTs, TES bonds).
+
+---
+
+## 5-Year Net Worth Projection
+
+*Based on $557,994 starting net worth, –$827/month net cash flow (income minus recurring spending),
+and no additional one-time expenditures. Returns applied to the full investable base.*
+
+```{r projection-chart}
+nw0 <- 557994
+
+proj <- crossing(
+  tibble(
+    Scenario = c("Conservative (5%)", "Base Case (7.5%)", "Optimistic (9%)"),
+    rate     = c(0.05, 0.075, 0.09),
+    color    = c(CLR_AMBER, CLR_NAVY, CLR_GREEN)
+  ),
+  Year = 0:5
+) |>
+  mutate(
+    # FV = PV*(1+r)^n + PMT*[(1+r)^n - 1]/r
+    nw = nw0 * (1 + rate)^Year + ANNUAL_FLOW * ((1 + rate)^Year - 1) / rate,
+    nw = if_else(Year == 0, nw0, nw)
+  )
+
+proj |>
+  ggplot(aes(x = Year, y = nw, color = color, group = Scenario)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2.5) +
+  geom_hline(yintercept = 500000, linetype = "dashed",
+             color = CLR_GRAY, linewidth = 0.7) +
+  annotate("text", x = 0.1, y = 513000,
+           label = "$500K estate goal", hjust = 0,
+           size = 3.2, color = CLR_GRAY) +
+  geom_text(
+    data = proj |> filter(Year == 5),
+    aes(label = paste0(Scenario, "\n", dollar(nw, accuracy = 1, scale = 1/1000, suffix = "K"))),
+    hjust = -0.05, size = 3.1
+  ) +
+  scale_color_identity() +
+  scale_y_continuous(labels = dollar_format(scale = 1/1000, suffix = "K"),
+                     expand = expansion(mult = c(0.05, 0.05))) +
+  scale_x_continuous(breaks = 0:5,
+                     labels = paste0("Yr ", 0:5),
+                     expand = expansion(mult = c(0.02, 0.28))) +
+  labs(
+    title    = "5-Year Net Worth Projection (3 Scenarios)",
+    subtitle = "Assumes –$9,924/year net consumption; returns on full portfolio",
+    x = NULL, y = "Net Worth"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none",
+        panel.grid.minor = element_blank())
+```
+
+```{r projection-table}
+proj |>
+  filter(Year %in% c(1, 3, 5)) |>
+  select(Scenario, Year, nw) |>
+  mutate(
+    Year = paste0("Year ", Year),
+    nw   = dollar(nw, accuracy = 1)
+  ) |>
+  pivot_wider(names_from = Year, values_from = nw) |>
+  gt() |>
+  tab_header(title = "Projected Net Worth by Scenario") |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(rows = Scenario == "Base Case (7.5%)")
+  ) |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+All three scenarios comfortably exceed the $500K estate goal through Year 5 — growth is
+driven by investment returns on the existing $558K asset base, not by new cash contributions.
+
+---
+
+*Data source: Banktivity QIF export (Sep 21, 2026); 12-month transaction analysis (Sep 2025–Aug 2026).
+Projections are illustrative and do not guarantee future results.*
+
+> **Disclaimer:** This is research and analysis only, not personalized financial advice. Consult a
+> qualified financial advisor before making investment decisions.

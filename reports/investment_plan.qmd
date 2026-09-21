@@ -1,0 +1,641 @@
+---
+title: "Investment Plan"
+subtitle: "Global Allocation Roadmap — September 2026"
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    toc: true
+    toc-depth: 2
+    toc-title: "On This Page"
+    fig-width: 9
+    fig-height: 5
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(gt)
+library(scales)
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+signals  <- read_csv("outputs/tables/2026-09-21_indicator_signal_dashboard.csv",
+                     show_col_types = FALSE)
+cop_rank <- read_csv("outputs/tables/2026-09-21_cop_vehicle_ranking.csv",
+                     show_col_types = FALSE)
+alloc    <- read_csv("outputs/tables/2026-09-21_ranked_allocation_recommendation.csv",
+                     show_col_types = FALSE)
+country  <- read_csv("data/processed/country_opportunity_screen_20260921.csv",
+                     show_col_types = FALSE)
+theme_sc <- read_csv("data/processed/theme_opportunity_screen_20260921.csv",
+                     show_col_types = FALSE)
+
+# ── Constants ─────────────────────────────────────────────────────────────────
+MONTHLY_INVEST  <- 5200     # Monthly Wealthfront contribution (from liquid reserve)
+COP_GAP_USD     <- 62492    # Dollar gap to close COP underweight
+MONTHS_TO_CLOSE <- 13       # Months at $5,200/mo to close COP gap
+USD_NW          <- 557994
+LIQUID          <- 309908
+
+# ── Palette ───────────────────────────────────────────────────────────────────
+CLR_NAVY  <- "#1e3a5f"
+CLR_GREEN <- "#4a9e7a"
+CLR_AMBER <- "#c97d25"
+CLR_RED   <- "#c94040"
+CLR_GRAY  <- "#6c757d"
+```
+
+```{=html}
+<style>
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  gap: 1rem;
+  margin: 0.5rem 0 2rem 0;
+}
+.kpi-card {
+  background: #f8f9fa;
+  border-left: 4px solid #1e3a5f;
+  border-radius: 6px;
+  padding: 1.1rem 1.3rem 0.9rem;
+}
+.kpi-value {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  line-height: 1.1;
+}
+.kpi-label {
+  font-size: 0.72rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.3rem;
+}
+.kpi-sub {
+  font-size: 0.78rem;
+  color: #adb5bd;
+  margin-top: 0.2rem;
+}
+.kpi-card.green { border-left-color: #4a9e7a; }
+.kpi-card.green .kpi-value { color: #4a9e7a; }
+.kpi-card.amber { border-left-color: #c97d25; }
+.kpi-card.amber .kpi-value { color: #c97d25; }
+.kpi-card.red   { border-left-color: #c94040; }
+.kpi-card.red   .kpi-value { color: #c94040; }
+.note-box {
+  background: #f0f7f4;
+  border-left: 4px solid #4a9e7a;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  margin: 1rem 0;
+}
+.warn-box {
+  background: #fff8f0;
+  border-left: 4px solid #c97d25;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  margin: 1rem 0;
+}
+.phase-header {
+  background: #1e3a5f;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 1.25rem 0 0.75rem;
+}
+hr { border-color: #dee2e6; margin: 2rem 0; }
+</style>
+```
+
+## Situation Summary {.unnumbered}
+
+::: kpi-grid
+<div class="kpi-card amber">
+<div class="kpi-value">97.4% USD</div>
+<div class="kpi-label">Current Currency Mix</div>
+<div class="kpi-sub">Target: 80% USD / 20% COP</div>
+</div>
+<div class="kpi-card red">
+<div class="kpi-value">−17.4pp</div>
+<div class="kpi-label">COP Underweight</div>
+<div class="kpi-sub">$62K gap to close</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">$5,200/mo</div>
+<div class="kpi-label">Investment Capacity</div>
+<div class="kpi-sub">From liquid reserve</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">13 months</div>
+<div class="kpi-label">COP Rebalancing Period</div>
+<div class="kpi-sub">Then return to 7-class plan</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">5.7%</div>
+<div class="kpi-label">Colombia TES Real Yield</div>
+<div class="kpi-sub">Fisher-adjusted, USD investor</div>
+</div>
+<div class="kpi-card">
+<div class="kpi-value">3.75</div>
+<div class="kpi-label">Top ETF Conviction (INDA)</div>
+<div class="kpi-sub">India; out of 5.0 max</div>
+</div>
+:::
+
+---
+
+## Market Signal Dashboard
+
+*Live indicators as of September 21, 2026, used to calibrate allocation decisions.*
+
+```{r signal-table}
+signal_colors <- c(
+  "attractive"   = "#d4edda",
+  "neutral"      = "#f8f9fa",
+  "neutral_usd"  = "#f8f9fa",
+  "moderate"     = "#fff3cd",
+  "caution"      = "#f8d7da"
+)
+signal_labels <- c(
+  "attractive"   = "✓ Attractive",
+  "neutral"      = "Neutral",
+  "neutral_usd"  = "Neutral",
+  "moderate"     = "⚠ Moderate",
+  "caution"      = "✗ Caution"
+)
+
+signals |>
+  mutate(
+    signal_label = signal_labels[signal],
+    bg           = signal_colors[signal]
+  ) |>
+  select(Indicator = indicator,
+         `Current Reading` = raw_value,
+         Signal = signal_label,
+         Implication = implication) |>
+  gt() |>
+  tab_header(
+    title    = "Market Signal Dashboard",
+    subtitle = "Indicator-driven modifiers applied to conviction scores"
+  ) |>
+  tab_style(
+    style     = cell_fill(color = signal_colors["attractive"]),
+    locations = cells_body(rows = Signal == "✓ Attractive")
+  ) |>
+  tab_style(
+    style     = cell_fill(color = signal_colors["moderate"]),
+    locations = cells_body(rows = Signal == "⚠ Moderate")
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(columns = Signal, rows = Signal == "✓ Attractive")
+  ) |>
+  cols_width(Indicator ~ px(200), `Current Reading` ~ px(160),
+             Signal ~ px(110), Implication ~ px(280)) |>
+  opt_row_striping(row_striping = FALSE) |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+**Key takeaway:** All momentum signals are currently neutral, meaning no major near-term catalysts
+are reinforcing or reversing the baseline conviction scores. The one standout signal is
+**Colombia TES real yield at 5.7%** (Fisher-adjusted) — classified as Attractive. This supports
+prioritizing COP assets in the near term while the USD/COP rebalancing gap is closed.
+
+---
+
+## Allocation Roadmap
+
+The plan runs in two sequential phases. Phase 1 addresses the currency imbalance; Phase 2 builds
+the long-run global portfolio.
+
+<div class="phase-header">Phase 1 — COP Rebalancing (Now through ~Oct 2027, ~13 months)</div>
+
+**All $5,200/month goes to Colombian COP-denominated income assets** until the 17.4pp underweight
+gap is closed (~$62K needed). No new USD equity or bond positions during this phase.
+
+Priority order for COP contributions:
+
+```{r cop-phase1-table}
+cop_rank |>
+  filter(vehicle_type %in% c("cdt", "government_bond")) |>
+  arrange(desc(cop_score)) |>
+  head(6) |>
+  mutate(
+    fogafin_label = if_else(fogafin_guaranteed, "✓ Yes", "No"),
+    vehicle_type  = case_when(
+      vehicle_type == "cdt"             ~ "Bank CDT",
+      vehicle_type == "government_bond" ~ "Sovereign Bond",
+      TRUE                              ~ vehicle_type
+    )
+  ) |>
+  select(
+    Vehicle         = vehicle_name,
+    Type            = vehicle_type,
+    `Nominal (%)` = nominal_yield_pct,
+    `Real COP (%)` = real_yield_pct,
+    Risk            = risk_level,
+    `Fogafin`       = fogafin_label,
+    Score           = cop_score
+  ) |>
+  mutate(across(where(is.numeric), ~ round(., 1))) |>
+  gt() |>
+  tab_header(title = "Phase 1 COP Vehicle Priority — Ranked by Score") |>
+  data_color(
+    columns = `Real COP (%)`,
+    fn      = col_numeric(
+      palette = c("#f5f5f5", CLR_GREEN),
+      domain  = c(3, 8)
+    )
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(rows = 1)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+::: note-box
+**Recommended Phase 1 COP allocation:**  
+- **BBVA CDT 360 Days** — 10.5% nominal / 4.7% real. Fogafin-insured up to 50M COP. Start here.  
+- **Bancolombia CDT 360 Days** — 10.2% nominal / 4.5% real. Same insurance. Diversifies bank exposure.  
+- **TES Colombia 5-Year** — 11.2% nominal / 5.4% real. Sovereign; no deposit insurance needed. Add once CDT limits approached.
+:::
+
+<div class="phase-header">Phase 2 — 7-Class Global Portfolio (After COP gap is closed)</div>
+
+Resume the $5,200/month in USD-denominated assets, deployed across the target allocation.
+Rebalance existing holdings toward these targets as well.
+
+```{r phase2-allocation-table}
+investable <- 309908 + 39847  # current investable base
+
+tibble(
+  `Asset Class`    = c("U.S. Large Cap", "International Developed", "Emerging Markets",
+                        "Bonds / Ladder", "Infrastructure", "Commodities / Transition",
+                        "Cash Reserve"),
+  Vehicle          = c("SPY or VTI", "VEA", "VWO or INDA",
+                       "VBTLX or bond ladder", "GRID", "COPX or URA", "HYSA / Money Market"),
+  `Target %`       = c(20, 15, 15, 25, 10, 5, 10),
+  `Target $ (now)` = round(c(20, 15, 15, 25, 10, 5, 10) / 100 * investable),
+  `Monthly $ DCA`  = round(c(20, 15, 15, 25, 10, 5, 10) / 100 * 5200)
+) |>
+  gt() |>
+  tab_header(
+    title    = "Phase 2 Target Allocation",
+    subtitle = paste0("Investable base ≈ $",
+                      format(round(investable / 1000), big.mark = ","), "K  |  ",
+                      "Monthly DCA = $5,200")
+  ) |>
+  fmt_currency(columns = c(`Target $ (now)`, `Monthly $ DCA`), decimals = 0) |>
+  fmt_percent(columns = `Target %`, scale_values = FALSE, decimals = 0) |>
+  grand_summary_rows(
+    columns  = c(`Target %`, `Target $ (now)`, `Monthly $ DCA`),
+    fns      = list(label = "Total", fn = "sum"),
+    fmt      = list(
+      ~ fmt_percent(., columns = `Target %`, scale_values = FALSE, decimals = 0),
+      ~ fmt_currency(., columns = `Target $ (now)`, decimals = 0),
+      ~ fmt_currency(., columns = `Monthly $ DCA`, decimals = 0)
+    )
+  ) |>
+  tab_style(
+    style     = list(cell_fill(color = "#f0f7f4"), cell_text(weight = "bold")),
+    locations = cells_grand_summary()
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+---
+
+## Global ETF Rankings
+
+*Conviction scores (0–5) reflect a composite of valuation, macro tailwind, catalyst strength,
+implementation quality, and risk control — then adjusted by live indicator signals.*
+
+```{r etf-chart}
+top_etfs <- alloc |>
+  arrange(desc(adjusted_score)) |>
+  head(12) |>
+  mutate(
+    label    = paste0(symbol, "\n", country_or_region),
+    label    = factor(label, levels = rev(label)),
+    category = case_when(
+      category == "Country ETF"     ~ "Country",
+      category == "Benchmark"       ~ "Benchmark",
+      category == "Infrastructure"  ~ "Infrastructure",
+      category == "Commodity theme" ~ "Commodity",
+      TRUE                          ~ category
+    ),
+    bar_color = case_when(
+      category == "Country"        ~ CLR_NAVY,
+      category == "Infrastructure" ~ CLR_GREEN,
+      category == "Commodity"      ~ CLR_AMBER,
+      TRUE                         ~ CLR_GRAY
+    )
+  )
+
+top_etfs |>
+  ggplot(aes(x = adjusted_score, y = label, fill = bar_color)) +
+  geom_col(width = 0.65) +
+  geom_text(
+    aes(label = sprintf("%.2f", adjusted_score)),
+    hjust = -0.15, size = 3.3, color = "#333"
+  ) +
+  scale_fill_identity() +
+  scale_x_continuous(
+    limits = c(0, 5.2),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  labs(
+    title    = "Top ETFs by Conviction Score (Indicator-Adjusted)",
+    subtitle = paste0("Score 0–5  |  ",
+                      "Navy = Country ETF  |  Green = Infrastructure  |  Amber = Commodity"),
+    x = "Conviction Score", y = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor   = element_blank())
+```
+
+```{r etf-detail-table}
+alloc |>
+  arrange(desc(adjusted_score)) |>
+  head(10) |>
+  mutate(
+    annualized_return     = percent(annualized_return, accuracy = 0.1),
+    annualized_volatility = percent(annualized_volatility, accuracy = 0.1),
+    max_drawdown          = percent(max_drawdown, accuracy = 0.1),
+    sharpe_proxy          = round(sharpe_proxy, 2),
+    adjusted_score        = round(adjusted_score, 2)
+  ) |>
+  select(
+    Symbol     = symbol,
+    Region     = country_or_region,
+    `Ann. Return` = annualized_return,
+    `Volatility`  = annualized_volatility,
+    `Max Drawdown`= max_drawdown,
+    `Sharpe`      = sharpe_proxy,
+    `Score`       = adjusted_score
+  ) |>
+  gt() |>
+  tab_header(title = "Top 10 ETFs — Key Metrics") |>
+  data_color(
+    columns = Score,
+    fn      = col_numeric(palette = c("#f5f5f5", CLR_NAVY), domain = c(2.5, 5))
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(rows = 1)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+---
+
+## COP Investment Vehicles
+
+*All yields shown are for a USD-based investor holding COP assets. Real COP yield uses the
+Fisher equation (nominal – inflation / 1 + inflation) with Colombia CPI ~5.5%. FX-adjusted
+yields assume COP/USD movement under three scenarios.*
+
+```{r cop-full-table}
+cop_rank |>
+  arrange(desc(cop_score)) |>
+  mutate(
+    fogafin_label = if_else(fogafin_guaranteed, "✓", "–"),
+    vehicle_type  = case_when(
+      vehicle_type == "cdt"             ~ "Bank CDT",
+      vehicle_type == "government_bond" ~ "Gov. Bond",
+      vehicle_type == "corporate_bond"  ~ "Corp. Bond",
+      vehicle_type == "savings"         ~ "Savings",
+      TRUE                              ~ vehicle_type
+    )
+  ) |>
+  select(
+    Vehicle   = vehicle_name,
+    Type      = vehicle_type,
+    `Nominal (%)` = nominal_yield_pct,
+    `Real COP (%)` = real_yield_pct,
+    Risk      = risk_level,
+    Fogafin   = fogafin_label,
+    Score     = cop_score
+  ) |>
+  mutate(across(where(is.numeric), ~ round(., 1))) |>
+  gt() |>
+  tab_header(
+    title    = "COP Investment Vehicle Comparison",
+    subtitle = "Ranked by composite score (real yield + risk + liquidity + insurance)"
+  ) |>
+  data_color(
+    columns = `Real COP (%)`,
+    fn      = col_numeric(
+      palette = c("#f5f5f5", CLR_GREEN),
+      domain  = c(0, 8)
+    )
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(rows = Score >= 2.7)
+  ) |>
+  tab_style(
+    style     = cell_text(color = CLR_GRAY),
+    locations = cells_body(rows = Score < 1)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+---
+
+## Investment Rationale
+
+### Why COP Assets First?
+
+The portfolio is 97.4% USD-denominated against a target of 80%. With wife Anna as a Colombian
+citizen and active residency in Colombia (~6+ months per year), COP purchasing power risk is real
+and material. The Colombian home (~$375K USD equivalent) is illiquid; the hedge needs to come
+from *income-generating* COP assets.
+
+Colombia's current rate environment is exceptional for a USD investor:
+
+- **TES 10-year nominal yield: 11.5%** with real yield ~5.7% after inflation — well above anything
+  available in the USD market on a risk-adjusted basis.
+- **CDT deposits at BBVA/Bancolombia** yield 10.2–10.5% nominal (4.5–4.7% real) and carry
+  Fogafin deposit insurance up to 50M COP — roughly equivalent to FDIC in structure.
+- Even under a bear FX scenario (COP depreciates further vs USD), the real yield remains
+  positive for a USD investor holding these assets for 1+ year.
+
+**The 13-month COP rebalancing window does not require a view that COP will appreciate.**
+It simply uses the high nominal yield to build a cash-flow-positive COP income base before
+returning to USD asset accumulation.
+
+### Why INDA (India)?
+
+**Conviction: 3.75 / 5.0** — Highest in the country ETF universe.
+
+India is the fastest-growing major economy globally and the only country with a credible
+multi-decade demographic tailwind. Key drivers:
+
+- Working-age population growing through 2045 (China and Europe are contracting)
+- Manufacturing supply chain diversification from China ("China+1" strategy)
+- Domestic consumption story largely independent of global trade cycle
+- Reforms: GST implementation, digital public infrastructure, startup ecosystem
+- Valuation premium vs. EM peers is real but partially justified by growth differential
+
+**Risk:** India is not cheap on absolute P/E. A global risk-off selloff hits Indian equities hard.
+Currency (INR/USD) adds volatility. Watch: current account deficit, inflation persistence, BJP
+policy continuity.
+
+### Why VWO (Emerging Markets Broad)?
+
+**Conviction: 3.72 / 5.0**
+
+EM broadly trades at a significant P/E discount to the S&P 500 (~12x vs ~21x). The basket
+provides diversification across India, Taiwan (semiconductors), China (selective recovery exposure),
+Brazil (commodity link), and South Korea. VWO is liquid, low-cost, and provides instant EM breadth.
+
+**Risk:** China is the largest single country weight (~25% of VWO); geopolitical escalation
+around Taiwan would hit VWO hardest. USD strength is a structural headwind to EM returns.
+
+### Why EWJ (Japan)?
+
+**Conviction: 3.61 / 5.0**
+
+Japan is the most interesting developed market value story in a decade:
+
+- **Corporate governance reform** (TSE pressure to raise ROE and return cash to shareholders)
+  is a structural catalyst unlike previous "Japan is cheap" cycles
+- **Yen undervaluation** is at multi-decade extremes; mean reversion provides FX tailwind for
+  USD investors even at flat local equity prices
+- Warren Buffett's Berkshire Hathaway holding large positions in Japanese trading houses validates
+  the deep value thesis from a credible source
+- Domestic inflation is returning after 30 years, supporting nominal earnings growth
+
+**Risk:** BOJ rate normalization can tighten financial conditions; yen appreciation helps USD
+returns but can pressure export-heavy earnings domestically.
+
+### Why GRID (Electric Grid Infrastructure)?
+
+**Conviction: Leading theme ETF by macro tailwind (4.0) and catalyst strength (3.8)**
+
+The global electricity grid requires an estimated $20+ trillion in investment through 2050.
+GRID gives exposure to companies building transmission, distribution, and grid modernization
+infrastructure across the U.S., Europe, and Asia. This theme is:
+
+- **Policy-driven** (IRA in U.S., Green Deal in Europe, India grid expansion)
+- **Geopolitically resilient** — grid investment is a domestic priority in every major economy
+- **Earnings visible** — utility-style regulated returns with growth optionality
+
+**Risk:** Interest rate sensitivity (infrastructure companies carry significant debt). GRID is
+more volatile than a pure utility ETF. Regulatory risk in European markets.
+
+### Why not U.S. Large Cap as the core position?
+
+The S&P 500 is not excluded — it remains 20% of the Phase 2 target. However, the starting
+position is effectively 89% cash/liquid (which shadows USD performance). The marginal
+investment dollar adds more diversification and return potential in non-U.S. assets at
+current valuations. U.S. large cap will be built systematically in Phase 2 via SPY/VTI.
+
+---
+
+## Risks and Falsification
+
+```{r risk-table}
+tibble(
+  Risk = c(
+    "COP/USD depreciation",
+    "Colombia political instability",
+    "U.S. recession / global risk-off",
+    "India equity correction",
+    "BOJ rate shock (Japan)",
+    "Sustained high U.S. inflation",
+    "Spending significantly exceeds $8,315/mo",
+    "Unexpected large health expenditure"
+  ),
+  Probability = c("Medium", "Medium", "Medium", "Low–Med",
+                  "Low–Med", "Low", "Medium", "Low"),
+  Impact = c("Low–Med", "High", "Medium", "Medium",
+             "Low–Med", "Medium", "High", "High"),
+  Mitigation = c(
+    "COP assets earn 10%+ nominal; FX loss must exceed yield to lose money in USD terms",
+    "TES bonds are sovereign; CDTs have Fogafin insurance. Diversify across instrument types",
+    "Guaranteed income ($7,488/mo) covers most spending; liquid reserve absorbs the rest",
+    "INDA position built via DCA over months; position sizing limits single-country risk",
+    "BOJ moves are telegraphed; EWJ position is modest within portfolio",
+    "U.S. TIPS or I-bonds can hedge; bond ladder shortens duration in high inflation",
+    "Liquid reserve ($310K) provides 37+ months of runway; monitor monthly",
+    "VA + Medicare provide primary coverage; Colombian Medicina Prepagada adds backup"
+  )
+) |>
+  gt() |>
+  tab_header(title = "Key Risks and Mitigations") |>
+  tab_style(
+    style     = cell_fill(color = "#fff3cd"),
+    locations = cells_body(rows = Impact == "High")
+  ) |>
+  cols_width(
+    Risk ~ px(220), Probability ~ px(100),
+    Impact ~ px(90), Mitigation ~ px(340)
+  ) |>
+  opt_row_striping(row_striping = FALSE) |>
+  tab_options(table.font.size = 12.5, table.width = pct(100))
+```
+
+### What Would Falsify This Plan?
+
+The following would trigger a material revision of the investment approach:
+
+1. **Colombia macro deterioration:** Policy rate cut below 8%, inflation re-accelerating above 8%, or
+   material sovereign credit rating downgrade → reduce COP allocation and shorten durations.
+2. **COP depreciation > 15% in 12 months:** The FX-adjusted yield becomes negative on CDTs. Pause
+   new COP contributions; hold existing until maturity.
+3. **U.S. recession confirmed** (two negative GDP quarters): De-risk equity exposure; extend bond
+   ladder; increase cash reserve target to 15–20%.
+4. **Monthly spending sustainably > $10,000:** Liquid runway shortens below 24 months; pause
+   investment contributions and rebuild reserve first.
+5. **India P/E > 30x on forward earnings with no growth acceleration:** Trim INDA; rotate to
+   cheaper EM or increase VWO weighting.
+
+---
+
+## Quarterly Review Checklist
+
+At the start of each quarter (January, April, July, October), run:
+
+```r
+source("scripts/00_quarterly_refresh.R")
+```
+
+This script automatically:
+
+1. Refreshes ETF price data (48 tickers)
+2. Regenerates global conviction scores
+3. Runs the live indicator pipeline and updates allocation recommendations
+4. Renders the monthly allocation brief to HTML
+
+Then complete the manual checklist the script prints:
+
+- Export latest Banktivity accounts as QIF → run `scripts/04_quarterly_wealth_dashboard.R`
+- Run `scripts/06_colombia_economic_snapshot.R` and verify COP/USD rate
+- Run `scripts/07_evaluate_colombia_investments.R` — check CDT rate quotes
+- Run `scripts/08_quarterly_dual_currency_review.R` — update COP home value if needed
+- Review `outputs/tables/` for any change in top ETFs or COP vehicle rankings
+- Commit results to git
+
+---
+
+> **Disclaimer:** This is research and analysis only, not personalized financial advice. Consult a
+> qualified financial advisor before making investment decisions. Past performance of referenced
+> ETFs and securities does not guarantee future results. Yields and valuations are as of
+> September 21, 2026, and will change.
