@@ -51,7 +51,26 @@ Your personal financial planning system is complete and operational. You have:
 | **Monthly Guaranteed Income** | $7,488 | ✓ Secure, inflation-indexed |
 | **Monthly Spending** | ~$2,300 | ✓ 30% of income |
 | **Monthly Surplus** | $5,188 | ✓ Available for investment |
+| **Monthly Healthcare Cost** | **$0** | ✓ Fully covered: VA (primary) + Medicare (secondary) |
 | **Emergency Reserve** | $309,908 | ✓ 135+ months coverage |
+
+### Projected Monthly Expense Budget
+
+*Based on known spending profile (~$2,300/month total). Transaction-level detail not yet extracted from Banktivity — categories below are estimates; update after exporting transaction history.*
+
+| Category | Est. Monthly | Notes |
+|---|---|---|
+| Housing & utilities (Hawthorne) | $700 | Mortgage-free; utilities, HOA, maintenance |
+| Food & groceries | $350 | Home cooking + occasional dining |
+| Transportation | $250 | Wheelchair-accessible vehicle, fuel, Uber |
+| Disability supplies & personal care | $150 | Adaptive equipment, personal care products |
+| Entertainment & subscriptions | $200 | Streaming, internet, recreational |
+| Colombia-related expenses | $250 | Travel, remittances, home upkeep |
+| Miscellaneous & buffer | $200 | Unexpected, gifts, irregular |
+| **Healthcare** | **$0** | **VA primary + Medicare secondary = fully covered** |
+| **TOTAL** | **~$2,100–$2,300** | |
+
+> **Note:** Zero healthcare cost is a significant structural advantage. Most financial plans for individuals aged 64 with chronic conditions budget $500–$1,500/month for healthcare. This saves $6,000–$18,000/year that remains fully investable.
 
 ---
 
@@ -226,6 +245,30 @@ Wealthfront rebalances automatically — no action needed. The only annual decis
 
 **Annual check (January):** Does your risk score still match your situation? If yes, no action needed.
 
+### 4. AI Company Exposure (Exclude)
+
+You have expressed concern about overvaluation in major AI companies and do not want financial exposure to them. This is a meaningful constraint given that companies such as NVIDIA, Microsoft, Alphabet, Meta, and Amazon currently represent a large share of broad U.S. market-cap-weighted ETFs.
+
+**Implementation options (in order of preference):**
+
+| Option | How | AI Avoidance | Overhead |
+|---|---|---|---|
+| **Wealthfront Direct Indexing** | Enable in settings (requires $100k — you qualify) | High — exclude specific stocks by name | Low — automated |
+| **International tilt** | Increase VEA/VWO weight in Wealthfront portfolio | High — non-U.S. markets have minimal AI company exposure | Low |
+| **Value factor tilt** | Request value-tilted portfolio in Wealthfront | Moderate — value ETFs structurally underweight growth/tech | Low |
+| **Equal-weight U.S. exposure** | Use RSP instead of SPY-equivalent if self-directed | Moderate — reduces concentration, doesn't eliminate | Higher |
+
+**Recommended approach:** Enable **Wealthfront Direct Indexing**, then add stock exclusions for:
+- NVIDIA (NVDA)
+- Microsoft (MSFT)
+- Alphabet / Google (GOOGL, GOOG)
+- Meta (META)
+- Amazon (AMZN)
+
+Wealthfront will hold substitute positions to maintain factor exposure while excluding the named stocks. This is the cleanest solution at your asset level.
+
+> **Note:** Complete elimination of AI exposure is difficult in broad-market funds. International, bond, infrastructure, and commodity positions naturally carry near-zero AI company exposure and already form a significant part of the target allocation.
+
 ---
 
 ## RISK & FALSIFICATION TRIGGERS
@@ -238,8 +281,8 @@ Wealthfront rebalances automatically — no action needed. The only annual decis
 2. **Monthly spending exceeds $4,000**
    - Action: Reduce monthly investment to $3,000
 
-3. **Major healthcare costs exceed $50,000/year**
-   - Action: Pause new investments; increase emergency reserve to $150k
+3. **VA or Medicare coverage is reduced or eliminated**
+   - Action: Immediately re-budget; healthcare costs could add $500–$1,500/month; reduce investment rate accordingly
 
 4. **Market downturn >30% for 2+ years running**
    - Action: Review risk tolerance; consider reducing equity allocation
@@ -288,8 +331,9 @@ Consider meeting quarterly with a fee-only financial advisor for:
 
 ### Insurance Review
 - Verify life insurance is appropriate (if any outstanding obligations)
-- Review disability insurance (likely already have VA coverage)
-- Consider umbrella liability coverage ($1M+ given assets)
+- Disability insurance: covered via VA disability ($4,388/month) — no additional policy needed
+- Healthcare: fully covered via VA (primary) + Medicare (secondary) — no supplemental needed
+- Consider umbrella liability coverage ($1M+ given combined ~$943k asset base)
 
 ---
 
@@ -339,9 +383,9 @@ You are in an exceptionally strong financial position. With disciplined executio
 3. **Maintain complete financial security** (guaranteed income + emergency reserves)
 4. **Sleep soundly** knowing your future is financially secure
 
-The plan is designed to be **simple** (7 asset classes, low-cost ETFs), **automated** (monthly transfers, quarterly reviews), and **resilient** (survives market downturns, income shocks, and spending surprises).
+The plan is designed to be **simple** (Wealthfront-automated, low-cost), **automated** (monthly transfers, quarterly reviews), and **resilient** (survives market downturns, income shocks, and spending surprises).
 
-**Start date:** As soon as you decide on ETF vehicles (target: end of September 2026)
+**Start date:** Configure Wealthfront risk score and Direct Indexing by September 30, 2026
 
 ---
 

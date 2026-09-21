@@ -42,10 +42,27 @@
 ## EXPENSE ANALYSIS
 
 ### Current Spending
-- **Reported monthly spending:** ~$2,300 (from prior conversation)
+- **Reported monthly spending:** ~$2,300 (from prior conversation; transaction-level breakdown pending)
 - **Monthly coverage ratio:** $7,488 / $2,300 = 3.25x
 - **Annual expense run rate:** ~$27,600
 - **Excess cash flow:** $5,188/month available for investment
+- **Healthcare cost:** **$0/month** — VA (primary coverage) + Medicare (secondary) = fully covered
+
+### Projected Monthly Expense Budget
+
+| Category | Est. Monthly |
+|---|---|
+| Housing & utilities (Hawthorne) | $700 |
+| Food & groceries | $350 |
+| Transportation | $250 |
+| Disability supplies & personal care | $150 |
+| Entertainment & subscriptions | $200 |
+| Colombia-related expenses | $250 |
+| Miscellaneous & buffer | $200 |
+| **Healthcare** | **$0** |
+| **Total** | **~$2,100–$2,300** |
+
+Zero healthcare cost is a structural advantage worth ~$6,000–$18,000/year compared to peers with comparable health profiles. This amount remains fully investable.
 
 ### Reserve Position
 - **Liquid emergency fund:** $309,908
@@ -82,7 +99,8 @@
 ### Age & Health Constraints
 - **Age:** 64; wheelchair-bound with MS
 - **Life expectancy:** 20–30+ years (MS typically does not reduce life expectancy significantly)
-- **Care risk:** Potential future increase in healthcare/care costs
+- **Healthcare:** Fully covered by VA (primary) and Medicare (secondary) — $0/month out-of-pocket
+- **Care risk:** Potential future increase in personal care/aide costs (not medical)
 - **Constraint:** Cannot be aggressive; need predictable income and liquidity
 
 ### Income Security
@@ -168,6 +186,14 @@ Wealthfront uses a 0.5–10 risk score to determine equity/bond mix. Given:
 - Already-met estate goal providing downside cushion
 
 **Recommended risk score: 7.5–8.5** (approximately 80–90% equities, 10–20% bonds/alternatives). Wealthfront will automatically include U.S. stocks, international stocks, emerging markets, bonds, real estate (REITs), and natural resources at this score — matching the target allocation without manual ETF selection.
+
+### AI Company Exclusion Policy
+
+You have explicitly stated you do not want financial exposure to major AI companies due to valuation concerns. The primary names of concern are NVIDIA (NVDA), Microsoft (MSFT), Alphabet (GOOGL/GOOG), Meta (META), and Amazon (AMZN).
+
+**Implementation:** Enable **Wealthfront Direct Indexing** (available at your asset level — $100k+ minimum) and add stock exclusions for the five names above. Wealthfront will hold substitute positions to maintain factor exposure while excluding the named stocks.
+
+This is the most practical solution within a low-overhead automated framework. International ETFs (VEA, VWO), bonds, infrastructure, and real assets carry near-zero exposure to these companies and naturally provide AI avoidance for those portions of the portfolio.
 
 ### Supplemental Positions (Outside Wealthfront)
 
