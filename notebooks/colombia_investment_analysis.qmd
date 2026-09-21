@@ -1,0 +1,436 @@
+---
+title: "Colombia Investment Analysis"
+subtitle: "COP-Denominated Income Strategies for a Dual-Currency Portfolio"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    embed-resources: true
+    theme: cosmo
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r setup}
+source("R/00_setup.R")
+source("R/economic_indicators.R")
+source("R/colombia_indicators.R")
+
+library(tidyverse)
+library(tidyquant)
+library(WDI)
+library(janitor)
+library(ggplot2)
+library(scales)
+library(gt)
+
+today <- Sys.Date()
+```
+
+## Executive Summary
+
+This notebook analyzes COP-denominated investment opportunities in Colombia for a dual-currency portfolio (USD + COP). The primary goals are:
+
+1. **Hedge USD/COP currency risk** — Generate COP income streams that cover Colombian living expenses without converting USD at unfavorable rates.
+2. **Maximize cash flow** — Identify the highest-yielding vehicles consistent with the risk profile (minimal to low risk preferred).
+3. **Preserve capital** — Prioritize Fogafin-insured deposits and sovereign bonds over equities and corporate bonds.
+
+**User context:**
+
+- Colombian assets: home (~1.2 billion COP), two bank accounts (~30 million COP)
+- Pursuing dual U.S.–Colombian citizenship (wife Anna is a Colombian citizen)
+- Monthly guaranteed USD income: $7,488 (Social Security + VA Disability)
+- Monthly COP investment capacity: depends on USD/COP transfers
+- Investment horizon: 20–30+ years
+
+**Key finding:** Colombian TES bonds (10–12% nominal) and bank CDTs (9.5–10.5%) offer strong real yields net of Colombian inflation. Even under a pessimistic FX scenario where the peso weakens 5%/year against the dollar, short-to-medium-term COP investments provide competitive returns for residents with COP expenses.
+
+---
+
+## 1. COP/USD Exchange Rate
+
+```{r cop-usd-data}
+cop_data <- fetch_cop_exchange_rate(
+  start_date = today - 5 * 365,
+  end_date   = today
+)
+
+current_cop_usd <- dplyr::last(cop_data$cop_per_usd)
+risk_metrics    <- assess_currency_risk(cop_data)
+```
+
+**Current rate:** `r round(current_cop_usd, 0)` COP per 1 USD as of `r today`.
+
+The COP/USD rate reflects the price of U.S. dollars in Colombian pesos. A rising rate means the peso is weakening — more pesos are required to buy one dollar. For a Colombian resident with peso expenses, COP depreciation is a cost of holding USD assets, not a benefit.
+
+```{r cop-chart, fig.width=10, fig.height=4.5}
+cop_data |>
+  dplyr::filter(date >= today - 3 * 365) |>
+  ggplot(aes(x = date, y = cop_per_usd)) +
+  geom_line(color = "#2c5f8a", linewidth = 0.7) +
+  geom_smooth(method = "loess", span = 0.3, se = FALSE,
+              color = "#e8541c", linewidth = 0.5, linetype = "dashed") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(
+    title    = "COP/USD Exchange Rate — 3-Year History",
+    subtitle = "Higher = more COP per USD = weaker peso",
+    x = NULL, y = "COP per 1 USD",
+    caption = "Source: Yahoo Finance (COP=X)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"), panel.grid.minor = element_blank())
+```
+
+```{r cop-risk-table}
+tibble::tibble(
+  Metric  = c("Current COP/USD rate", "YTD change (%)", "1-year change (%)",
+              "5-year change (%)", "Annualized volatility (%)", "Max COP depreciation (from peak)"),
+  Value   = c(
+    round(risk_metrics$current_rate, 0),
+    paste0(round(risk_metrics$ytd_change_pct, 1), "%"),
+    paste0(round(risk_metrics$one_year_change_pct, 1), "%"),
+    paste0(round(risk_metrics$five_year_change_pct, 1), "%"),
+    paste0(risk_metrics$annualized_vol_pct, "%"),
+    paste0(round(risk_metrics$max_cop_depreciation_pct, 1), "%")
+  )
+) |>
+  gt::gt() |>
+  gt::tab_header(title = "COP/USD Risk Metrics") |>
+  gt::cols_label(Metric = "Metric", Value = "Value")
+```
+
+---
+
+## 2. Colombia Macro Fundamentals
+
+```{r colombia-macro}
+macro_data <- fetch_colombia_macro(start_year = 2015, end_year = as.integer(format(today, "%Y")))
+
+colombia_inflation <- macro_data |>
+  dplyr::filter(grepl("CPI|Inflation", indicator_name)) |>
+  dplyr::slice_max(date, n = 1) |>
+  dplyr::pull(value)
+
+if (length(colombia_inflation) == 0) colombia_inflation <- 5.5
+```
+
+```{r macro-chart, fig.width=10, fig.height=5}
+macro_data |>
+  dplyr::filter(
+    indicator_name %in% c("GDP Growth (Annual %)", "CPI Inflation (Annual %)",
+                           "Unemployment Rate (%)")
+  ) |>
+  ggplot(aes(x = date, y = value, color = indicator_name)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  facet_wrap(~ indicator_name, scales = "free_y", ncol = 1) +
+  scale_color_manual(values = c(
+    "GDP Growth (Annual %)"       = "#2c5f8a",
+    "CPI Inflation (Annual %)"    = "#e8541c",
+    "Unemployment Rate (%)"       = "#4a9e7a"
+  )) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  labs(
+    title   = "Colombia: Key Macro Indicators",
+    x = NULL, y = "Percent", color = NULL,
+    caption = "Source: World Bank WDI"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(face = "bold")
+  )
+```
+
+**Latest Colombia CPI:** `r round(colombia_inflation, 1)`% (annual). This is the key deflator for calculating real yields on COP investments.
+
+---
+
+## 3. Investment Vehicle Universe
+
+```{r investment-universe}
+universe <- get_colombia_investment_universe()
+```
+
+Colombia offers a range of COP-denominated instruments suitable for conservative to moderate investors:
+
+| Type | Instruments | Yield Range | Risk |
+|---|---|---|---|
+| **Savings accounts** | BBVA / Bancolombia | 3.8–4.0% | Minimal (Fogafin insured) |
+| **CDTs (term deposits)** | 90–360 days | 9.5–10.5% | Minimal (Fogafin insured) |
+| **TES (government bonds)** | 1Y / 5Y / 10Y / 30Y | 10.5–12.0% | Low (sovereign) |
+| **Corporate bonds** | Ecopetrol, Bancolombia | 12.5–13.0% | Moderate |
+| **COLCAP equities** | Index / Ecopetrol | 2.5–5.0% div | High |
+
+**CDT note:** *Certificado de Depósito a Término* is the Colombian equivalent of a certificate of deposit (CD). Fogafin insurance protects up to 50 million COP per depositor per institution — comparable to FDIC in the U.S.
+
+**TES note:** Colombian government peso-denominated bonds traded on the BVC (Bolsa de Valores de Colombia). Purchased through a local broker (e.g., Valores Bancolombia, Corficolombiana).
+
+---
+
+## 4. Yield Analysis
+
+```{r screening}
+screen <- screen_colombian_bonds(
+  colombia_inflation_pct = colombia_inflation,
+  usd_risk_free_pct      = 5.3,
+  fx_scenarios           = c(bear = -5, base = 0, bull = 3)
+)
+```
+
+```{r yield-chart, fig.width=10, fig.height=6}
+screen |>
+  dplyr::filter(vehicle_type %in% c("savings", "cdt", "government_bond")) |>
+  tidyr::pivot_longer(
+    cols      = c(nominal_yield_pct, real_yield_cop_pct, fx_adj_base_pct),
+    names_to  = "yield_type",
+    values_to = "yield_pct"
+  ) |>
+  dplyr::mutate(
+    yield_label = dplyr::case_when(
+      yield_type == "nominal_yield_pct"  ~ "Nominal",
+      yield_type == "real_yield_cop_pct" ~ "Real (net of CPI)",
+      yield_type == "fx_adj_base_pct"    ~ "FX-Adjusted (USD, base)"
+    ),
+    vehicle_short = stringr::str_replace_all(
+      vehicle_name,
+      c(" Colombia" = "", " 360 Days" = " 1Y", " 180 Days" = " 6M",
+        " 90 Days" = " 3M", " Account" = "", " Colombia.*" = "")
+    )
+  ) |>
+  ggplot(aes(x = forcats::fct_reorder(vehicle_short, yield_pct, max),
+             y = yield_pct, fill = yield_label)) +
+  geom_col(position = "dodge") +
+  geom_hline(yintercept = 5.3, linetype = "dashed", color = "gray30", linewidth = 0.6) +
+  annotate("text", x = 2, y = 5.8, label = "USD Risk-Free (5.3%)",
+           size = 3, color = "gray30", hjust = 0) +
+  scale_fill_manual(values = c(
+    "Nominal"                  = "#2c5f8a",
+    "Real (net of CPI)"        = "#4a9e7a",
+    "FX-Adjusted (USD, base)"  = "#e8541c"
+  )) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
+  coord_flip() +
+  labs(
+    title    = "COP Investment Vehicle Yields",
+    subtitle = paste0("Colombia CPI: ", round(colombia_inflation, 1),
+                      "% | USD risk-free: 5.3% | COP/USD base scenario: flat"),
+    x = NULL, y = "Annual Yield (%)", fill = NULL,
+    caption = "Bear FX: COP -5%/yr | Base: flat | Bull: COP +3%/yr"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+### FX-Adjusted Yield by Scenario
+
+```{r scenario-table}
+screen |>
+  dplyr::filter(vehicle_type %in% c("savings", "cdt", "government_bond")) |>
+  dplyr::select(
+    `Vehicle` = vehicle_name,
+    `Type` = vehicle_type,
+    `Nominal (%)` = nominal_yield_pct,
+    `Real COP (%)` = real_yield_cop_pct,
+    `Bear FX (%)` = fx_adj_bear_pct,
+    `Base FX (%)` = fx_adj_base_pct,
+    `Bull FX (%)` = fx_adj_bull_pct,
+    `Risk` = risk_level,
+    `Liquidity` = liquidity,
+    `Fogafin` = fogafin_guaranteed
+  ) |>
+  dplyr::mutate(dplyr::across(where(is.numeric), ~ round(., 1))) |>
+  gt::gt() |>
+  gt::tab_header(
+    title    = "COP Investment Vehicle Comparison",
+    subtitle = "FX-adjusted yields assume USD-based investor with COP exposure"
+  ) |>
+  gt::tab_spanner(
+    label   = "FX-Adjusted Real Yield (USD Investor)",
+    columns = c(`Bear FX (%)`, `Base FX (%)`, `Bull FX (%)`)
+  ) |>
+  gt::data_color(
+    columns = `Base FX (%)`,
+    fn = scales::col_numeric(
+      palette = c("#cc3333", "#f5f5f5", "#4a9e7a"),
+      domain  = c(-5, 8)
+    )
+  ) |>
+  gt::fmt_logical(columns = `Fogafin`, true = "✓", false = "–")
+```
+
+---
+
+## 5. Proposed COP Allocation
+
+```{r proposed-allocation}
+total_cop_investable <- 20000000  # 20M COP from bank accounts
+
+proposed <- tibble::tribble(
+  ~vehicle_id,    ~pct,
+  "bbva_savings",  20,
+  "bbva_cdt_360",  30,
+  "bcol_cdt_360",  20,
+  "tes_5y",        20,
+  "tes_10y",       10
+) |>
+  dplyr::left_join(
+    screen |> dplyr::select(vehicle_id, vehicle_name, nominal_yield_pct,
+                             real_yield_cop_pct, fx_adj_base_pct, risk_level),
+    by = "vehicle_id"
+  ) |>
+  dplyr::mutate(
+    cop_amount         = round(total_cop_investable * pct / 100, -4),
+    usd_equivalent     = round(cop_amount / current_cop_usd, 0),
+    annual_income_cop  = round(cop_amount * nominal_yield_pct / 100, 0),
+    annual_income_usd  = round(annual_income_cop / current_cop_usd, 0)
+  )
+
+proposed |>
+  dplyr::select(
+    `Vehicle` = vehicle_name,
+    `Allocation (%)` = pct,
+    `COP Invested` = cop_amount,
+    `USD Equiv.` = usd_equivalent,
+    `Yield (%)` = nominal_yield_pct,
+    `Annual Income (COP)` = annual_income_cop,
+    `Annual Income (USD)` = annual_income_usd,
+    `Risk` = risk_level
+  ) |>
+  dplyr::mutate(
+    `COP Invested`        = scales::comma(`COP Invested`),
+    `USD Equiv.`          = scales::dollar(`USD Equiv.`),
+    `Annual Income (COP)` = scales::comma(`Annual Income (COP)`),
+    `Annual Income (USD)` = scales::dollar(`Annual Income (USD)`)
+  ) |>
+  gt::gt() |>
+  gt::tab_header(
+    title    = "Proposed COP Allocation",
+    subtitle = paste0("Total: ", scales::comma(total_cop_investable),
+                      " COP (~", scales::dollar(round(total_cop_investable / current_cop_usd)),
+                      " USD)")
+  ) |>
+  gt::grand_summary_rows(
+    columns = c(`Annual Income (USD)`),
+    fns     = list(Total = ~ paste0("$", scales::comma(sum(proposed$annual_income_usd)))),
+    fmt     = ~ gt::fmt_passthrough(.)
+  )
+```
+
+**Blended yield:** `r round(weighted.mean(proposed$nominal_yield_pct, proposed$cop_amount), 1)`% nominal | `r round(weighted.mean(proposed$real_yield_cop_pct, proposed$cop_amount, na.rm=TRUE), 1)`% real (net of CPI)
+
+**Estimated annual income:** `r scales::comma(sum(proposed$annual_income_cop))` COP / `r scales::dollar(sum(proposed$annual_income_usd))` USD
+
+---
+
+## 6. 5-Year Income Projection
+
+```{r income-forecast}
+forecast <- generate_colombia_income_forecast(
+  vehicle_ids            = proposed$vehicle_id,
+  cop_amounts            = proposed$cop_amount,
+  years                  = 5,
+  current_cop_usd        = current_cop_usd,
+  colombia_inflation_pct = colombia_inflation,
+  fx_scenarios           = c(bear = -5, base = 0, bull = 3)
+)
+
+annual_totals <- forecast |>
+  dplyr::group_by(scenario, year) |>
+  dplyr::summarise(
+    total_income_cop  = sum(annual_income_cop),
+    total_income_usd  = sum(annual_income_usd),
+    total_balance_cop = sum(balance_end_cop),
+    .groups = "drop"
+  ) |>
+  dplyr::mutate(
+    cumulative_income_usd = ave(total_income_usd, scenario, FUN = cumsum)
+  )
+```
+
+```{r income-chart, fig.width=10, fig.height=5}
+annual_totals |>
+  dplyr::mutate(scenario = stringr::str_to_title(scenario)) |>
+  ggplot(aes(x = year, y = cumulative_income_usd, color = scenario, group = scenario)) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2.5) +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_color_manual(values = c(Bear = "#cc3333", Base = "#2c5f8a", Bull = "#4a9e7a")) +
+  labs(
+    title    = "Cumulative COP Investment Income (USD Equivalent)",
+    subtitle = paste0("Starting: ", scales::comma(total_cop_investable), " COP (~",
+                      scales::dollar(round(total_cop_investable / current_cop_usd)),
+                      " USD) | Reinvested | Blended yield: ",
+                      round(weighted.mean(proposed$nominal_yield_pct, proposed$cop_amount), 1), "%"),
+    x = "Year", y = "Cumulative Income (USD)", color = "FX Scenario",
+    caption = "Bear: COP -5%/yr vs USD | Base: COP flat | Bull: COP +3%/yr vs USD"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(face = "bold"), panel.grid.minor = element_blank())
+```
+
+---
+
+## 7. Risk Assessment
+
+### Currency Risk
+
+The key risk for a USD-based investor holding COP assets is peso depreciation. Historically, the COP has weakened against the USD at an average rate of roughly 3–5%/year over the long run. However, for a Colombian resident with ongoing COP expenses, this risk is substantially reduced — a weaker peso does not hurt COP income streams consumed locally.
+
+**Key insight:** For someone living partly in Colombia (as you expect to with dual citizenship), COP income is consumed in COP. The FX translation to USD is informational, not operational. The real measure of success is whether COP yields exceed Colombian inflation — which they do substantially at current rates.
+
+### What Would Change This Analysis
+
+- **Banrep policy rate cuts** — As the Banco de la República cuts rates, CDT and TES yields will decline. The 10Y TES currently yields ~11.5%; if rates normalize to 7–8%, TES values rise (capital gain for existing holders) but reinvestment rates fall.
+- **Inflation re-acceleration** — If Colombian CPI resurges above 8%, real yields compress. Watch DANE monthly CPI releases.
+- **Sovereign credit downgrade** — A downgrade below BB would pressure TES yields and widen corporate bond spreads. Current rating: Ba2/BB (Moody's/S&P), stable.
+- **Political risk spike** — Policy uncertainty around hydrocarbon sector (Ecopetrol) or fiscal consolidation could drive capital outflows and peso depreciation.
+- **COP depreciation >10%/year** — In this scenario, CDT and savings account real USD returns turn negative in base case. However, TES with longer maturities could offer partial hedge through price appreciation.
+
+### Falsification Triggers
+
+| Trigger | Threshold | Action |
+|---|---|---|
+| Banrep rate cut | Below 7% policy rate | Shorten TES duration; extend CDT lock-in at current rates |
+| Colombia CPI | Rises above 8% | Reduce long TES; shift to short CDTs |
+| Sovereign rating | Downgrade below BB- | Sell TES; move to CDTs only |
+| COP depreciation | >10% in 12 months | Pause new COP investments; reassess allocation split |
+| Fogafin limit | Balance exceeds 50M COP at one bank | Diversify across institutions |
+
+---
+
+## 8. Implementation Notes
+
+### How to Buy CDTs
+
+1. **BBVA Colombia** — Log in to BBVA.com.co or visit branch. Under *Inversiones* → *CDT*. Minimum: 500,000 COP. Rates vary by term; 360-day rates highest.
+2. **Bancolombia** — Log in to bancolombia.com or App. Under *Inversiones* → *CDT*. Minimum: 1,000,000 COP.
+3. Confirm the current offered rate before placing — rates are not fixed daily but negotiated by term.
+4. Ask about **automatic renewal** to avoid rate shopping each maturity.
+
+### How to Buy TES Bonds
+
+1. Open a brokerage account with **Valores Bancolombia** (easiest if you have a Bancolombia account) or **Corficolombiana** or **BTG Pactual Colombia**.
+2. Search for TES in the secondary market on BVC. Minimum transaction: typically 1,000,000 COP face value.
+3. TES trade in the secondary market — price fluctuates inversely with yields. Buying in a high-rate environment (like now) locks in favorable yields.
+4. TES are held in custody at **Deceval** (Colombia's securities depository). The broker handles this automatically.
+
+### Fogafin Insurance
+
+The *Fondo de Garantías de Instituciones Financieras* (Fogafin) insures bank deposits up to **50 million COP per depositor per institution**. With ~30M COP across two banks, you are fully covered. If COP balances grow above 50M at either bank, open a third institution.
+
+---
+
+## Disclaimer
+
+> This is research and analysis only, not personalized financial advice. Consult a qualified financial advisor before making investment decisions. Rates shown are approximate and change frequently; verify current rates with the relevant institution before investing.

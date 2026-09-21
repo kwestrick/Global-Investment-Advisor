@@ -569,7 +569,7 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 | Part | Status |
 |---|---|
 | Part 1: Global Indicators Framework | ✅ Complete (Sep 21, 2026) |
-| Part 2: Colombia Investment System | 🔲 Not started |
+| Part 2: Colombia Investment System | ✅ Complete (Sep 21, 2026) |
 | Part 3: Dual-Currency Monitoring | 🔲 Not started |
 | Part 4: Indicator-Driven Prioritization | 🔲 Not started |
 | Part 5: Data Source Management | ✅ Complete — included in Part 1 (Sep 21, 2026) |
@@ -603,5 +603,53 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 - `bind_indicators()`: combines and deduplicates correctly across sources
 - `load_source_registry()`: 30 rows, 13 columns loaded correctly
 - Current COP/USD rate: ~3,198 COP per USD (Sep 21, 2026)
+
+### Phase 3, Part 2 Deliverables (Complete)
+
+**Completed:** September 21, 2026
+
+**`R/colombia_indicators.R`** — Full Colombia investment module:
+- `get_colombia_investment_universe()` — Reference tibble of 14 COP vehicles: savings accounts (BBVA/Bancolombia), CDTs (90/180/360 days), TES government bonds (1Y/5Y/10Y/30Y), corporate bonds (Ecopetrol, Bancolombia), COLCAP equity, Ecopetrol equity. Includes: vehicle_id, vehicle_name, vehicle_type, institution, nominal_yield_pct, term_days, min_investment_cop, risk_level, liquidity, fogafin_guaranteed, notes.
+- `fetch_cop_exchange_rate()` — Daily COP/USD via Yahoo Finance (COP=X)
+- `fetch_colcap_data()` — Daily COLCAP index via Yahoo Finance (^COLCAP) with daily returns
+- `fetch_colombia_macro()` — Annual Colombia macro from World Bank WDI: GDP growth, CPI, unemployment, current account, government debt, reserves, GDP per capita
+- `calculate_real_yield()` — Fisher equation: (1 + nominal) / (1 + inflation) − 1
+- `calculate_fx_adjusted_yield()` — Real COP yield adjusted for expected COP/USD change; positive = COP appreciation benefits USD investor
+- `calculate_carry_return()` — Carry trade: borrow USD at risk-free rate, invest in COP instrument
+- `assess_currency_risk()` — COP risk metrics: current rate, YTD/1Y/5Y change, annualized volatility, max drawdown, plain-English summary string
+- `screen_colombian_bonds()` — Rank all 14 vehicles by: nominal yield → real yield (net CPI) → FX-adjusted yield (bear/base/bull scenarios) → risk-adjusted yield; flags vehicles beating COP inflation and USD risk-free rate
+- `generate_colombia_income_forecast()` — Projects annual + cumulative COP and USD income over N years per vehicle, per FX scenario, with compounded reinvestment
+- `print_colombia_snapshot()` — Console dashboard: FX rate summary, macro indicators, ranked vehicle table
+
+**`scripts/06_colombia_economic_snapshot.R`** — Dashboard script:
+- Fetches live COP/USD, COLCAP, Colombia WDI macro
+- Translates user's Colombian assets (1.2B COP home, 30M COP bank accounts) to USD at current rate
+- Runs `screen_colombian_bonds()` with live inflation input
+- Saves 3 CSVs: cop rate, macro snapshot, bond screen
+- Generates COP/USD 3-year chart (PNG)
+- Prints full `print_colombia_snapshot()`
+
+**`scripts/07_evaluate_colombia_investments.R`** — Investment evaluation script:
+- Proposes specific 5-vehicle COP allocation of 20M COP: 20% BBVA savings, 30% BBVA CDT 360, 20% Bancolombia CDT 360, 20% TES 5Y, 10% TES 10Y
+- Calculates blended yield and annual income
+- Runs 5-year income forecast under bear/base/bull FX scenarios
+- Generates 2 charts: yield comparison, cumulative income scenarios
+- Prints summary with falsification triggers and implementation notes
+
+**`notebooks/colombia_investment_analysis.qmd`** — Full Quarto notebook:
+- 8 sections: Executive Summary, COP/USD rate (chart + risk table), Colombia macro (chart), Investment universe (table), Yield analysis (chart + scenario table), Proposed allocation (gt table), 5-year projection (chart), Risk assessment with falsification triggers
+- All code dynamic (no hardcoded values); renders to HTML
+- gt-formatted tables with color coding
+- Includes how-to notes for buying CDTs and TES bonds
+- Fogafin insurance explanation
+
+**Validated (live tests, Sep 21, 2026):**
+- `get_colombia_investment_universe()`: 14 vehicles correct
+- `fetch_cop_exchange_rate()`: 65 daily obs; current rate 3,193 COP/USD; COP strengthened 7.3% YTD
+- `assess_currency_risk()`: annualized vol 13.7%, summary string correct
+- `calculate_real_yield()`: 11.5% nominal - 5.5% CPI = 5.69% real (Fisher equation)
+- `calculate_fx_adjusted_yield()`: bear 0.4%, base 5.7%, bull 8.9% for TES 10Y
+- `screen_colombian_bonds()`: 14 vehicles ranked; TES 5Y beats USD risk-free in base case
+- `generate_colombia_income_forecast()`: 5-year COP income projections correct across all 3 scenarios
 
 ---
