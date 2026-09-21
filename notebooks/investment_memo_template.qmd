@@ -1,0 +1,263 @@
+---
+title: "Investment Memo: [Opportunity Name]"
+subtitle: "Global Investment Advisor"
+author: "Kenneth Westrick"
+date: last-modified
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    theme: cosmo
+    code-fold: true
+  pdf:
+    toc: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(tidyquant)
+library(lubridate)
+library(scales)
+library(gt)
+library(patchwork)
+library(PerformanceAnalytics)
+```
+
+# Executive Summary
+
+## Thesis
+
+Briefly state the investment thesis in one to three paragraphs.
+
+Template:
+
+> [Asset, country, sector, ETF, currency, or commodity] may outperform [U.S. benchmark] over [time horizon] because [core reason]. The thesis depends on [main assumptions]. The most important risks are [key risks].
+
+## Recommendation
+
+| Field | Entry |
+|---|---|
+| Opportunity | [Name] |
+| Vehicle | [ETF, ADR, equity, currency, bond, commodity, other] |
+| Benchmark | [U.S. benchmark] |
+| Time horizon | [Tactical / Cyclical / Strategic / Structural] |
+| Conviction | [High / Medium / Low / Watchlist] |
+| Primary catalyst | [Catalyst] |
+| Primary risk | [Risk] |
+
+# Research Question
+
+State the research question clearly.
+
+Examples:
+
+- Is [country ETF] likely to outperform the S&P 500 over the next 12 to 36 months?
+- Are [region] equities undervalued relative to U.S. equities after adjusting for growth, currency, and political risk?
+- Does [commodity or sector] offer asymmetric upside compared with U.S. alternatives?
+
+# Benchmark Comparison
+
+Explain why the selected benchmark is appropriate.
+
+```{r}
+#| label: tickers
+
+tickers <- c(
+  opportunity = "TICKER",
+  benchmark = "SPY"
+)
+
+start_date <- "2015-01-01"
+```
+
+```{r}
+#| label: price-data
+# eval: false
+
+prices <- tq_get(
+  tickers,
+  from = start_date,
+  to = Sys.Date()
+)
+```
+
+```{r}
+#| label: return-calculation
+# eval: false
+
+returns <- prices %>%
+  group_by(symbol) %>%
+  arrange(date) %>%
+  mutate(daily_return = adjusted / lag(adjusted) - 1) %>%
+  ungroup()
+```
+
+# Why This May Outperform the U.S.
+
+Summarize the main reasons this opportunity could outperform.
+
+| Driver | Evidence | Importance |
+|---|---|---|
+| Valuation | [Evidence] | High / Medium / Low |
+| Macro backdrop | [Evidence] | High / Medium / Low |
+| Currency | [Evidence] | High / Medium / Low |
+| Policy | [Evidence] | High / Medium / Low |
+| Capital flows | [Evidence] | High / Medium / Low |
+| Geopolitics | [Evidence] | High / Medium / Low |
+| Catalyst | [Evidence] | High / Medium / Low |
+
+# Valuation
+
+Discuss valuation relative to:
+
+- Own history
+- U.S. benchmark
+- Regional peers
+- Sector peers
+- Expected earnings or cash-flow growth
+
+Suggested metrics:
+
+- P/E
+- Forward P/E
+- P/B
+- EV/EBITDA
+- Dividend yield
+- Earnings yield
+- Free cash-flow yield
+- Real yield for bonds
+
+# Macro Backdrop
+
+Discuss:
+
+- Growth
+- Inflation
+- Central bank policy
+- Fiscal policy
+- Current account
+- Debt sustainability
+- Credit cycle
+- Capital flows
+
+# Currency Considerations
+
+Discuss:
+
+- Local currency versus U.S. dollar returns
+- Real effective exchange-rate valuation
+- Interest-rate differentials
+- Current-account support
+- Inflation differentials
+- Hedging availability and cost
+
+# Geopolitical and Policy Considerations
+
+Discuss:
+
+- Political stability
+- Policy credibility
+- Conflict exposure
+- Sanctions risk
+- Trade exposure
+- Energy security
+- Reform momentum
+- Regulatory risk
+
+# Catalysts
+
+List catalysts that could cause the market to reprice the opportunity.
+
+| Catalyst | Expected Timing | Why It Matters |
+|---|---|---|
+| [Catalyst 1] | [Timing] | [Explanation] |
+| [Catalyst 2] | [Timing] | [Explanation] |
+| [Catalyst 3] | [Timing] | [Explanation] |
+
+# What Could Go Wrong
+
+State the bear case clearly.
+
+| Risk | Mechanism | Monitoring Indicator |
+|---|---|---|
+| [Risk 1] | [How it hurts returns] | [Indicator] |
+| [Risk 2] | [How it hurts returns] | [Indicator] |
+| [Risk 3] | [How it hurts returns] | [Indicator] |
+
+# Scenario Analysis
+
+| Scenario | Description | Expected Outcome | Subjective Probability |
+|---|---|---|---:|
+| Bull | [Thesis works better than expected] | [Return or qualitative outcome] | [%] |
+| Base | [Main thesis plays out] | [Return or qualitative outcome] | [%] |
+| Bear | [Key assumptions fail] | [Return or qualitative outcome] | [%] |
+
+# Falsification Triggers
+
+The thesis should be reviewed or downgraded if:
+
+- [Trigger 1]
+- [Trigger 2]
+- [Trigger 3]
+- [Trigger 4]
+
+# Implementation Notes
+
+Discuss:
+
+- Preferred vehicle
+- Expense ratio
+- Liquidity
+- Bid-ask spread
+- Holdings concentration
+- Currency exposure
+- Tax or withholding considerations
+- Position sizing considerations
+- Alternatives
+
+# Conviction Rating
+
+| Category | Score | Notes |
+|---|---:|---|
+| Valuation | [1-5] | [Notes] |
+| Macro tailwind | [1-5] | [Notes] |
+| Catalyst strength | [1-5] | [Notes] |
+| Risk control | [1-5] | [Notes] |
+| Implementation quality | [1-5] | [Notes] |
+
+```{r}
+#| label: conviction-score
+
+valuation <- NA_real_
+macro_tailwind <- NA_real_
+catalyst_strength <- NA_real_
+risk_control <- NA_real_
+implementation_quality <- NA_real_
+
+weighted_score <- valuation * 0.25 +
+  macro_tailwind * 0.25 +
+  catalyst_strength * 0.20 +
+  risk_control * 0.15 +
+  implementation_quality * 0.15
+
+weighted_score
+```
+
+# Conclusion
+
+State the final view in direct but conditional language.
+
+Recommended structure:
+
+1. Whether the opportunity is attractive relative to the U.S. benchmark.
+2. What must happen for the thesis to work.
+3. The most important risk.
+4. What would change the conclusion.
+
+This is research and analysis only, not personalized financial advice. Consult a qualified financial advisor before making investment decisions.

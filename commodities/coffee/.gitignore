@@ -1,0 +1,30 @@
+# Git Ignore for Global Commodity Platform
+
+# Data and Models
+# We ignore data directories to keep the repository lightweight and secure.
+# Raw and processed data should be regenerated from code.
+data/
+models/*.rds
+models/*.RData
+
+# Credentials and Environment
+# Never push API keys, database passwords, or local paths.
+.Renviron
+.env
+
+# IDE and OS files
+.Rproj.user
+.RStudio
+.DS_Store
+.idea/
+.vscode/
+
+# Package/Dependency management
+# If using renv, decide whether to commit the library or just lockfile.
+# Generally, commit renv.lock but not the renv/library/ directory.
+renv/library/
+renv/python/
+
+# Temporary/Log files
+*.log
+*.tmp

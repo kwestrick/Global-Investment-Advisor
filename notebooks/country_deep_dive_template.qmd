@@ -1,0 +1,429 @@
+---
+title: "Country Investment Memo: [COUNTRY_NAME]"
+subtitle: "[ETF_SYMBOL] — Global Investment Advisor"
+date: today
+author: "Global Investment Advisor"
+format:
+  html:
+    theme: default
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    code-summary: "Show code"
+---
+
+# Investment Thesis
+
+## Executive Summary
+
+**Opportunity:** [Brief thesis statement]
+
+**Vehicle:** [ETF symbol and name]
+
+**Time Horizon:** [3-5 years / other]
+
+**Benchmark:** SPY (U.S. large cap equities)
+
+**Conviction Rating:** [HIGH / ATTRACTIVE, MONITOR / WATCHLIST / WEAK]
+
+**Key Insight:** [What makes this compelling relative to U.S. alternatives?]
+
+---
+
+## Quick Snapshot
+
+```{r setup, include=FALSE}
+# Load required packages and functions
+library(tidyverse)
+library(tidyquant)
+library(PerformanceAnalytics)
+library(scales)
+library(patchwork)
+
+source(here::here("R/00_setup.R"))
+source(here::here("R/indicators.R"))
+source(here::here("R/plotting.R"))
+
+# ETF symbol to analyze
+ticker <- "[ETF_SYMBOL]"
+benchmark <- "SPY"
+analysis_start <- "2015-01-01"
+```
+
+```{r load-data, echo=FALSE, warning=FALSE}
+# Load market data
+prices <- tidyquant::tq_get(
+  c(ticker, benchmark),
+  from = analysis_start,
+  to = Sys.Date(),
+  get = "stock.prices"
+) |>
+  janitor::clean_names() |>
+  dplyr::arrange(symbol, date)
+
+returns <- prices |>
+  dplyr::group_by(symbol) |>
+  dplyr::arrange(date, .by_group = TRUE) |>
+  dplyr::mutate(
+    daily_return = adjusted / dplyr::lag(adjusted) - 1
+  ) |>
+  dplyr::ungroup()
+
+# Calculate cumulative returns
+cum_returns <- returns |>
+  dplyr::group_by(symbol) |>
+  dplyr::arrange(date, .by_group = TRUE) |>
+  dplyr::mutate(
+    cumulative_return = cumprod(1 + tidyr::replace_na(daily_return, 0)) - 1,
+    growth_of_1 = 1 + cumulative_return
+  ) |>
+  dplyr::ungroup()
+
+# Summary statistics
+return_summary <- returns |>
+  dplyr::group_by(symbol) |>
+  dplyr::summarise(
+    observations = sum(!is.na(daily_return)),
+    annualized_return = mean(daily_return, na.rm = TRUE) * 252,
+    annualized_volatility = sd(daily_return, na.rm = TRUE) * sqrt(252),
+    sharpe_proxy = annualized_return / annualized_volatility,
+    best_period = max(daily_return, na.rm = TRUE),
+    worst_period = min(daily_return, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+| Metric | [COUNTRY_NAME] | SPY Benchmark | vs. SPY |
+|--------|---|---|---|
+| **Annualized Return** | `r percent(return_summary[return_summary$symbol == ticker, "annualized_return"][[1]], 0.1)` | `r percent(return_summary[return_summary$symbol == benchmark, "annualized_return"][[1]], 0.1)` | `r percent(return_summary[return_summary$symbol == ticker, "annualized_return"][[1]] - return_summary[return_summary$symbol == benchmark, "annualized_return"][[1]], 0.1)` |
+| **Volatility** | `r percent(return_summary[return_summary$symbol == ticker, "annualized_volatility"][[1]], 0.1)` | `r percent(return_summary[return_summary$symbol == benchmark, "annualized_volatility"][[1]], 0.1)` | `r percent(return_summary[return_summary$symbol == ticker, "annualized_volatility"][[1]] - return_summary[return_summary$symbol == benchmark, "annualized_volatility"][[1]], 0.1)` |
+| **Sharpe Ratio** | `r round(return_summary[return_summary$symbol == ticker, "sharpe_proxy"][[1]], 2)` | `r round(return_summary[return_summary$symbol == benchmark, "sharpe_proxy"][[1]], 2)` | – |
+
+---
+
+# Performance Analysis
+
+## Growth of $1
+
+This chart shows how $1 invested at the start of the analysis period would have grown through time.
+
+```{r growth-plot, echo=FALSE, fig.width=10, fig.height=6}
+plot_growth_of_1(
+  cum_returns,
+  title = paste("Growth of $1:", ticker, "vs.", benchmark),
+  subtitle = paste("Since", analysis_start)
+) +
+  theme_gia()
+```
+
+**Key Observation:** [Describe the performance story. Is [COUNTRY] consistently beating SPY? Is there a pattern—outperformance in certain periods, underperformance in others?]
+
+## Relative Strength
+
+Relative strength measures performance relative to the SPY benchmark. A rising line means [COUNTRY_NAME] is outperforming; a falling line means underperforming.
+
+```{r relative-strength, echo=FALSE, fig.width=10, fig.height=6}
+# Calculate relative strength
+price_wide <- prices |>
+  dplyr::select(date, symbol, adjusted) |>
+  tidyr::pivot_wider(names_from = symbol, values_from = adjusted)
+
+relative_strength <- price_wide |>
+  tidyr::pivot_longer(
+    cols = -date,
+    names_to = "symbol",
+    values_to = "adjusted"
+  ) |>
+  dplyr::left_join(
+    price_wide |>
+      dplyr::select(date, benchmark_adjusted = dplyr::all_of(benchmark)),
+    by = "date"
+  ) |>
+  dplyr::filter(symbol == ticker) |>
+  dplyr::mutate(relative_strength = adjusted / benchmark_adjusted)
+
+ggplot(relative_strength, aes(x = date, y = relative_strength)) +
+  geom_line(linewidth = 0.8, color = "#2C7FB8") +
+  geom_hline(yintercept = 1.0, linetype = "dashed", color = "gray60", linewidth = 0.5) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = paste(ticker, "Relative Strength vs.", benchmark),
+    subtitle = "Above 1.0 = outperforming; below 1.0 = underperforming",
+    x = NULL,
+    y = "Relative Strength"
+  ) +
+  theme_gia()
+```
+
+**Analysis:** [Is the relative trend improving or deteriorating? What does this tell us about forward opportunity?]
+
+## Drawdown Comparison
+
+Understanding maximum drawdowns and recovery patterns is critical for risk assessment.
+
+```{r drawdown-analysis, echo=FALSE, fig.width=10, fig.height=6}
+# Calculate drawdowns
+drawdowns <- returns |>
+  dplyr::group_by(symbol) |>
+  dplyr::arrange(date, .by_group = TRUE) |>
+  dplyr::mutate(
+    wealth_index = cumprod(1 + tidyr::replace_na(daily_return, 0)),
+    prior_peak = cummax(wealth_index),
+    drawdown = wealth_index / prior_peak - 1
+  ) |>
+  dplyr::ungroup()
+
+plot_drawdowns(
+  drawdowns,
+  title = "Drawdown Comparison",
+  subtitle = paste(ticker, "vs.", benchmark)
+) +
+  theme_gia()
+```
+
+| Metric | [COUNTRY_NAME] | SPY | Difference |
+|--------|---|---|---|
+| **Max Drawdown** | `r percent(min(drawdowns[drawdowns$symbol == ticker, "drawdown"][[1]], na.rm = TRUE), 0.1)` | `r percent(min(drawdowns[drawdowns$symbol == benchmark, "drawdown"][[1]], na.rm = TRUE), 0.1)` | `r percent(min(drawdowns[drawdowns$symbol == ticker, "drawdown"][[1]], na.rm = TRUE) - min(drawdowns[drawdowns$symbol == benchmark, "drawdown"][[1]], na.rm = TRUE), 0.1)` |
+
+**Risk Assessment:** [Is [COUNTRY] more or less volatile? Does it recover faster from drawdowns? What does this mean for a U.S. investor?]
+
+---
+
+# Why This May Outperform the U.S.
+
+## 1. Valuation Case
+
+[Discuss valuation relative to U.S. equities. Are multiples cheaper? Is dividend yield higher? What does the earnings yield say?]
+
+**Evidence:**
+- [Key valuation metric 1]
+- [Key valuation metric 2]
+- [Key valuation metric 3]
+
+**Conclusion:** [Is valuation attractive?]
+
+## 2. Macro Tailwinds
+
+[Describe the macroeconomic environment that should favor [COUNTRY_NAME]. Consider growth, inflation, monetary policy, fiscal policy, capital flows.]
+
+### GDP and Growth
+
+[Is real GDP growth accelerating or decelerating? How does it compare to the U.S.?]
+
+### Inflation
+
+[What is the inflation regime? Is it elevated or moderating? How does it compare to U.S. inflation?]
+
+### Monetary Policy
+
+[What is the central bank doing? Are rates rising, falling, or stable? Is this supportive or restrictive?]
+
+### Fiscal Policy
+
+[Is the government spending, consolidating, or in a sustainable position? Are there pro-growth policies in place?]
+
+## 3. Currency Considerations
+
+[Analyze the currency dynamics. Is the local currency weak (cheaper entry) or strong (better carry)?]
+
+**USD vs. [COUNTRY_CURRENCY]:**
+- Last 1 year: [direction, %]
+- Last 3 years: [direction, %]
+- Long-term trend: [description]
+
+**Implication:** [Does FX help or hurt returns for a U.S. investor?]
+
+## 4. Geopolitical Catalysts
+
+[What geopolitical events or policy changes could catalyze outperformance?]
+
+- **Short-term (0–12 months):** [Catalyst 1]
+- **Medium-term (1–3 years):** [Catalyst 2]
+- **Long-term (3+ years):** [Structural shift]
+
+---
+
+# Risks and What Could Go Wrong
+
+## Bull Case Reversals
+
+[What would invalidate this thesis? For each tailwind above, describe the opposite scenario.]
+
+### Valuation Risk
+
+If multiples compress further, or earnings disappoint, valuations could face pressure.
+
+### Macro Risk
+
+[Inflation resurges / Growth stalls / Monetary tightening / Fiscal crisis]
+
+### Currency Risk
+
+If the [COUNTRY_CURRENCY] strengthens sharply, returns in USD terms suffer.
+
+### Geopolitical Risk
+
+[Describe specific geopolitical downside scenarios: policy reversal, trade conflict, political instability, etc.]
+
+## Historical Precedent
+
+[Have similar setups in [COUNTRY_NAME]'s past led to disappointment? What went wrong?]
+
+---
+
+# Falsification Triggers
+
+These are the levels or conditions that would convince you the thesis is wrong and should be exited:
+
+| Trigger | Current Value | Alert Level | Implication |
+|---------|---|---|---|
+| **[Metric 1]** | [Value] | [Alert if < > value] | [Reason this matters] |
+| **[Metric 2]** | [Value] | [Alert if < > value] | [Reason this matters] |
+| **[Metric 3]** | [Value] | [Alert if < > value] | [Reason this matters] |
+| **[Metric 4]** | [Value] | [Alert if < > value] | [Reason this matters] |
+
+---
+
+# Scenario Analysis
+
+## Base Case (60% Probability)
+
+[Describe the most likely scenario over your time horizon.]
+
+**Assumed Returns:** [%]
+**Key Drivers:** [List 3–4 drivers]
+
+## Bull Case (25% Probability)
+
+[Describe the optimistic scenario where catalysts accelerate and valuations re-rate higher.]
+
+**Assumed Returns:** [%]
+**Key Drivers:** [What has to go right?]
+
+## Bear Case (15% Probability)
+
+[Describe the pessimistic scenario where the thesis breaks.]
+
+**Assumed Returns:** [%] or [negative return]
+**Key Drivers:** [What has to go wrong?]
+
+---
+
+# Implementation & Liquidity
+
+## ETF Details
+
+| Attribute | Details |
+|-----------|---------|
+| **ETF Symbol** | [SYMBOL] |
+| **Full Name** | [Full ETF Name] |
+| **Manager** | [Issuer] |
+| **Asset Class** | Equity |
+| **Geographic Focus** | [COUNTRY] |
+| **Expense Ratio** | [%] |
+| **Assets Under Management** | [$B] |
+| **Trading Volume (avg daily)** | [$M or # shares] |
+
+## Liquidity Assessment
+
+[Comment on bid-ask spreads, trading volume, and ease of entry/exit. Is this a liquid, easy-to-trade ETF or subject to wider spreads?]
+
+## Position Sizing Recommendation
+
+[How much of a portfolio should this represent? Is it a core holding, tactical trade, or satellite position?]
+
+---
+
+# Conviction Summary
+
+**Investment Decision:** [HIGH / ATTRACTIVE, MONITOR / WATCHLIST / WEAK]
+
+**Weighted Score Components:**
+- Valuation: [1–5]
+- Macro Tailwind: [1–5]
+- Catalyst Strength: [1–5]
+- Risk Control: [1–5]
+- Implementation Quality: [1–5]
+
+**Conviction Narrative:**
+
+[Synthesize the bull and bear cases into a clear conviction statement. Why does this deserve [rating] conviction? What would need to change for conviction to shift up or down?]
+
+---
+
+# Comparison to Alternatives
+
+How does [COUNTRY_NAME] compare to similar alternatives?
+
+```{r comparison-table, echo=FALSE}
+# Compare to similar developed or emerging market ETFs
+comparison_pairs <- c(ticker, "[ALTERNATIVE_1]", "[ALTERNATIVE_2]")
+
+comparison_data <- tidyquant::tq_get(
+  comparison_pairs,
+  from = analysis_start,
+  to = Sys.Date(),
+  get = "stock.prices"
+) |>
+  janitor::clean_names() |>
+  dplyr::group_by(symbol) |>
+  dplyr::arrange(date, .by_group = TRUE) |>
+  dplyr::mutate(
+    daily_return = adjusted / dplyr::lag(adjusted) - 1
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::group_by(symbol) |>
+  dplyr::summarise(
+    annualized_return = mean(daily_return, na.rm = TRUE) * 252,
+    annualized_volatility = sd(daily_return, na.rm = TRUE) * sqrt(252),
+    sharpe = annualized_return / annualized_volatility,
+    .groups = "drop"
+  ) |>
+  dplyr::arrange(dplyr::desc(sharpe))
+
+comparison_data |>
+  gt::gt() |>
+  gt::fmt_percent(columns = c(annualized_return, annualized_volatility), decimals = 1) |>
+  gt::fmt_number(columns = sharpe, decimals = 2)
+```
+
+---
+
+# Next Steps
+
+## Due Diligence
+
+- [ ] Review top holdings and sector exposures
+- [ ] Analyze earnings growth and valuation relative to history
+- [ ] Assess dividend sustainability
+- [ ] Check for tax-loss harvesting opportunities
+- [ ] Evaluate correlation with existing portfolio
+
+## Monitoring Plan
+
+- **Quarterly review:** Recheck valuation, macro, and catalyst metrics
+- **Monthly check:** Monitor relative strength and drawdowns
+- **Trigger review:** If any falsification trigger hits, evaluate immediately
+
+---
+
+# Disclaimer
+
+This is research and analysis only, not personalized financial advice. Consult a qualified financial advisor before making investment decisions. Past performance does not guarantee future results. International investing involves currency risk, political risk, and liquidity risk. Exchange-traded funds carry their own risks, including tracking error and operational risk.
+
+---
+
+# Appendix: Data and Sources
+
+**Data Sources:**
+- Market prices: Yahoo Finance (via tidyquant)
+- Macro data: [Sources TBD based on selected metrics]
+- ETF details: ETF provider website / Morningstar
+
+**Analysis Date:** `r Sys.Date()`
+
+**R Session Info:**
+```{r session-info, echo=FALSE}
+sessionInfo()
+```
