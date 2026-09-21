@@ -57,18 +57,21 @@ Your personal financial planning system is complete and operational. You have:
 
 ## RECOMMENDED PORTFOLIO ALLOCATION
 
-Deploy your assets across 7 asset classes:
+### Platform: Wealthfront (Primary)
 
-| Asset Class | % | $ Amount | Vehicle |
+All core investing runs through **Wealthfront** at 0.25% annual fee, with automated tax-loss harvesting and rebalancing. No manual ETF selection required — set the risk score and Wealthfront allocates across U.S. equities, international, emerging markets, bonds, REITs, and real assets automatically.
+
+**Recommended Wealthfront risk score: 7.5–8.5** (appropriate given guaranteed income floor and 20–30+ year horizon)
+
+| Account | Platform | Role | Target Balance |
 |---|---|---|---|
-| **U.S. Large Cap Equities** | 20% | $111,599 | SPY or VTSAX |
-| **International Developed** | 15% | $83,699 | VEA |
-| **Emerging Markets** | 15% | $83,699 | VWO or INDA |
-| **Bonds (Core/Ladder)** | 25% | $139,498 | VBTLX or ladder |
-| **Infrastructure (Yield)** | 10% | $55,799 | GRID |
-| **Commodities/Transition** | 5% | $27,900 | COPX or URA |
-| **Cash Reserve** | 10% | $55,799 | HYSA (4%+) |
-| **TOTAL** | **100%** | **$557,994** | — |
+| **Cash Account** | Wealthfront | Emergency fund / HYSA | $100,000 |
+| **Investment Account** | Wealthfront | Core taxable portfolio (auto-managed) | $402,195 |
+| **Bond Ladder** | Existing | Fixed income ballast | $39,384 (hold; roll) |
+| **COP Investments** | BBVA / Bancolombia | Currency hedge; COP income | Target 20% of investable |
+| **TOTAL** | | | **$557,994** |
+
+The Wealthfront Investment Account at risk score 7.5–8.5 delivers the equivalent of the prior 7-ETF target allocation with zero manual management overhead.
 
 ---
 
@@ -77,26 +80,20 @@ Deploy your assets across 7 asset classes:
 ### Phase 1: Initial Deployment (Months 1–3)
 **Goal:** Deploy $209,908 from existing liquid reserves while maintaining emergency fund
 
-1. **Reserve emergency fund:** Keep $100,000 in HYSA
-2. **Deploy $209,908:**
-   - $50,000 → Bond ladder extension
-   - $80,000 → International equities (VEA + VWO)
-   - $79,908 → U.S. equities + infrastructure (SPY + GRID)
+1. **Keep $100,000 in Wealthfront Cash Account** — earns competitive APY automatically
+2. **Transfer $50,000 → Bond ladder extension** (extend at maturity; keep existing position)
+3. **Transfer $159,908 → Wealthfront Investment Account** — single transfer; Wealthfront deploys and manages automatically per risk score
 
-**Timeline:** Spread over 2–3 weeks to manage transaction costs and peace of mind
+**Timeline:** Can be executed in 1–2 transactions over a few days
 
-### Phase 2: Systematic Investment (Months 4+)
-**Goal:** Dollar-cost average $5,200/month into target allocation
+### Phase 2: Automated Monthly Investing (Months 4+)
+**Goal:** Systematic $5,200/month contribution with zero manual overhead
 
-Monthly allocation:
-- **$1,000** → SPY (20% of allocation)
-- **$750** → VEA (15%)
-- **$750** → VWO (15%)
-- **$1,000** → VBTLX (20%)
-- **$500** → GRID (10%)
-- **$200** → COPX or URA (4%)
+- **Set up $5,200/month auto-deposit → Wealthfront Investment Account** (1st of each month)
+- Wealthfront automatically invests, rebalances, and harvests tax losses daily
+- No individual ETF purchases or manual allocation decisions required
 
-**Automation:** Set up automatic transfers on the 1st of each month
+**Automation:** One-time setup; runs indefinitely
 
 ### Phase 3: Maintenance & Review (Ongoing)
 - **Monthly:** Verify investment transfers processed
@@ -204,46 +201,30 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 
 ## KEY DECISION POINTS
 
-### 1. ETF Selection (Decide Now)
+### 1. Wealthfront Risk Score (Decide Now)
 
-Choose your preferred ETF provider:
+Wealthfront uses a 0.5–10 scale to set your equity/bond mix. Your profile supports an above-average score:
 
-**Option A: Vanguard (Recommended for cost & simplicity)**
-- SPY → VTSAX (0.03% ER, no minimum)
-- VEA (0.05% ER)
-- VWO (0.08% ER)
-- VBTLX (0.03% ER, no minimum)
+| Factor | Implication |
+|---|---|
+| Guaranteed income ($7,488/mo) | No sequence-of-returns risk → higher equity tolerance |
+| 20–30+ year horizon | Long recovery window → higher equity tolerance |
+| Estate goal already met ($557k vs $500k target) | Downside cushion → higher equity tolerance |
+| Wheelchair/MS health constraints | Predictable expenses → moderate, not maximum |
 
-**Option B: iShares (Excellent, slightly higher cost)**
-- IVV or VOO (0.03–0.04% ER)
-- IEFA (0.07% ER)
-- IEMG (0.08% ER)
-- AGG (0.03% ER)
+**Recommended: 7.5–8.5** (~80–90% equities, 10–20% bonds/alternatives)
 
-**Action:** Choose one option and open accounts with Vanguard or iShares (or your existing brokerage)
+**Action:** Log into Wealthfront → Investment Account → Settings → adjust risk score.
 
-### 2. Bond Ladder vs. ETF (Decide Now)
+### 2. Bond Ladder (Keep As-Is)
 
-**Bond Ladder (Current strategy)**
-- Pros: Direct control, predictable maturity schedule, FDIC insured if CDs
-- Cons: Manual management, reinvestment risk
-- Best for: If you enjoy active management
+The existing $39,384 bond ladder provides predictable income and stability ballast outside Wealthfront. **Recommendation:** Hold and roll at maturity. Do not redirect to Wealthfront; the ladder serves a different purpose (fixed maturity income, not total-return growth).
 
-**Bond ETF (VBTLX)**
-- Pros: Automatic, diversified, low cost, easy to automate
-- Cons: Price fluctuation, duration risk
-- Best for: Set-and-forget investing
+### 3. Rebalancing
 
-**Recommendation:** Use VBTLX for new contributions ($1,000/month), maintain existing bond ladder
+Wealthfront rebalances automatically — no action needed. The only annual decision is whether to adjust the risk score if circumstances change (income, health, goals).
 
-### 3. Rebalancing Frequency (Decide Now)
-
-Options:
-- **Annual (Recommended):** Review every January
-- **Quarterly:** More active, higher costs
-- **Threshold-based:** Rebalance if drift >5%
-
-**Recommendation:** Annual rebalancing in January; drift-based check in Q4
+**Annual check (January):** Does your risk score still match your situation? If yes, no action needed.
 
 ---
 
@@ -317,11 +298,11 @@ Consider meeting quarterly with a fee-only financial advisor for:
 | Date | Action | Status |
 |---|---|---|
 | **Sep 21, 2026** | Plan creation & validation | ✓ Complete |
-| **Sep 30, 2026** | Decide on ETFs & open accounts | — Pending |
-| **Oct 15, 2026** | Deploy Phase 1 capital | — Pending |
-| **Nov 1, 2026** | Start $5,200/month investments | — Pending |
+| **Sep 30, 2026** | Configure Wealthfront risk score (7.5–8.5); enable tax-loss harvesting | — Pending |
+| **Oct 15, 2026** | Transfer $159,908 → Wealthfront Investment Account | — Pending |
+| **Nov 1, 2026** | Start $5,200/month auto-deposit → Wealthfront | — Pending |
 | **Dec 21, 2026** | Q4 quarterly dashboard review | — Scheduled |
-| **Jan 15, 2027** | Annual rebalancing & full review | — Scheduled |
+| **Jan 15, 2027** | Annual risk score review; no rebalancing needed (Wealthfront handles it) | — Scheduled |
 | **Apr 1, 2027** | Q1 quarterly dashboard | — Scheduled |
 | **Jul 1, 2027** | Q2 quarterly dashboard | — Scheduled |
 | **Oct 1, 2027** | Q3 quarterly dashboard | — Scheduled |

@@ -140,24 +140,41 @@ This allocation balances income generation, growth, and volatility constraints:
 
 ## INVESTMENT VEHICLE RECOMMENDATIONS
 
-### Core Holdings (ETFs & Mutual Funds)
+### Platform Philosophy: Low-Overhead, Automated
 
-**Equities:**
-- **U.S. Large Cap:** SPY (Vanguard VTSAX alternative: VTSAX)
-- **International Developed:** VEA (iShares MSCI EAFE)
-- **Emerging Markets:** VWO (iShares MSCI Emerging Markets) or INDA (iShares MSCI India)
+The plan centers on **Wealthfront** as the primary investment platform, with the existing bond ladder retained as a separate income position. Wealthfront provides:
 
-**Bonds:**
-- **Core Bonds:** VBTLX (Vanguard Total Bond) or SCHZ (Schwab US Aggregate Bond)
-- **Existing Bond Ladder:** Continue; roll as needed
+- **0.25% annual advisory fee** — among the lowest available for a full-service robo-advisor
+- **Automated daily tax-loss harvesting** — captures losses systematically without manual effort
+- **Automatic rebalancing** — no manual intervention needed
+- **Automated investing** — deposits allocated and invested immediately
 
-**Infrastructure & Transition:**
-- **Infrastructure:** GRID (Invesco Global Infrastructure)
-- **Commodities:** COPX (Global X Copper Miners) or URA (Global X Uranium)
+No individual ETF selection or manual rebalancing is required. You set a risk score and deposit; Wealthfront manages the rest.
 
-**Cash:**
-- **High-Yield Savings:** Wealthfront (already have account—currently at $153k)
-- **Backup:** Marcus, Ally, or similar HYSA (4.0–4.5% APY)
+### Accounts
+
+| Account | Platform | Role | Current Balance |
+|---|---|---|---|
+| Individual Cash Account | Wealthfront | Emergency fund / HYSA | $153,492 |
+| Joint Investment Account | Wealthfront | Core taxable portfolio | $151 (seed) |
+| Individual Bond Ladder | Existing | Fixed income / income | $39,384 |
+| IRA accounts (Fidelity) | Fidelity | Tax-advantaged (minimal) | ~$336 |
+
+### Wealthfront Risk Score Guidance
+
+Wealthfront uses a 0.5–10 risk score to determine equity/bond mix. Given:
+- Guaranteed income floor ($7,488/month) removing sequence-of-returns risk
+- Long 20–30+ year horizon
+- Already-met estate goal providing downside cushion
+
+**Recommended risk score: 7.5–8.5** (approximately 80–90% equities, 10–20% bonds/alternatives). Wealthfront will automatically include U.S. stocks, international stocks, emerging markets, bonds, real estate (REITs), and natural resources at this score — matching the target allocation without manual ETF selection.
+
+### Supplemental Positions (Outside Wealthfront)
+
+| Position | Purpose | Vehicle |
+|---|---|---|
+| Existing bond ladder | Income; stability ballast | Hold; roll at maturity |
+| COP cash-generating investments | Currency hedging; COP income | BBVA/Bancolombia CDTs, TES bonds — managed via `scripts/07_evaluate_colombia_investments.R` |
 
 ---
 
@@ -168,22 +185,24 @@ Using the $5,188/month excess cash flow (conservative estimate):
 
 #### Phase 1: Immediate (Months 1–3)
 Deploy existing $309k liquid reserve strategically:
-- **$100k → Cash reserve** (maintain emergency fund)
-- **$50k → Bond ladder** (extend existing position)
-- **$80k → VEA + VWO** (international diversification)
-- **$79k → SPY + GRID** (equities + infrastructure)
+- **$100k → Wealthfront Cash Account** (maintain emergency fund; earns competitive APY automatically)
+- **$50k → Bond ladder extension** (extend existing position at maturity)
+- **$159k → Wealthfront Joint Investment Account** (single transfer; Wealthfront deploys automatically per risk score)
 
-**Month 1 end: Target allocation ~40% deployed**
+**Month 1 end: Core portfolio funded and actively managed**
 
-#### Phase 2: Monthly Dollar-Cost Averaging (Months 4+)
-- **$1,000/month → SPY** (U.S. equities)
-- **$750/month → VEA** (International developed)
-- **$750/month → VWO** (Emerging markets)
-- **$1,000/month → VBTLX** (Bonds, or extend ladder)
-- **$500/month → GRID** (Infrastructure)
-- **$200/month → COPX or URA** (Commodities)
+#### Phase 2: Monthly Automated Investing (Months 4+)
+- **Set up $5,200/month automatic deposit → Wealthfront Joint Investment Account**
+- Wealthfront allocates and invests automatically; no manual ETF purchases needed
+- Tax-loss harvesting runs daily in background
 
 **Total monthly:** $5,200 (within available cash flow)
+
+#### Currency Diversification (Ongoing)
+When USD/COP exposure gap closes to target (≤5% drift from 80/20), redirect a portion of monthly surplus to COP instruments:
+- CDTs at BBVA or Bancolombia (Fogafin-insured, 9.5–10.5% nominal yield)
+- TES government bonds (10–12% nominal) via Colombian brokerage
+- Track and evaluate monthly using `scripts/08_quarterly_dual_currency_review.R`
 
 ---
 
@@ -215,32 +234,31 @@ Deploy existing $309k liquid reserve strategically:
 
 ## ACTION ITEMS: IMMEDIATE (NEXT 30 DAYS)
 
-### 1. Open/Verify Investment Accounts
-- [ ] Verify Wealthfront account status ($153k)
-- [ ] Open Vanguard taxable account if not existing
-- [ ] Confirm existing IRA account limits & contribution room
+### 1. Configure Wealthfront Accounts
+- [ ] Log into Wealthfront; verify Individual Cash Account ($153k) is active
+- [ ] Open or fund **Wealthfront Investment Account** (taxable; individual or joint)
+- [ ] Set risk score to **7.5–8.5** based on guaranteed income floor and long horizon
+- [ ] Enable **tax-loss harvesting** (should be on by default; confirm)
 
-### 2. Initial Deployment ($309,908 Liquid)
-- [ ] Withdraw $100,000 → Cash reserve (HYSA)
-- [ ] Deploy $209,908 → Phased allocation:
-  - $50k → Bond ladder extension
-  - $80k → VTSAX + VEA
-  - $79k → SPY + GRID
+### 2. Initial Deployment ($209,908)
+- [ ] Keep $100,000 in Wealthfront Cash Account (emergency fund; earns APY automatically)
+- [ ] Transfer $50,000 → extend existing bond ladder (maturity schedule permitting)
+- [ ] Transfer $159,908 → Wealthfront Investment Account (single transfer; auto-deployed)
 
-### 3. Set Up Recurring Investments
-- [ ] Schedule $5,200/month automatic transfer from cash
-- [ ] Allocate across ETFs per Phase 2 plan
-- [ ] Configure quarterly rebalancing reminder
+### 3. Set Up Automated Monthly Investing
+- [ ] Configure **$5,200/month automatic deposit** to Wealthfront Investment Account
+- [ ] Set deposit date to 1st of each month
+- [ ] No further manual action needed — Wealthfront invests and rebalances automatically
 
 ### 4. Tax Planning
-- [ ] Review IRA contribution room for 2026 ($7,500 limit, age 50+)
-- [ ] Consider SEP-IRA if self-employed income exists
-- [ ] Plan for tax-loss harvesting in taxable account
+- [ ] Review IRA contribution room for 2026 ($7,500 limit at age 64)
+- [ ] Note: Wealthfront tax-loss harvesting handles day-to-day tax optimization automatically
+- [ ] Consult CPA annually for overall tax strategy (qualified dividends, IRA timing, etc.)
 
 ### 5. Ongoing Monitoring
-- [ ] **Quarterly review:** Track allocation vs. targets
-- [ ] **Annual rebalancing:** Adjust if drift > 5%
-- [ ] **Annual goal check:** Progress toward $500k estate ✓
+- [ ] **Quarterly:** Run `source("scripts/04_quarterly_wealth_dashboard.R")` + `source("scripts/08_quarterly_dual_currency_review.R")`
+- [ ] **Annual:** Review Wealthfront risk score if circumstances change (income, health, goals)
+- [ ] **Annual goal check:** Progress toward $500k estate ✓ (already achieved)
 
 ---
 
