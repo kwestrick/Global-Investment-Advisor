@@ -1,0 +1,418 @@
+---
+title: "Global Investment Dashboard"
+subtitle: "Kenneth Westrick — Personal Finance & Investment Overview"
+date: today
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    toc: false
+    fig-width: 9
+    fig-height: 4.2
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(gt)
+library(scales)
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+accounts <- read_csv("data/processed/2026-09-21_accounts_from_banktivity.csv",
+                     show_col_types = FALSE)
+nw_stmt  <- read_csv("data/processed/2026-09-21_net_worth_statement.csv",
+                     show_col_types = FALSE) |> filter(!is.na(balance))
+alloc    <- read_csv("outputs/tables/2026-09-21_ranked_allocation_recommendation.csv",
+                     show_col_types = FALSE)
+signals  <- read_csv("outputs/tables/2026-09-21_indicator_signal_dashboard.csv",
+                     show_col_types = FALSE)
+spending <- read_csv("data/processed/2026-09-21_spending_by_category.csv",
+                     show_col_types = FALSE)
+
+# ── Constants ─────────────────────────────────────────────────────────────────
+USD_NW         <- 557994
+COMBINED_NW    <- 557994 + 375000 + 9375   # incl. Colombia home + accounts
+MONTHLY_INCOME <- 7488
+MONTHLY_SPEND  <- 8315
+NET_FLOW       <- MONTHLY_INCOME - MONTHLY_SPEND
+ANNUAL_FLOW    <- NET_FLOW * 12
+LIQUID         <- 309908
+
+CLR_NAVY  <- "#1e3a5f"
+CLR_GREEN <- "#4a9e7a"
+CLR_AMBER <- "#c97d25"
+CLR_RED   <- "#c94040"
+CLR_GRAY  <- "#6c757d"
+```
+
+```{=html}
+<style>
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+body { font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+/* ── Navigation cards ────────────────────────────────────────────────────── */
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2.5rem;
+}
+.nav-card {
+  display: block;
+  text-decoration: none;
+  background: #1e3a5f;
+  color: white;
+  border-radius: 8px;
+  padding: 1.6rem 2rem;
+  transition: background 0.15s, transform 0.1s;
+}
+.nav-card:hover {
+  background: #16304f;
+  transform: translateY(-2px);
+  color: white;
+  text-decoration: none;
+}
+.nav-card.green { background: #4a9e7a; }
+.nav-card.green:hover { background: #3d8a6a; }
+.nav-icon  { font-size: 2rem; margin-bottom: 0.5rem; }
+.nav-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.3rem; }
+.nav-desc  { font-size: 0.88rem; opacity: 0.88; line-height: 1.5; }
+
+/* ── KPI cards ───────────────────────────────────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 0.85rem;
+  margin: 0 0 2.5rem;
+}
+.kpi-card {
+  background: #f8f9fa;
+  border-left: 4px solid #1e3a5f;
+  border-radius: 6px;
+  padding: 0.95rem 1.1rem 0.75rem;
+}
+.kpi-value {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #1e3a5f;
+  line-height: 1.1;
+}
+.kpi-label {
+  font-size: 0.68rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.3rem;
+}
+.kpi-sub { font-size: 0.74rem; color: #adb5bd; margin-top: 0.15rem; }
+.kpi-card.green { border-left-color: #4a9e7a; }
+.kpi-card.green .kpi-value { color: #4a9e7a; }
+.kpi-card.amber { border-left-color: #c97d25; }
+.kpi-card.amber .kpi-value { color: #c97d25; }
+.kpi-card.red   { border-left-color: #c94040; }
+.kpi-card.red   .kpi-value { color: #c94040; }
+
+/* ── Section headers ─────────────────────────────────────────────────────── */
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #6c757d;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 0.4rem;
+  margin: 2rem 0 1rem;
+}
+
+/* ── Signal pill ─────────────────────────────────────────────────────────── */
+.signal-attractive { color: #4a9e7a; font-weight: 700; }
+.signal-moderate   { color: #c97d25; font-weight: 700; }
+.signal-neutral    { color: #6c757d; }
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+.footer-note {
+  font-size: 0.78rem;
+  color: #adb5bd;
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+  margin-top: 2.5rem;
+}
+hr { border-color: #dee2e6; margin: 1.75rem 0; }
+</style>
+```
+
+## Navigate
+
+::: nav-grid
+<a class="nav-card" href="snapshot.html">
+<div class="nav-icon">📊</div>
+<div class="nav-title">Financial Snapshot</div>
+<div class="nav-desc">Complete balance sheet, spending breakdown, asset allocation, currency exposure, and 5-year net worth projections.</div>
+</a>
+<a class="nav-card green" href="investment_plan.html">
+<div class="nav-icon">🌐</div>
+<div class="nav-title">Investment Plan</div>
+<div class="nav-desc">Global ETF rankings, Colombia COP vehicles, two-phase allocation roadmap, market signal dashboard, and investment rationale.</div>
+</a>
+:::
+
+---
+
+<div class="section-label">Portfolio at a Glance — September 21, 2026</div>
+
+::: kpi-grid
+<div class="kpi-card">
+<div class="kpi-value">$558K</div>
+<div class="kpi-label">US Net Worth</div>
+<div class="kpi-sub">Assets – Liabilities</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">$942K</div>
+<div class="kpi-label">Combined NW</div>
+<div class="kpi-sub">Includes Colombia assets</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">$310K</div>
+<div class="kpi-label">Liquid Reserve</div>
+<div class="kpi-sub">37+ months of runway</div>
+</div>
+<div class="kpi-card amber">
+<div class="kpi-value">−$827</div>
+<div class="kpi-label">Net Monthly Flow</div>
+<div class="kpi-sub">Income minus spending</div>
+</div>
+<div class="kpi-card red">
+<div class="kpi-value">−17.4pp</div>
+<div class="kpi-label">COP Underweight</div>
+<div class="kpi-sub">80/20 target; 13mo to close</div>
+</div>
+<div class="kpi-card green">
+<div class="kpi-value">5.7%</div>
+<div class="kpi-label">Colombia Real Yield</div>
+<div class="kpi-sub">TES 10Y Fisher-adjusted</div>
+</div>
+:::
+
+---
+
+<div class="section-label">5-Year Net Worth Projection</div>
+
+```{r projection}
+nw0 <- USD_NW
+
+proj <- crossing(
+  tibble(
+    Scenario = c("Conservative (5%)", "Base Case (7.5%)", "Optimistic (9%)"),
+    rate     = c(0.05, 0.075, 0.09),
+    color    = c(CLR_AMBER, CLR_NAVY, CLR_GREEN)
+  ),
+  Year = 0:5
+) |>
+  mutate(
+    nw = if_else(
+      Year == 0, nw0,
+      nw0 * (1 + rate)^Year + ANNUAL_FLOW * ((1 + rate)^Year - 1) / rate
+    )
+  )
+
+proj |>
+  ggplot(aes(x = Year, y = nw, color = color, group = Scenario)) +
+  geom_ribbon(
+    data = proj |>
+      select(Year, Scenario, nw, color) |>
+      pivot_wider(names_from = Scenario, values_from = c(nw, color)) |>
+      rename(lo = `nw_Conservative (5%)`, hi = `nw_Optimistic (9%)`),
+    aes(ymin = lo, ymax = hi, x = Year),
+    inherit.aes = FALSE,
+    fill = CLR_NAVY, alpha = 0.08
+  ) +
+  geom_line(linewidth = 1.3) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 500000, linetype = "dashed",
+             color = CLR_GRAY, linewidth = 0.7) +
+  annotate("text", x = 0.1, y = 515000,
+           label = "$500K estate goal", hjust = 0,
+           size = 3.1, color = CLR_GRAY) +
+  geom_text(
+    data = proj |> filter(Year == 5),
+    aes(label = paste0(gsub(" \\(.*", "", Scenario), "\n",
+                       dollar(nw, accuracy = 1, scale = 1/1000, suffix = "K"))),
+    hjust = -0.07, size = 3.1
+  ) +
+  scale_color_identity() +
+  scale_y_continuous(labels = dollar_format(scale = 1/1000, suffix = "K")) +
+  scale_x_continuous(breaks = 0:5, labels = paste0("Yr ", 0:5),
+                     expand = expansion(mult = c(0.02, 0.28))) +
+  labs(
+    title    = "5-Year Net Worth Projection",
+    subtitle = "Starting $558K  |  –$9,924/year net consumption  |  Shaded band = scenario range",
+    x = NULL, y = "Net Worth"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "none", panel.grid.minor = element_blank())
+```
+
+---
+
+<div class="section-label">Two Most Important Actions Right Now</div>
+
+```{r actions-chart, fig.height=3.2}
+tibble(
+  Action = c(
+    "① Redirect $5,200/mo → COP assets\n   (CDTs + TES bonds, ~13 months)",
+    "② After COP gap closed:\n   Deploy into 7-class global ETF portfolio"
+  ),
+  Phase = c("Phase 1 — Now", "Phase 2 — ~Oct 2027"),
+  Start_mo = c(0, 13),
+  End_mo   = c(13, 30),
+  color    = c(CLR_GREEN, CLR_NAVY)
+) |>
+  ggplot(aes(xmin = Start_mo, xmax = End_mo,
+             ymin = as.numeric(factor(Phase)) - 0.35,
+             ymax = as.numeric(factor(Phase)) + 0.35,
+             fill = color)) +
+  geom_rect(color = "white", linewidth = 0.4) +
+  geom_text(
+    aes(x = (Start_mo + End_mo) / 2,
+        y = as.numeric(factor(Phase)),
+        label = Action),
+    color = "white", size = 3.2, lineheight = 1.3, fontface = "bold"
+  ) +
+  scale_fill_identity() +
+  scale_x_continuous(
+    breaks = c(0, 6, 13, 18, 24, 30),
+    labels = c("Now", "Mo 6", "Mo 13\n(~Oct '27)", "Mo 18", "Mo 24", "Mo 30")
+  ) +
+  scale_y_continuous(
+    breaks = 1:2,
+    labels = c("Phase 2 — Global ETFs", "Phase 1 — COP Rebalancing")
+  ) +
+  labs(title = "Allocation Roadmap", x = "Months from Now", y = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor   = element_blank(),
+        axis.text.y        = element_text(face = "bold"))
+```
+
+---
+
+<div class="section-label">Currency Exposure vs Target</div>
+
+```{r currency, fig.height=3}
+tibble(
+  Scenario = rep(c("Current", "Target"), each = 2),
+  Currency = rep(c("USD", "COP"), 2),
+  Pct      = c(97.4, 2.6, 80.0, 20.0)
+) |>
+  mutate(
+    Scenario = factor(Scenario, levels = c("Current", "Target")),
+    Currency = factor(Currency, levels = c("COP", "USD"))
+  ) |>
+  ggplot(aes(x = Scenario, y = Pct, fill = Currency)) +
+  geom_col(width = 0.38, position = "stack") +
+  geom_text(aes(label = paste0(Pct, "%")),
+            position = position_stack(vjust = 0.5),
+            size = 5, fontface = "bold", color = "white") +
+  geom_segment(
+    data = tibble(x = 1.22, xend = 1.78, y = 97.4, yend = 80),
+    aes(x = x, xend = xend, y = y, yend = yend),
+    inherit.aes = FALSE,
+    arrow = arrow(length = unit(0.2, "cm"), ends = "last"),
+    color = CLR_AMBER, linewidth = 0.8, linetype = "dashed"
+  ) +
+  annotate("text", x = 1.5, y = 92, label = "17.4pp\ngap",
+           size = 3, color = CLR_AMBER, fontface = "bold") +
+  scale_fill_manual(values = c("USD" = CLR_NAVY, "COP" = CLR_GREEN),
+                    name = "Currency") +
+  scale_y_continuous(labels = percent_format(scale = 1)) +
+  labs(title = "Currency Allocation: Current vs Target",
+       x = NULL, y = "Allocation (%)") +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.major.x = element_blank())
+```
+
+---
+
+<div class="section-label">Top Global ETF Opportunities</div>
+
+```{r etf-bar, fig.height=4}
+alloc |>
+  arrange(desc(adjusted_score)) |>
+  head(10) |>
+  mutate(
+    label     = paste0(symbol, " — ", country_or_region),
+    label     = factor(label, levels = rev(label)),
+    bar_color = case_when(
+      grepl("infrastructure|grid|fan", tolower(country_or_region)) ~ CLR_GREEN,
+      grepl("uranium|copper|commodity", tolower(country_or_region)) ~ CLR_AMBER,
+      TRUE ~ CLR_NAVY
+    )
+  ) |>
+  ggplot(aes(x = adjusted_score, y = label, fill = bar_color)) +
+  geom_col(width = 0.65) +
+  geom_text(aes(label = sprintf("%.2f", adjusted_score)),
+            hjust = -0.15, size = 3.3, color = "#333") +
+  scale_fill_identity() +
+  scale_x_continuous(limits = c(0, 5.3),
+                     expand = expansion(mult = c(0, 0))) +
+  labs(
+    title    = "Top 10 ETFs by Conviction Score (Indicator-Adjusted)",
+    subtitle = "Score 0–5  |  Navy = Country/EM  |  Green = Infrastructure  |  Amber = Commodity",
+    x = "Score", y = NULL
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor   = element_blank())
+```
+
+---
+
+<div class="section-label">Market Signals</div>
+
+```{r signals-inline}
+signal_colors <- c(
+  attractive  = "#d4edda", neutral = "#f8f9fa",
+  neutral_usd = "#f8f9fa", moderate = "#fff3cd", caution = "#f8d7da"
+)
+signal_icons <- c(
+  attractive  = "✓", neutral = "–",
+  neutral_usd = "–", moderate = "⚠", caution = "✗"
+)
+
+signals |>
+  mutate(
+    icon   = signal_icons[signal],
+    Signal = paste(icon, str_to_title(signal))
+  ) |>
+  select(Indicator = indicator, `Current Reading` = raw_value,
+         Signal, Implication = implication) |>
+  gt() |>
+  tab_style(
+    style     = cell_fill(color = signal_colors["attractive"]),
+    locations = cells_body(rows = grepl("✓", Signal))
+  ) |>
+  tab_style(
+    style     = cell_fill(color = signal_colors["moderate"]),
+    locations = cells_body(rows = grepl("⚠", Signal))
+  ) |>
+  tab_style(
+    style     = cell_text(weight = "bold"),
+    locations = cells_body(columns = Signal, rows = grepl("✓", Signal))
+  ) |>
+  cols_width(
+    Indicator ~ px(190), `Current Reading` ~ px(155),
+    Signal ~ px(120), Implication ~ px(280)
+  ) |>
+  opt_row_striping(row_striping = FALSE) |>
+  tab_options(table.font.size = 12.5, table.width = pct(100))
+```
+
+<div class="footer-note">
+Data as of September 21, 2026. Prices and yields will change. Refresh quarterly by running
+<code>source("scripts/00_quarterly_refresh.R")</code> and re-rendering all three pages.<br><br>
+<strong>Disclaimer:</strong> This is research and analysis only, not personalized financial advice.
+Consult a qualified financial advisor before making investment decisions.
+</div>
