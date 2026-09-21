@@ -282,11 +282,22 @@ When working in this repository:
 
 ---
 
-## Phase 3 Status: IN PROGRESS (Global Economic Indicators + Colombia Investment System)
+## Phase 3 Status: Complete (Global Economic Indicators + Colombia Investment System)
 
 **Approved on:** September 21, 2026  
-**Parts 1, 2, 3 completed:** September 21, 2026  
+**Completed on:** September 21, 2026  
 **Plan file:** `.posit/assistant/plans/2026-09-21-1337-global-economic-indicators-colombia-investment-system.md`
+
+### Quarterly Workflow
+
+Run `source("scripts/00_quarterly_refresh.R")` at the start of each quarterly review (January, April, July, October). This script:
+1. Sources `scripts/01_collect_market_data.R` — refreshes ETF price data
+2. Sources `scripts/02_screen_global_assets.R` — regenerates conviction scores
+3. Sources `scripts/09_indicator_driven_portfolio_ranking.R` — live allocation recommendation
+4. Renders `reports/monthly_allocation_brief.qmd` — self-contained HTML report
+5. Prints a manual-steps checklist (Banktivity QIF export, Colombia snapshots, allocation decision, git commit)
+
+**Before running:** export latest Banktivity accounts as QIF to `data/raw/`, and confirm `FRED_API_KEY` is set in `.Renviron`.
 
 ### Phase 3 Part 1: Global Indicators Foundation — Complete
 
