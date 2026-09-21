@@ -277,7 +277,7 @@ When working in this repository:
 ## Phase 3 Status: IN PROGRESS (Global Economic Indicators + Colombia Investment System)
 
 **Approved on:** September 21, 2026  
-**Part 1 completed:** September 21, 2026  
+**Parts 1, 2, 3 completed:** September 21, 2026  
 **Plan file:** `.posit/assistant/plans/2026-09-21-1337-global-economic-indicators-colombia-investment-system.md`
 
 ### Phase 3 Part 1: Global Indicators Foundation — Complete
@@ -319,13 +319,16 @@ When working in this repository:
 - `scripts/07_evaluate_colombia_investments.R`
 - `notebooks/colombia_investment_analysis.qmd`
 
-**Part 3: Dual-Currency Portfolio Monitoring**
-- Extend `R/personal_wealth_monitoring.R` with dual-currency functions:
-  - `calculate_dual_currency_net_worth()` — USD + COP consolidated balance sheet
-  - `calculate_currency_exposure()` — Current USD/COP split vs. target
-  - `project_dual_currency_growth()` — Multi-year projection with FX assumptions
-  - `assess_fx_rebalancing_need()` — When to shift USD → COP or vice versa
-- `scripts/08_quarterly_dual_currency_review.R`
+**Part 3: Dual-Currency Portfolio Monitoring — Complete (Sep 21, 2026)**
+- Extended `R/personal_wealth_monitoring.R` with 4 dual-currency functions:
+  - `calculate_dual_currency_net_worth()` — Consolidated USD + COP balance sheet
+  - `calculate_currency_exposure()` — Current USD/COP split vs. target (80/20); drift + action
+  - `project_dual_currency_growth()` — 5-year multi-scenario projection (bear/base/bull FX)
+  - `assess_fx_rebalancing_need()` — Monthly contribution guidance to close exposure gap
+- `scripts/08_quarterly_dual_currency_review.R` — Full quarterly review script
+- `reports/investment_dashboard_2026-09-21.html` — 25KB HTML dashboard (Chart.js, live data)
+
+**Live-tested (Sep 21, 2026):** USD 97.4% / COP 2.6%; overweight by 17.4pp; redirect to COP for ~11 months. 5-year base projection: $359k → $926k investable.
 
 **Part 4: Indicator-Driven Portfolio Prioritization**
 - `scripts/09_indicator_driven_portfolio_ranking.R` — Reweight conviction scores based on macro/climate/political indicators; recommend monthly $5,200 allocation split across USD and COP vehicles
