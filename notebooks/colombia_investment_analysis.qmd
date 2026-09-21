@@ -266,7 +266,7 @@ screen |>
       domain  = c(-5, 8)
     )
   ) |>
-  gt::fmt_logical(columns = `Fogafin`, true = "✓", false = "–")
+  gt::fmt(columns = `Fogafin`, fns = function(x) dplyr::if_else(x, "✓", "–"))
 ```
 
 ---

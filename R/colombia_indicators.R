@@ -235,7 +235,7 @@ fetch_colombia_macro <- function(start_year = 2010,
   raw |>
     janitor::clean_names() |>
     tidyr::pivot_longer(
-      cols      = dplyr::all_of(tolower(gsub("\\.", "_", colombia_indicators))),
+      cols      = dplyr::any_of(tolower(gsub("\\.", "_", colombia_indicators))),
       names_to  = "indicator_code_clean",
       values_to = "value"
     ) |>
