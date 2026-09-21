@@ -338,8 +338,16 @@ When working in this repository:
 
 **Live-tested (Sep 21, 2026):** USD 97.4% / COP 2.6%; overweight by 17.4pp; redirect to COP for ~11 months. 5-year base projection: $359k → $926k investable.
 
-**Part 4: Indicator-Driven Portfolio Prioritization**
-- `scripts/09_indicator_driven_portfolio_ranking.R` — Reweight conviction scores based on macro/climate/political indicators; recommend monthly $5,200 allocation split across USD and COP vehicles
+**Part 4: Indicator-Driven Portfolio Prioritization — Complete (Sep 21, 2026)**
+- `scripts/09_indicator_driven_portfolio_ranking.R` — 8-section live indicator pipeline:
+  - Live FX (COP/USD, DXY) + benchmark ETF prices (Yahoo Finance)
+  - FRED CPI with graceful fallback; 7 indicator signals
+  - Indicator modifiers applied to global ETF conviction scores
+  - COP vehicle ranking by real yield (Fisher) + momentum bonus
+  - Currency allocation decision vs indicator-adjusted 80/20 target
+  - Monthly $ allocation recommendation per vehicle/ETF
+  - Exports to `outputs/tables/`
+- Live results (Sep 21, 2026): US CPI 3.4% (moderate); all momentum signals neutral; Colombia TES 10Y real yield 5.7% (attractive); recommendation: redirect all $5,200/mo to COP for ~13 months (USD 17.4pp overweight)
 
 **Part 5: Data Source Management**
 - `data/external/data_source_registry.csv` — All 30+ sources with API metadata
