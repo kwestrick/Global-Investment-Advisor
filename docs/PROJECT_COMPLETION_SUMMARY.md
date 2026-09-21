@@ -568,10 +568,40 @@ source("scripts/04_quarterly_wealth_dashboard.R")
 
 | Part | Status |
 |---|---|
-| Part 1: Global Indicators Framework | 🔲 Not started |
+| Part 1: Global Indicators Framework | ✅ Complete (Sep 21, 2026) |
 | Part 2: Colombia Investment System | 🔲 Not started |
 | Part 3: Dual-Currency Monitoring | 🔲 Not started |
 | Part 4: Indicator-Driven Prioritization | 🔲 Not started |
-| Part 5: Data Source Management | 🔲 Not started |
+| Part 5: Data Source Management | ✅ Complete — included in Part 1 (Sep 21, 2026) |
+
+### Phase 3, Part 1 Deliverables (Complete)
+
+**Completed:** September 21, 2026
+
+**`data/external/data_source_registry.csv`** — 30 data sources cataloged with metadata: source_id, r_package, api_key_required, api_key_env_var, update_frequency, coverage, cost, loader_function, url, notes. Breakdown: 24 free, 2 free-with-registration, 3 paid, 1 subscription. Frequencies: 15 annual, 7 monthly, 6 daily, 1 quarterly, 1 semi-annual.
+
+**`R/economic_indicators.R`** — Core indicators module:
+- Standard schema: 9-column long format (`date`, `geography`, `indicator_code`, `indicator_name`, `category`, `value`, `unit`, `source`, `frequency`)
+- `FRED_SERIES`: 33 curated FRED series — U.S. macro (GDP, PMI, housing), inflation (CPI, PCE, breakevens), labor (unemployment, payrolls, LFPR), monetary/financial (Fed funds, yield curve, spreads, mortgage rate, USD index), global commodities (WTI, Brent, gold, copper, natural gas)
+- `WDI_INDICATORS`: 16 curated World Bank WDI indicators (growth, inflation, labor, current account, reserves, debt, credit, demographics)
+- `WDI_COUNTRIES`: 27 key geographies (US, CO, BR, IN, CN, DE, JP, GB, FR, KR, MX, ID, ZA, SA, AU, CA, CL, PE, AR, VN, PH, TH, PL, TR, NG, EG, KE)
+- `YAHOO_FX_TICKERS`: 19 EM and DM currency pairs (COP, BRL, INR, MXN, IDR, ZAR, TRY, PHP, VND, JPY, KRW, CNY, EUR, GBP, AUD, CAD, CLP, PEN, ARS)
+- Live loaders: `fetch_fred_indicators()`, `fetch_wdi_indicators()`, `fetch_yahoo_fx()`
+- Stubs (to be implemented in later parts): `fetch_colombia_rates()`, `fetch_vdem_indicators()`, `fetch_wb_climate()`, `fetch_oecd_indicators()`, `fetch_fragile_states()`
+- Utilities: `bind_indicators()`, `validate_indicator_schema()`, `load_source_registry()`, `load_indicator_source()`, `summarize_indicators()`, `report_indicator_coverage()`
+
+**`scripts/05_collect_global_indicators.R`** — Orchestration script:
+- FRED API key check with setup instructions
+- Calls all three live loaders; calls stubs to print pending notes
+- Combines with `bind_indicators()`; runs NA check
+- Saves 5 timestamped output files to `data/processed/`
+- Prints Colombia COP/USD spotlight and full coverage report
+
+**Validated (live tests, Sep 21, 2026):**
+- WDI: schema correct; data returned for all 27 countries and 16 indicators
+- FX: 195 daily observations for COP/USD, BRL/USD, INR/USD over 90 days; schema OK
+- `bind_indicators()`: combines and deduplicates correctly across sources
+- `load_source_registry()`: 30 rows, 13 columns loaded correctly
+- Current COP/USD rate: ~3,198 COP per USD (Sep 21, 2026)
 
 ---

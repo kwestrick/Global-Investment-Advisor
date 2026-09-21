@@ -3,3 +3,10 @@
 .RData
 .Ruserdata
 .posit/assistant
+.DS_Store
+**/.DS_Store
+
+# Personal financial data — never commit raw QIF exports or sensitive account files
+data/raw/*.qif
+data/raw/*.csv
+
