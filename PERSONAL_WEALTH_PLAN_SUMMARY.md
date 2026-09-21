@@ -49,14 +49,14 @@ Your personal financial planning system is complete and operational. You have:
 | Item | Amount | Status |
 |---|---|---|
 | **Monthly Guaranteed Income** | $7,488 | ✓ Secure, inflation-indexed |
-| **Monthly Spending** | ~$2,300 | ✓ 30% of income |
+| **Monthly Spending (actual)** | $8,315 recurring | ⚠ Exceeds monthly income by $827 |
 | **Monthly Surplus** | $5,188 | ✓ Available for investment |
 | **Monthly Healthcare Cost** | **$0** | ✓ Fully covered: VA (primary) + Medicare (secondary) |
 | **Emergency Reserve** | $309,908 | ✓ 135+ months coverage |
 
 ### Projected Monthly Expense Budget
 
-*Based on known spending profile (~$2,300/month total). Transaction-level detail not yet extracted from Banktivity — categories below are estimates; update after exporting transaction history.*
+*Based on transaction-level analysis of Sep 2025–Aug 2026 Banktivity QIF data. Categories from Banktivity's own classification. Excludes transfer transactions and investment account activity.*
 
 | Category | Est. Monthly | Notes |
 |---|---|---|

@@ -179,6 +179,134 @@ import_qif_accounts <- function(qif_file) {
   accounts
 }
 
+# ---- QIF transaction import (Banktivity, YNAB, etc.) ----
+
+import_qif_transactions <- function(qif_file,
+                                    exclude_transfers = TRUE,
+                                    exclude_starting_balance = TRUE) {
+  # Parse transaction-level records from a QIF file.
+  # Returns a tibble with one row per transaction, including account name,
+  # date, amount, payee, memo, category, and cleared status.
+  #
+  # QIF field codes used:
+  #   D = date, T = amount, C = cleared, P = payee, M = memo,
+  #   L = category (or [Transfer Account]), N = check number
+  #   ^ = end of record
+
+  if (!file.exists(qif_file)) {
+    stop("QIF file not found: ", qif_file)
+  }
+
+  lines <- readLines(qif_file, warn = FALSE)
+
+  # Find the !Clear:AutoSwitch boundary (end of account header section)
+  clear_idx <- which(lines == "!Clear:AutoSwitch")[1]
+  if (is.na(clear_idx)) {
+    stop("QIF file missing !Clear:AutoSwitch. Cannot locate transaction section.")
+  }
+
+  # Work only on the body (everything after the header)
+  body <- lines[(clear_idx + 1):length(lines)]
+
+  transactions <- list()
+  current_account <- NA_character_
+  current_tx <- list()
+  in_tx <- FALSE
+
+  for (line in body) {
+
+    # ---- Account header block ----
+    if (line == "!Account") {
+      in_tx <- FALSE
+      current_tx <- list()
+      next
+    }
+
+    # Account name (only meaningful right after !Account marker;
+    # N inside a transaction block is check number — disambiguate by in_tx)
+    if (!in_tx && startsWith(line, "N") && nchar(line) > 1) {
+      current_account <- substr(line, 2, nchar(line))
+      next
+    }
+
+    # !Type: line marks start of transaction block for the current account
+    if (startsWith(line, "!Type:")) {
+      in_tx <- TRUE
+      current_tx <- list()
+      next
+    }
+
+    if (!in_tx) next
+
+    # ---- Transaction fields ----
+    if (line == "^") {
+      # End of transaction record — save if it has a date
+      if (!is.null(current_tx$date)) {
+        current_tx$account <- current_account
+        transactions <- c(transactions, list(current_tx))
+      }
+      current_tx <- list()
+      next
+    }
+
+    if (nchar(line) < 2) next
+
+    key <- substr(line, 1, 1)
+    val <- substr(line, 2, nchar(line))
+
+    switch(key,
+      "D" = { current_tx$date_raw    <- val },
+      "T" = { current_tx$amount_raw  <- val },
+      "C" = { current_tx$cleared     <- val },
+      "P" = { current_tx$payee       <- val },
+      "M" = { current_tx$memo        <- val },
+      "L" = { current_tx$category    <- val },
+      "N" = { current_tx$check_num   <- val }
+    )
+  }
+
+  if (length(transactions) == 0) {
+    warning("No transactions found in QIF file.")
+    return(tibble::tibble())
+  }
+
+  # Coerce list of lists to tibble
+  tx_df <- tibble::tibble(
+    account      = sapply(transactions, \(x) x$account    %||% NA_character_, USE.NAMES = FALSE),
+    date_raw     = sapply(transactions, \(x) x$date_raw   %||% NA_character_, USE.NAMES = FALSE),
+    amount_raw   = sapply(transactions, \(x) x$amount_raw %||% NA_character_, USE.NAMES = FALSE),
+    payee        = sapply(transactions, \(x) x$payee      %||% NA_character_, USE.NAMES = FALSE),
+    memo         = sapply(transactions, \(x) x$memo       %||% NA_character_, USE.NAMES = FALSE),
+    category     = sapply(transactions, \(x) x$category   %||% NA_character_, USE.NAMES = FALSE),
+    cleared      = sapply(transactions, \(x) x$cleared    %||% NA_character_, USE.NAMES = FALSE),
+    check_num    = sapply(transactions, \(x) x$check_num  %||% NA_character_, USE.NAMES = FALSE)
+  ) |>
+    dplyr::mutate(
+      # Parse dates: Banktivity uses M/D/YY
+      date = lubridate::mdy(date_raw),
+      # Parse amounts: remove commas, coerce to numeric
+      amount = as.numeric(gsub(",", "", amount_raw)),
+      # Flag transfers (category wrapped in square brackets)
+      is_transfer = grepl("^\\[", category)
+    ) |>
+    dplyr::select(account, date, amount, payee, memo, category, is_transfer, cleared, check_num)
+
+  # Optionally drop transfer transactions
+  if (exclude_transfers) {
+    tx_df <- dplyr::filter(tx_df, !is_transfer)
+  }
+
+  # Optionally drop starting-balance rows
+  if (exclude_starting_balance) {
+    tx_df <- dplyr::filter(
+      tx_df,
+      !grepl("STARTING BALANCE|BALANCE ADJUSTMENT", payee, ignore.case = TRUE)
+    )
+  }
+
+  dplyr::arrange(tx_df, date, account)
+}
+
 # ---- Reference tables ----
 
 read_reference_table <- function(file_name, sheet = NULL) {

@@ -1,0 +1,28 @@
+account,date,amount,payee,memo,category,is_transfer,cleared,check_num,source
+Citi /AAdvantage Executive World Elite Mastercard,2026-02-19,23913.92,Autolarte Itagui Col,NA,Household,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2026-06-12,10300,American Nails,NA,Fitness-Personal Care,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-10-10,9718.6,WINDSTAR CRUISE RESERV SEATTLE WA,NA,Travel,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-11-29,9406.25,American Airlines,NA,Travel,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2025-11-03,6434,Oceania Cruises,NA,Travel,FALSE,c,NA,credit_card
+Chase checking,2026-07-31,5000,Withdrawal,NA,Miscellaneous Expenses,FALSE,c,NA,bank
+Citi /AAdvantage Executive World Elite Mastercard,2026-03-24,4970.15,Nustep Llc Plymouth MI,NA,Household,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-10-02,3581.36,SP ANKER SOLIX ONTARIO CA,NA,Dining-Restaurants,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2026-02-18,2729.06,Autolarte X9,NA,Gasoline-Fuel,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2026-02-18,2729,Autolarte Itagui Col,NA,Household,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2026-08-25,2502.39,Wompi Sas Medellin Col,NA,Dining-Restaurants,FALSE,c,NA,credit_card
+Chase checking,2026-07-06,2500,Remitly United S PAYMENTS XX4058 ID: XX1988,NA,Travel,FALSE,c,NA,bank
+Chase Marriott Bonvoy,2026-05-20,2095,Pmt*Lake CO Assessment,NA,Miscellaneous Expenses,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2026-05-29,1843.56,Municipio DE Envigado,NA,Miscellaneous Expenses,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2025-10-15,1800,IN *HUNDLEY MECHANICAL,NA,Miscellaneous Expenses,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-09-19,1709.4,WINDSTAR CRUISE RESERV SEATTLE WA,NA,Travel,FALSE,c,NA,credit_card
+Chase Amazon Visa 5154,2026-03-09,1673.45,Amazon Marketplace,NA,Household,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-11-25,1650,Taca International,NA,Dining-Restaurants,FALSE,c,NA,credit_card
+Chase checking,2026-03-12,1500,Remitly,NA,Web-Internet,FALSE,c,NA,bank
+Citi /AAdvantage Executive World Elite Mastercard,2025-12-22,1423.68,Avis,NA,Travel,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-09-22,1277.58,Apple,NA,Electronics,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2026-03-25,1250,Marriott International,NA,Travel,FALSE,c,NA,credit_card
+Hilton Honors AMEX 1009,2026-07-19,1153.42,Max,NA,Dining-Restaurants,FALSE,c,NA,credit_card
+Hilton Honors AMEX 1009,2026-04-29,1074.28,Apple,NA,Electronics,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2026-08-21,1053.9,PriceSmart,NA,Household,FALSE,c,NA,credit_card
+Citi /AAdvantage Executive World Elite Mastercard,2025-12-04,1030,American Nails,NA,Fitness-Personal Care,FALSE,c,NA,credit_card
+Chase Marriott Bonvoy,2025-11-20,1007.65,Best Buy,NA,Electronics,FALSE,c,NA,credit_card

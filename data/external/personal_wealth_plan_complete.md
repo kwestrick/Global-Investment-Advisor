@@ -41,33 +41,83 @@
 
 ## EXPENSE ANALYSIS
 
-### Current Spending
-- **Reported monthly spending:** ~$2,300 (from prior conversation; transaction-level breakdown pending)
-- **Monthly coverage ratio:** $7,488 / $2,300 = 3.25x
-- **Annual expense run rate:** ~$27,600
-- **Excess cash flow:** $5,188/month available for investment
-- **Healthcare cost:** **$0/month** — VA (primary coverage) + Medicare (secondary) = fully covered
+### Actual Spending — Transaction Analysis (Sep 2025–Aug 2026)
 
-### Projected Monthly Expense Budget
+Transaction-level analysis of Banktivity QIF data reveals actual spending significantly higher than the initial estimate.
 
-| Category | Est. Monthly |
-|---|---|
-| Housing & utilities (Hawthorne) | $700 |
-| Food & groceries | $350 |
-| Transportation | $250 |
-| Disability supplies & personal care | $150 |
-| Entertainment & subscriptions | $200 |
-| Colombia-related expenses | $250 |
-| Miscellaneous & buffer | $200 |
-| **Healthcare** | **$0** |
-| **Total** | **~$2,100–$2,300** |
+**Summary:**
+- **Recurring monthly spending (≤$1,000/transaction):** $8,315/month
+- **12-month total (all transactions):** $179,672 (~$14,973/month including large one-time items)
+- **Monthly income:** $7,488
+- **Monthly income vs. recurring spend:** –$827/month deficit on recurring alone
+- **Annual expense run rate (recurring):** ~$99,800
 
-Zero healthcare cost is a structural advantage worth ~$6,000–$18,000/year compared to peers with comparable health profiles. This amount remains fully investable.
+> The initial $2,300/month estimate reflected a theoretical baseline budget; actual lifestyle spending is materially higher due to travel, Colombia-related purchases, dining, and electronics.
+
+### Actual Spending by Category (Monthly Average, Sep 2025–Aug 2026)
+
+Transactions ≤$1,000 each. Source: Banktivity QIF, all credit cards + checking accounts.
+
+| Category | Monthly Avg | 12-Mo Total | % of Spend |
+|---|---|---|---|
+| Household (Costco, PriceSmart, Amazon) | $1,492 | $17,902 | 17.9% |
+| Travel | $1,167 | $14,005 | 14.0% |
+| Dining & Restaurants | $1,016 | $12,188 | 12.2% |
+| Miscellaneous Expenses | $839 | $10,073 | 10.1% |
+| Groceries | $582 | $6,985 | 7.0% |
+| Electronics | $466 | $5,593 | 5.6% |
+| Clothing & Shoes | $395 | $4,736 | 4.7% |
+| Web & Internet (subscriptions) | $395 | $4,734 | 4.7% |
+| Telephone & Cellular | $361 | $4,327 | 4.3% |
+| Utilities | $351 | $4,208 | 4.2% |
+| Medical & Healthcare | $341 | $4,097 | 4.1% |
+| Entertainment | $246 | $2,953 | 3.0% |
+| Insurance | $162 | $1,946 | 2.0% |
+| All Other | $303 | $3,633 | 3.6% |
+| **TOTAL** | **$8,315** | **$99,380** | **100%** |
+
+### Large One-Time Items (>$1,000, Sep 2025–Aug 2026)
+
+These are non-recurring and should not be included in the ongoing monthly budget:
+
+| Date | Amount | Description | Category |
+|---|---|---|---|
+| Feb 2026 | $23,914 | Autolarte Itagui (Colombia auto purchase) | Household |
+| Jun 2026 | $10,300 | American Nails (large purchase — verify) | Personal Care |
+| Oct 2025 | $9,719 | Windstar Cruise | Travel |
+| Nov 2025 | $9,406 | American Airlines (large booking) | Travel |
+| Nov 2025 | $6,434 | Oceania Cruises | Travel |
+| Jul 2026 | $5,000 | Cash Withdrawal | Misc |
+| Mar 2026 | $4,970 | NuStep LLC (medical/rehab equipment) | Household |
+| + 20 more | — | See `data/processed/2026-09-21_large_one_time_items.csv` | — |
+| **Total large items** | **$80,294** | — | — |
+
+### Healthcare Cost Correction
+
+**VA + Medicare:** $0/month for primary and most secondary coverage — structural advantage.
+
+**Colombian private health insurance (Medicina Prepagada):** ~$200–$490/month — paid via credit card for wife and/or user while in Colombia. This was missing from the original estimate.
+
+**Seed.com probiotic supplement:** $50/month.
+
+**Revised healthcare estimate:** ~$250–$540/month total (depending on months in Colombia).
 
 ### Reserve Position
 - **Liquid emergency fund:** $309,908
-- **Months of expenses covered:** 134 months (11+ years)
-- **Assessment:** Massively over-reserved; excess funds should be deployed
+- **Months of recurring expenses covered:** 37 months (3+ years) at $8,315/month
+- **Assessment:** Substantial reserve; sufficient cushion even with income/spending deficit.
+
+### Investment Capacity Reassessment
+
+The original estimate of $5,188/month investable surplus was based on the $2,300 spending estimate. Based on actual transaction data:
+
+| | Original Estimate | Actual (Sep 2025–Aug 2026) |
+|---|---|---|
+| Monthly income | $7,488 | $7,488 |
+| Monthly spending (recurring) | $2,300 | $8,315 |
+| Monthly surplus/deficit | +$5,188 | **–$827** |
+
+The user is currently spending more than income on a recurring basis, drawing down liquid reserves. This is sustainable given $309k in liquid assets, but the net wealth accumulation trajectory depends on investment returns exceeding the monthly drawdown. The $5,188/month auto-deposit plan to Wealthfront should be treated as a **drawdown from liquid reserves** rather than a surplus from income, at least until spending patterns change.
 
 ---
 

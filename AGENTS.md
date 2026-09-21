@@ -379,8 +379,13 @@ When working in this repository:
 - **Investments:** $39,847 (bond ladder core)
 - **Other Assets:** $218,206 (Hawthorne home, Aircraft loan)
 - **Liabilities:** $9,967 (credit cards only—excellent position)
-- **Monthly Spending:** ~$2,300 (30% of income)
-- **Monthly Investment Capacity:** $5,188
+- **Monthly Spending (recurring, actual):** $8,315/month (Sep 2025–Aug 2026 transaction analysis; see `data/processed/2026-09-21_spending_by_category.csv`)
+  - Initial estimate of $2,300/month was significantly understated — actual lifestyle includes heavy travel, dining, Colombia-related purchases
+  - Large one-time items (Colombia car purchase $23,914; cruises $9,719 + $6,434; etc.) add ~$6,700/month on top of recurring
+  - Colombian private health insurance (Medicina Prepagada): ~$250–$490/month (not $0)
+- **Monthly Investment Capacity:** Income ($7,488) – Recurring Spend ($8,315) = **–$827/month deficit**
+  - $5,188/month Wealthfront contributions are funded from liquid reserve drawdown, not income surplus
+  - Liquid reserves ($309k) cover 37+ months at current recurring burn rate
 - **Investment Runway:** 20-30+ years
 
 **Deliverables (Complete Personal Wealth Plan):**
