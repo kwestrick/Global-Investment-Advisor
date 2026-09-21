@@ -276,16 +276,29 @@ build_modifier <- function(category) {
 }
 
 # Load or recompute the global ETF screening scores from script 02 output
-latest_screen <- list.files(
-  "data/processed", pattern = "^global_screening_scores_",
+# Script 02 saves two files: country_opportunity_screen_<date>.csv
+#                            theme_opportunity_screen_<date>.csv
+latest_country <- list.files(
+  "data/processed", pattern = "^country_opportunity_screen_",
   full.names = TRUE
 ) |> sort(decreasing = TRUE) |> head(1)
 
-if (length(latest_screen) > 0) {
-  base_scores <- readr::read_csv(latest_screen, show_col_types = FALSE)
-  cat("  Loaded base scores from:", basename(latest_screen), "\n")
+latest_theme <- list.files(
+  "data/processed", pattern = "^theme_opportunity_screen_",
+  full.names = TRUE
+) |> sort(decreasing = TRUE) |> head(1)
+
+if (length(latest_country) > 0 && length(latest_theme) > 0) {
+  country_screen <- readr::read_csv(latest_country, show_col_types = FALSE) |>
+    dplyr::mutate(screen_type = "country")
+  theme_screen   <- readr::read_csv(latest_theme, show_col_types = FALSE) |>
+    dplyr::rename(country_or_region = dplyr::any_of("theme")) |>
+    dplyr::mutate(screen_type = "theme")
+  base_scores <- dplyr::bind_rows(country_screen, theme_screen)
+  cat("  Loaded", nrow(country_screen), "country scores from:", basename(latest_country), "\n")
+  cat("  Loaded", nrow(theme_screen),   "theme scores from:",   basename(latest_theme), "\n")
 } else {
-  # Fallback: use the country/theme universe with hard-coded base scores
+  # Fallback: use the country/theme universe with neutral base scores
   cat("  No screening file found — using ETF universe with neutral base scores.\n")
   country_u <- create_country_etf_universe() |>
     dplyr::mutate(weighted_score = 3.0, conviction_bucket = "Watchlist or tactical")

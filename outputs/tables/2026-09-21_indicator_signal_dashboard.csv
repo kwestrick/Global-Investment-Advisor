@@ -1,6 +1,6 @@
 indicator,raw_value,signal,implication
-COP/USD 30-day trend,-1.1% COP gain,neutral,COP allocation attractiveness
-COP/USD 90-day trend,8.6% COP gain,neutral,COP trend confirmation
+COP/USD 30-day trend,-1.3% COP gain,neutral,COP allocation attractiveness
+COP/USD 90-day trend,8.4% COP gain,neutral,COP trend confirmation
 US Dollar Index (DXY) 30-day,0.3% USD index change,neutral_usd,USD vs international positioning
 US CPI YoY,3.4%,moderate,Inflation regime: bond/equity/commodity mix
 SPY vs VEA 60-day momentum,SPY 4.1% vs VEA 1.8%,neutral,US vs developed-market relative weight

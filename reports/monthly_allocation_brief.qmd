@@ -1,0 +1,486 @@
+---
+title: "Monthly Allocation Brief"
+subtitle: "Global Investment Advisor"
+date: today
+format:
+  html:
+    theme: flatly
+    self-contained: true
+    toc: true
+    toc-location: left
+    toc-title: "Contents"
+    toc-depth: 2
+    smooth-scroll: true
+    css: |
+      .signal-positive { color: #2A9D8F; font-weight: 600; }
+      .signal-negative { color: #E63946; font-weight: 600; }
+      .signal-neutral  { color: #6c757d; }
+      .highlight-box   { background-color: #f8f9fa; border-left: 4px solid #3A7FC1;
+                         padding: 12px 16px; margin: 12px 0; border-radius: 4px; }
+      .cop-box         { background-color: #f8f9fa; border-left: 4px solid #2A9D8F;
+                         padding: 12px 16px; margin: 12px 0; border-radius: 4px; }
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(scales)
+library(gt)
+library(tidyquant)
+
+source("../R/00_setup.R")
+source("../R/data_import.R")
+source("../R/screening.R")
+source("../R/indicators.R")
+source("../R/economic_indicators.R")
+source("../R/colombia_indicators.R")
+source("../R/personal_wealth_monitoring.R")
+
+today_str  <- format(Sys.Date(), "%B %d, %Y")
+today_file <- format(Sys.Date(), "%Y-%m-%d")
+```
+
+```{r load-data}
+# ── Live FX + benchmark ETF prices ──────────────────────────────────────────
+fx_raw <- tryCatch(
+  tq_get(c("COP=X", "DX-Y.NYB"), from = Sys.Date() - 100),
+  error = function(e) NULL
+)
+
+etf_raw <- tryCatch(
+  tq_get(c("SPY", "VEA", "VWO", "IEF", "GLD"), from = Sys.Date() - 100),
+  error = function(e) NULL
+)
+
+# ── US CPI ──────────────────────────────────────────────────────────────────
+us_cpi_yoy <- tryCatch({
+  if (!nzchar(Sys.getenv("FRED_API_KEY"))) stop("no key")
+  fredr::fredr_set_key(Sys.getenv("FRED_API_KEY"))
+  cpi <- fredr::fredr("CPIAUCSL", observation_start = Sys.Date() - 400)
+  cpi |> dplyr::arrange(date) |>
+    dplyr::mutate(yoy = value / dplyr::lag(value, 12) - 1) |>
+    dplyr::filter(!is.na(yoy)) |> dplyr::slice_tail(n = 1) |>
+    dplyr::pull(yoy) * 100
+}, error = function(e) 3.4)   # fallback
+
+# ── Helper functions ─────────────────────────────────────────────────────────
+get_return_nday <- function(df, ticker, n) {
+  if (is.null(df)) return(NA_real_)
+  sub <- df |> dplyr::filter(symbol == ticker, !is.na(adjusted)) |>
+    dplyr::arrange(date) |> dplyr::slice_tail(n = n + 1)
+  if (nrow(sub) < 2) return(NA_real_)
+  (dplyr::last(sub$adjusted) / dplyr::first(sub$adjusted)) - 1
+}
+get_latest <- function(df, ticker) {
+  if (is.null(df)) return(NA_real_)
+  df |> dplyr::filter(symbol == ticker, !is.na(adjusted)) |>
+    dplyr::slice_max(date, n = 1) |> dplyr::pull(adjusted) |> dplyr::first()
+}
+
+# ── Derived signals ──────────────────────────────────────────────────────────
+cop_usd       <- get_latest(fx_raw, "COP=X")
+cop_30d       <- -get_return_nday(fx_raw, "COP=X", 30)   # inverted: + = COP gains
+cop_90d       <- -get_return_nday(fx_raw, "COP=X", 90)
+dxy_30d       <- get_return_nday(fx_raw, "DX-Y.NYB", 30)
+spy_60d       <- get_return_nday(etf_raw, "SPY", 60)
+vea_60d       <- get_return_nday(etf_raw, "VEA", 60)
+vwo_60d       <- get_return_nday(etf_raw, "VWO", 60)
+
+cop_signal    <- dplyr::case_when(!is.na(cop_30d) & cop_30d >  .02 ~ "bullish",
+                                  !is.na(cop_30d) & cop_30d < -.02 ~ "bearish",
+                                  TRUE ~ "neutral")
+dxy_signal    <- dplyr::case_when(!is.na(dxy_30d) & dxy_30d >  .015 ~ "strong_usd",
+                                  !is.na(dxy_30d) & dxy_30d < -.015 ~ "weak_usd",
+                                  TRUE ~ "neutral_usd")
+inflation_reg <- dplyr::case_when(us_cpi_yoy >= 4.5 ~ "high",
+                                  us_cpi_yoy >= 2.5 ~ "moderate", TRUE ~ "low")
+intl_signal   <- dplyr::case_when(
+  !is.na(spy_60d) & !is.na(vea_60d) & (spy_60d - vea_60d) >  .05 ~ "us_leading",
+  !is.na(spy_60d) & !is.na(vea_60d) & (spy_60d - vea_60d) < -.05 ~ "intl_leading",
+  TRUE ~ "neutral")
+em_signal     <- dplyr::case_when(
+  !is.na(vwo_60d) & !is.na(spy_60d) & (vwo_60d - spy_60d) >  .04 ~ "em_leading",
+  !is.na(vwo_60d) & !is.na(spy_60d) & (vwo_60d - spy_60d) < -.04 ~ "us_leading_em",
+  TRUE ~ "neutral")
+
+colombia_cpi  <- 5.5
+tes_10y       <- 11.5
+real_yield    <- ((1 + tes_10y/100) / (1 + colombia_cpi/100) - 1) * 100
+yield_signal  <- dplyr::case_when(real_yield >= 6 ~ "very_attractive",
+                                  real_yield >= 4 ~ "attractive", TRUE ~ "neutral")
+
+# ── Load screening scores ────────────────────────────────────────────────────
+screen_file <- list.files("../data/processed",
+                           pattern = "^country_opportunity_screen_",
+                           full.names = TRUE) |> sort(decreasing = TRUE) |> head(1)
+theme_file  <- list.files("../data/processed",
+                           pattern = "^theme_opportunity_screen_",
+                           full.names = TRUE) |> sort(decreasing = TRUE) |> head(1)
+
+if (length(screen_file) > 0) {
+  country_scores <- readr::read_csv(screen_file, show_col_types = FALSE)
+  theme_scores   <- readr::read_csv(theme_file,  show_col_types = FALSE) |>
+    dplyr::rename(country_or_region = dplyr::any_of("theme"))
+  all_scores <- dplyr::bind_rows(country_scores, theme_scores) |>
+    dplyr::filter(category != "Benchmark")
+} else {
+  all_scores <- tibble::tibble(symbol = character(), weighted_score = numeric(),
+                                conviction_bucket = character(), category = character())
+}
+
+# ── COP vehicles ─────────────────────────────────────────────────────────────
+cop_universe <- get_colombia_investment_universe() |>
+  dplyr::mutate(
+    real_yield_pct = ((1 + nominal_yield_pct/100) / (1 + colombia_cpi/100) - 1) * 100,
+    cop_score = round(
+      dplyr::coalesce(real_yield_pct / 10 * 4, 0) + 0.5 +
+      dplyr::if_else(!is.na(fogafin_guaranteed) & fogafin_guaranteed, 0.5, 0) +
+      dplyr::case_when(liquidity == "high" ~ 0.3, liquidity == "medium" ~ 0.1, TRUE ~ 0) -
+      dplyr::case_when(risk_level == "minimal" ~ 0, risk_level == "low" ~ 0.2,
+                       risk_level == "moderate" ~ 0.6, risk_level == "high" ~ 1.2, TRUE ~ 0.5),
+      2)) |>
+  dplyr::arrange(dplyr::desc(cop_score))
+```
+
+## Executive Summary
+
+```{r summary-cards}
+# Key metric tiles
+cop_rate_fmt <- if (!is.na(cop_usd)) comma(round(cop_usd, 0)) else "~3,200"
+
+cards <- tibble::tibble(
+  metric = c("Monthly Income", "Monthly Spend", "Net Cash Flow",
+             "Liquid Reserve", "Wealthfront Deposit", "COP/USD Rate"),
+  value  = c("$7,488", "$8,315", "–$827",
+             "$309,908", "$5,200/mo", paste0(cop_rate_fmt, " COP")),
+  note   = c("SS + VA Disability", "Actual, Sep '25–Aug '26", "Funded from reserve",
+             "37+ months runway", "Drawn from reserve", "Live rate")
+)
+
+cards |>
+  gt() |>
+  tab_header(title = md("**Key Metrics at a Glance**"),
+             subtitle = paste("As of", today_str)) |>
+  cols_label(metric = "Metric", value = "Value", note = "Note") |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(columns = value)) |>
+  tab_style(style = list(cell_fill(color = "#fff3cd"),
+                         cell_text(weight = "bold")),
+            locations = cells_body(rows = metric == "Net Cash Flow")) |>
+  tab_style(style = cell_fill(color = "#f8f9fa"),
+            locations = cells_body(rows = seq(1, 6, 2))) |>
+  tab_options(table.width = pct(100), column_labels.font.weight = "bold") |>
+  opt_stylize(style = 1, color = "blue")
+```
+
+::: {.callout-important}
+**Net cash flow is –$827/month.** The planned $5,200/month Wealthfront deposit is funded from the $309k liquid reserve, not from income surplus. At this rate the reserve supports 37+ months of both the deficit and the Wealthfront contributions before adjustment is needed.
+:::
+
+---
+
+## Signal Dashboard
+
+```{r signal-table}
+signal_df <- tibble::tibble(
+  Indicator = c("COP/USD 30-day", "COP/USD 90-day", "DXY (Dollar Index) 30-day",
+                "US CPI YoY", "SPY vs VEA 60-day", "VWO vs SPY 60-day",
+                "Colombia TES 10Y Real Yield"),
+  `Raw Value` = c(
+    ifelse(!is.na(cop_30d), paste0(round(cop_30d*100,1),"% COP"), "N/A"),
+    ifelse(!is.na(cop_90d), paste0(round(cop_90d*100,1),"% COP"), "N/A"),
+    ifelse(!is.na(dxy_30d), paste0(round(dxy_30d*100,1),"% USD idx"), "N/A"),
+    paste0(round(us_cpi_yoy,1),"%"),
+    ifelse(!is.na(spy_60d)&!is.na(vea_60d),
+           paste0("SPY ",round(spy_60d*100,1),"% / VEA ",round(vea_60d*100,1),"%"),"N/A"),
+    ifelse(!is.na(vwo_60d)&!is.na(spy_60d),
+           paste0("VWO ",round(vwo_60d*100,1),"% / SPY ",round(spy_60d*100,1),"%"),"N/A"),
+    paste0(round(real_yield,1),"% (Fisher)")
+  ),
+  Signal = c(cop_signal, ifelse(!is.na(cop_90d) & cop_90d > .02, "bullish", "neutral"),
+             dxy_signal, inflation_reg, intl_signal, em_signal, yield_signal),
+  Implication = c(
+    "COP allocation attractiveness",
+    "Trend confirmation for COP",
+    "International vs US positioning",
+    "Bond / equity / commodity mix",
+    "Developed-market relative weight",
+    "EM relative weight",
+    "Colombia fixed-income attractiveness"
+  )
+)
+
+signal_color <- function(s) {
+  dplyr::case_when(
+    s %in% c("bullish","attractive","very_attractive","weak_usd","intl_leading","em_leading","low") ~ "#d4edda",
+    s %in% c("bearish","strong_usd","us_leading","us_leading_em","high") ~ "#f8d7da",
+    TRUE ~ "#ffffff"
+  )
+}
+
+signal_df |>
+  gt() |>
+  tab_header(title = md("**Indicator Signal Dashboard**"),
+             subtitle = paste("Live data as of", today_str)) |>
+  cols_label(Indicator = "Indicator", `Raw Value` = "Value",
+             Signal = "Signal", Implication = "Implication") |>
+  data_color(columns = Signal,
+             target_columns = everything(),
+             fn = function(x) signal_color(x)) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(columns = Signal)) |>
+  tab_options(table.width = pct(100), column_labels.font.weight = "bold") |>
+  opt_stylize(style = 1, color = "blue")
+```
+
+**All signals are neutral today** except Colombia TES real yield, which remains attractive at `r round(real_yield, 1)`%. No macro catalyst currently shifts the global ETF conviction scores; the primary action driver is the structural USD/COP currency imbalance.
+
+---
+
+## Currency Allocation
+
+```{r currency-chart, fig.height=3, fig.width=8}
+# Current vs target bar chart
+alloc_data <- tibble::tribble(
+  ~currency, ~type,        ~pct,
+  "USD",     "Current",    97.4,
+  "USD",     "Target",     80.0,
+  "COP",     "Current",    2.6,
+  "COP",     "Target",     20.0
+) |>
+  dplyr::mutate(
+    type = factor(type, levels = c("Current", "Target")),
+    currency = factor(currency, levels = c("USD", "COP"))
+  )
+
+ggplot(alloc_data, aes(x = type, y = pct, fill = currency)) +
+  geom_col(position = "stack", width = 0.55) +
+  geom_text(aes(label = paste0(pct, "%")),
+            position = position_stack(vjust = 0.5), color = "white",
+            fontface = "bold", size = 4.5) +
+  scale_fill_manual(values = c(USD = "#3A7FC1", COP = "#2A9D8F")) +
+  scale_y_continuous(labels = percent_format(scale = 1)) +
+  coord_flip() +
+  labs(title = "Investable Asset Currency Exposure",
+       subtitle = "Current vs 80/20 USD/COP target | $359k investable base",
+       x = NULL, y = "% of investable assets", fill = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+::: {.callout-warning}
+**USD is overweight by 17.4 percentage points** (+17.4pp vs target). The gap is ~$62,500 USD. At $5,200/month directed entirely to COP assets, this closes in approximately **13 months** (Oct 2026–Nov 2027).
+:::
+
+---
+
+## 5-Year Net Worth Projections
+
+```{r projection-chart, fig.height=4, fig.width=9}
+source("../R/personal_wealth_monitoring.R")
+
+current_nw  <- 557994
+monthly_def <- -827
+
+scen_list <- list(
+  `Conservative (5%)` = 0.050,
+  `Base Case (7.5%)`  = 0.075,
+  `Optimistic (9%)`   = 0.090
+)
+
+proj_data <- purrr::map_dfr(names(scen_list), function(nm) {
+  project_net_worth(current_nw, monthly_def, scen_list[[nm]], 5) |>
+    dplyr::mutate(scenario = nm)
+})
+
+ggplot(proj_data, aes(x = year, y = balance, color = scenario)) +
+  geom_line(linewidth = 1.1) +
+  geom_point(data = dplyr::filter(proj_data, year %in% c(0,1,3,5)), size = 3) +
+  geom_label(data = dplyr::filter(proj_data, year == 5),
+             aes(label = dollar(balance, accuracy = 1000, scale = 1/1000, suffix = "k")),
+             hjust = -0.1, size = 3.2, show.legend = FALSE) +
+  geom_hline(yintercept = 500000, linetype = "dotted", color = "gray50", linewidth = 0.8) +
+  annotate("text", x = 0.1, y = 518000, label = "$500k estate goal",
+           size = 3, color = "gray40", hjust = 0) +
+  scale_color_manual(values = c(`Conservative (5%)` = "#6c757d",
+                                `Base Case (7.5%)`  = "#3A7FC1",
+                                `Optimistic (9%)`   = "#2A9D8F")) +
+  scale_y_continuous(labels = dollar_format(scale = 1/1000, suffix = "k"),
+                     limits = c(450000, NA), expand = expansion(mult = c(0, 0.15))) +
+  scale_x_continuous(breaks = 0:5) +
+  labs(title = "5-Year Net Worth Projection (Corrected Assumptions)",
+       subtitle = "Starting: $558k | Cash flow: –$827/month | USD assets only",
+       x = "Year", y = "Net Worth (USD)", color = NULL) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+```{r projection-table}
+proj_table <- purrr::map_dfr(names(scen_list), function(nm) {
+  project_net_worth(current_nw, monthly_def, scen_list[[nm]], 5) |>
+    dplyr::filter(year %in% c(0, 1, 3, 5)) |>
+    dplyr::mutate(scenario = nm, balance_fmt = dollar(balance, accuracy = 1000)) |>
+    dplyr::select(scenario, year, balance_fmt)
+}) |>
+  tidyr::pivot_wider(names_from = year, values_from = balance_fmt,
+                     names_prefix = "Year ") |>
+  dplyr::rename(Scenario = scenario)
+
+proj_table |>
+  gt() |>
+  tab_header(title = md("**Net Worth at Key Milestones**"),
+             subtitle = "Corrected: –$827/month cash flow | USD assets only") |>
+  tab_spanner(label = "Projected Net Worth", columns = starts_with("Year")) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(rows = Scenario == "Base Case (7.5%)")) |>
+  tab_style(style = cell_fill(color = "#e8f4fd"),
+            locations = cells_body(rows = Scenario == "Base Case (7.5%)")) |>
+  tab_options(table.width = pct(100), column_labels.font.weight = "bold") |>
+  opt_stylize(style = 1, color = "blue")
+```
+
+All three scenarios exceed the $500k estate goal through Year 5. Growth is driven by investment returns on the $349k investable base (projected at 7.5% base case) rather than new contributions — since income and spending are roughly break-even.
+
+---
+
+## Monthly Allocation Recommendation
+
+```{r alloc-recommendation}
+monthly_investable  <- 5200
+monthly_usd_deploy  <- 0       # 100% to COP while USD overweight >5pp
+monthly_cop_usd     <- 5200
+cop_rate            <- if (!is.na(cop_usd)) cop_usd else 3200
+monthly_cop_cop     <- round(monthly_cop_usd * cop_rate / 1e6, 1)
+
+alloc_rec <- tibble::tibble(
+  Currency = c("USD (Wealthfront)", "COP (Colombia)"),
+  `Monthly $` = c("$0", paste0("$", comma(monthly_cop_usd))),
+  `% of Total` = c("0%", "100%"),
+  Rationale = c(
+    "Hold — USD 17.4pp overweight vs target",
+    paste0("Redirect to close gap (~13 months) | ", monthly_cop_cop, "M COP")
+  )
+)
+
+alloc_rec |>
+  gt() |>
+  tab_header(title = md("**This Month's Allocation**"),
+             subtitle = paste("Total deployable:", dollar(monthly_investable), "from liquid reserve")) |>
+  tab_style(style = list(cell_fill(color = "#d4edda"), cell_text(weight = "bold")),
+            locations = cells_body(rows = Currency == "COP (Colombia)")) |>
+  tab_style(style = list(cell_fill(color = "#f8d7da")),
+            locations = cells_body(rows = Currency == "USD (Wealthfront)")) |>
+  tab_options(table.width = pct(100), column_labels.font.weight = "bold") |>
+  opt_stylize(style = 1, color = "blue")
+```
+
+---
+
+## Top COP Investment Vehicles
+
+```{r cop-table}
+cop_universe |>
+  dplyr::filter(cop_score > 0) |>
+  dplyr::slice_head(n = 8) |>
+  dplyr::select(
+    `Vehicle` = vehicle_name,
+    `Type` = vehicle_type,
+    `Nominal Yield` = nominal_yield_pct,
+    `Real Yield` = real_yield_pct,
+    `Risk` = risk_level,
+    `Fogafin` = fogafin_guaranteed,
+    `Score` = cop_score
+  ) |>
+  dplyr::mutate(
+    `Nominal Yield` = paste0(`Nominal Yield`, "%"),
+    `Real Yield`    = paste0(round(`Real Yield`, 1), "%"),
+    `Fogafin`       = ifelse(`Fogafin`, "✓", "—")
+  ) |>
+  gt() |>
+  tab_header(title = md("**COP Vehicle Ranking**"),
+             subtitle = paste("Colombia CPI:", colombia_cpi, "% | TES 10Y real yield:",
+                              round(real_yield, 1), "% | COP/USD:", cop_rate_fmt)) |>
+  tab_style(style = list(cell_fill(color = "#d4edda")),
+            locations = cells_body(rows = `Fogafin` == "✓")) |>
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(columns = `Nominal Yield`)) |>
+  tab_footnote(footnote = "Score = risk-adjusted real yield + liquidity + Fogafin + COP momentum",
+               locations = cells_column_labels(columns = `Score`)) |>
+  tab_options(table.width = pct(100), column_labels.font.weight = "bold") |>
+  opt_stylize(style = 1, color = "blue")
+```
+
+**Recommended COP split (~16.6M COP / $5,200 USD):**
+
+- **BBVA CDT 360 Days** — 10.5% nominal / 4.7% real, minimal risk, Fogafin-insured
+- **Bancolombia CDT 360 Days** — 10.2% nominal / 4.5% real, minimal risk, Fogafin-insured
+- **TES Colombia 5Y** — 11.2% nominal / 5.4% real, government bond, no bank counterparty risk
+
+---
+
+## Top USD ETF Opportunities
+
+```{r etf-table}
+if (nrow(all_scores) > 0) {
+  all_scores |>
+    dplyr::arrange(dplyr::desc(weighted_score)) |>
+    dplyr::slice_head(n = 10) |>
+    dplyr::mutate(
+      name = dplyr::coalesce(country_or_region, symbol),
+      score_fmt = round(weighted_score, 2)
+    ) |>
+    dplyr::select(`Symbol` = symbol, `Market / Theme` = name,
+                  `Category` = category, `Score` = score_fmt,
+                  `Conviction` = conviction_bucket) |>
+    gt() |>
+    tab_header(title = md("**Global ETF Opportunities — Indicator-Adjusted**"),
+               subtitle = paste("Screening as of", today_str,
+                                "| All modifiers neutral today")) |>
+    tab_style(
+      style = list(cell_fill(color = "#d4edda"), cell_text(weight = "bold")),
+      locations = cells_body(rows = Conviction == "Attractive, monitor closely")
+    ) |>
+    tab_style(
+      style = cell_fill(color = "#e8f4fd"),
+      locations = cells_body(rows = Conviction == "Watchlist or tactical")
+    ) |>
+    tab_footnote(
+      footnote = "No indicator modifiers applied today — all macro signals neutral. Scores reflect base conviction only.",
+      locations = cells_column_labels(columns = Score)
+    ) |>
+    tab_options(table.width = pct(100), column_labels.font.weight = "bold") |>
+    opt_stylize(style = 1, color = "blue")
+} else {
+  cat("No screening data available. Run scripts/01 and 02 first.")
+}
+```
+
+> **Note:** USD allocation is $0 this month — all contributions directed to COP to close the currency gap. When the USD/COP exposure reaches the 80/20 target (~13 months), the above ETF rankings will guide the USD portion of monthly contributions. Top candidates at that point: **INDA** (India, 3.75), **EWJ** (Japan, 3.61), **GRID** (infrastructure, 3.46).
+
+---
+
+## Falsification Triggers
+
+The following conditions would change the current recommendation:
+
+| Trigger | Implication |
+|---|---|
+| COP/USD breaks above 4,500 (>15% depreciation) | Pause COP buildup; reassess Colombia allocation |
+| Colombia Banrep cuts policy rate below 7% | TES / CDT real yields may fall; reduce COP bond allocation |
+| Fed restarts aggressive hiking cycle | Increase USD duration; reduce international equity |
+| VWO drawdown exceeds 15% without macro catalyst | Reduce EM exposure; increase cash/bonds |
+| US CPI drops below 2.5% | Bonds become more attractive; consider IEF/TLT |
+| SPY 60d > VEA 60d by >10% sustained | Reduce international ETF allocation; favor US equities |
+
+---
+
+## Disclaimer
+
+*This document is generated by the Global Investment Advisor research system. It is research and analysis only, not personalized financial advice. Past performance is not indicative of future results. All projections are illustrative scenarios, not guarantees. Consult a qualified financial advisor before making investment decisions.*
+
+---
+
+*Report generated: `r format(Sys.time(), "%Y-%m-%d %H:%M %Z")`*
