@@ -1,0 +1,16 @@
+step,rate,table
+Gross CDT yield (nominal COP),0.105,waterfall
+Less: Colombian withholding,-0.007350000000000001,waterfall
+Less: U.S. income tax at 22% (net of foreign tax credit),-0.01575,waterfall
+After-tax nominal yield (COP),0.0819,waterfall
+Less: COP inflation adjustment (Fisher),-0.05931020793950839,waterfall
+Real COP yield after all taxes,0.02258979206049161,waterfall
+---,NA,waterfall
+USD T-bill (gross),0.048,waterfall
+USD T-bill after 22% U.S. tax,0.03744,waterfall
+USD T-bill real yield (after tax + US CPI),0.003326885880077235,waterfall
+5%,-0.005540000000000003,carry_vs_tbill
+8%,-0.03554,carry_vs_tbill
+10%,-0.055540000000000006,carry_vs_tbill
+12%,-0.07554,carry_vs_tbill
+15%,-0.10554,carry_vs_tbill

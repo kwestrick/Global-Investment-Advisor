@@ -5,7 +5,7 @@ date: today
 format:
   html:
     theme: flatly
-    self-contained: true
+    embed-resources: true
     toc: true
     toc-location: left
     toc-title: "Contents"
@@ -31,13 +31,13 @@ library(scales)
 library(gt)
 library(tidyquant)
 
-source("../R/00_setup.R")
-source("../R/data_import.R")
-source("../R/screening.R")
-source("../R/indicators.R")
-source("../R/economic_indicators.R")
-source("../R/colombia_indicators.R")
-source("../R/personal_wealth_monitoring.R")
+source("R/00_setup.R")
+source("R/data_import.R")
+source("R/screening.R")
+source("R/indicators.R")
+source("R/economic_indicators.R")
+source("R/colombia_indicators.R")
+source("R/personal_wealth_monitoring.R")
 
 today_str  <- format(Sys.Date(), "%B %d, %Y")
 today_file <- format(Sys.Date(), "%Y-%m-%d")
@@ -113,10 +113,10 @@ yield_signal  <- dplyr::case_when(real_yield >= 6 ~ "very_attractive",
                                   real_yield >= 4 ~ "attractive", TRUE ~ "neutral")
 
 # ── Load screening scores ────────────────────────────────────────────────────
-screen_file <- list.files("../data/processed",
+screen_file <- list.files("data/processed",
                            pattern = "^country_opportunity_screen_",
                            full.names = TRUE) |> sort(decreasing = TRUE) |> head(1)
-theme_file  <- list.files("../data/processed",
+theme_file  <- list.files("data/processed",
                            pattern = "^theme_opportunity_screen_",
                            full.names = TRUE) |> sort(decreasing = TRUE) |> head(1)
 
@@ -280,7 +280,7 @@ ggplot(alloc_data, aes(x = type, y = pct, fill = currency)) +
 ## 5-Year Net Worth Projections
 
 ```{r projection-chart, fig.height=4, fig.width=9}
-source("../R/personal_wealth_monitoring.R")
+source("R/personal_wealth_monitoring.R")
 
 current_nw  <- 557994
 monthly_def <- -827

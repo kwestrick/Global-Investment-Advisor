@@ -310,7 +310,7 @@ Run `source("scripts/00_quarterly_refresh.R")` at the start of each quarterly re
 
 ### User Context Added
 
-- **Colombian Assets:** Home in Colombia (~1.2 billion COP), two bank accounts (BBVA + Bancolombia, combined ~30 million COP)
+- **Colombian Assets:** Home in Colombia (~1.2 billion COP), two bank accounts (BBVA + Bancolombia, combined ~30 million COP). **The Colombia home is a legacy asset designated for son Anton — it is not expected to be sold and should not be treated as investable or deployable capital in any financial model.** Its USD-equivalent value is tracked for net worth reporting and FX sensitivity monitoring only.
 - **Dual Citizenship:** Wife Anna is a Colombian citizen; user is pursuing dual U.S.–Colombian citizenship
 - **Goal:** Hedge USD/COP currency risk by building cash-generating COP-denominated investments; integrate comprehensive global economic, societal, and climate indicators to drive portfolio prioritization
 
@@ -383,6 +383,85 @@ Run `source("scripts/00_quarterly_refresh.R")` at the start of each quarterly re
 | `scripts/07_evaluate_colombia_investments.R` | Rank COP vehicles by real yield and currency-adjusted return |
 | `scripts/08_quarterly_dual_currency_review.R` | Full USD + COP quarterly review dashboard |
 | `scripts/09_indicator_driven_portfolio_ranking.R` | Dynamic conviction reweighting based on live indicators |
+
+---
+
+## Analytical Findings — Sep 21, 2026 (Post-Model Council Review)
+
+Three key analytical findings were derived after the Model Council review of `investment_plan_full.md`. These findings supersede earlier Phase 1 assumptions and are reflected in the updated `reports/investment_plan_full.md` and `scripts/10_rebuild_investment_plan_tables.R`.
+
+### 1. COP Reserve Sizing: Spending-Based, Not Percentage-Based
+
+The prior 80/20 USD/COP target (implying ~$62K in COP assets) is replaced by a spending-needs approach. Based on 85 Colombia-linked transactions over 12 months:
+
+**Monthly COP-linked spending by scenario:**
+
+| Scenario | Monthly (USD) | 18-Month Reserve | Institutions Needed |
+|---|---:|---:|---:|
+| Low (1–2 trips/year) | $839 | $15,106 | 1 |
+| Base (~1 month/quarter) | $1,089 | **$19,603** | 2 |
+| High (6 months/year) | $1,339 | $24,099 | 2–3 |
+
+**Fixed monthly costs (regardless of physical presence): ~$231/month**
+- Medicina Prepagada: ~$200–300/month
+- Prosegur (building security): ~$50/month
+- UNE Telco (internet): ~$60/month
+- Avianca LifeMiles subscription: $12/month
+
+**Fogafín cap:** COP 50M per institution ≈ **$15,625 USD**. The 18-month base reserve (62.7M COP) requires 2 institutions. Do not concentrate more than COP 50M at any single bank.
+
+**Key implication:** The COP reserve is approximately $15,000–$25,000 USD — far smaller than the previous $62K target. Phase 1 timeline shortens from ~13 months to ~3–5 months at $5,200/month.
+
+**Script:** `scripts/10_rebuild_investment_plan_tables.R` calculates this live with current COP/USD.
+
+### 2. CDT Reframing: Liability Hedge, Not Yield Play
+
+After Colombian withholding, U.S. income tax (§988 ordinary income treatment), and even mild COP depreciation, the CDT carry advantage disappears in USD terms:
+
+| Step | Rate |
+|---|---:|
+| Gross CDT yield (nominal COP) | 10.50% |
+| Less: Colombian withholding (7%) | –0.74% |
+| Less: U.S. income tax at 22% (net of FTC) | –1.58% |
+| After-tax nominal yield (COP) | 8.19% |
+| Less: COP inflation (Fisher) | –5.93% |
+| **Real COP yield after all taxes** | **2.26%** |
+
+**vs. USD T-bill at 4.8% after 22% U.S. tax = 3.74%**
+
+| COP Depreciation | CDT After-Tax (USD) | T-Bill After-Tax | Carry Advantage |
+|---|---:|---:|---:|
+| 5% (mild) | 3.19% | 3.74% | **–0.55%** |
+| 8% (moderate) | 0.19% | 3.74% | **–3.55%** |
+| 10% (severe) | –1.81% | 3.74% | **–5.55%** |
+
+**Correct frame:** CDTs fund COP obligations without USD conversion. The value is spending-coverage certainty, not excess yield. Size by spending need, not by yield opportunity.
+
+**§988 note:** FX gains/losses on Colombian CDTs are ordinary income/loss for U.S. tax purposes, not capital gains. Verify the applicable withholding rate (7% is the resident rate; non-resident rates may be higher).
+
+### 3. Wealthfront Platform Decision
+
+**Account status (Sep 21, 2026):**
+- Wealthfront Individual Cash Account: **$153,492** → Keep as USD liquidity reserve
+- Wealthfront Joint Automated Investing Account: **$151** → Effectively unused
+
+**Decision:** Redirect all investment contributions to a self-directed brokerage (Fidelity or Schwab). Wealthfront's robo-advisor cannot implement specific sleeve targets and would conflict with manual ETF allocation.
+
+| Account | Purpose | Action |
+|---|---|---|
+| Wealthfront Cash ($153K) | USD liquidity reserve | Keep, no change |
+| Fidelity or Schwab (new) | Strategic ETF portfolio (4 sleeves) | Open; redirect $5,200/month here |
+| BBVA / Bancolombia | COP spending reserve (CDTs) | Fund slowly after tax gate cleared |
+
+### 4. Balance Sheet Stress Scenarios (COP/USD)
+
+| Scenario | COP/USD | Colombia Home (USD) | USD NW | Combined NW | vs. Estate Goal |
+|---|---:|---:|---:|---:|---:|
+| Base | 3,200 | $375,000 | $557,994 | $942,369 | +$442,369 |
+| Stress 1 | 3,600 | $333,333 | $557,994 | $899,661 | +$399,661 |
+| Stress 2 | 4,500 | $266,667 | $557,994 | $831,327 | +$331,327 |
+
+**Key finding:** USD net worth ($557,994) already exceeds the $500K estate goal by $57,994 without any COP assets. The estate goal is not at risk from COP depreciation at any plausible exchange rate. However, the Colombia home's USD value declines by ~$108K under the 4,500 scenario — a meaningful wealth effect to monitor annually.
 
 ---
 

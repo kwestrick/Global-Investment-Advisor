@@ -1,0 +1,11 @@
+item,amount,notes,amount_fmt
+Starting USD cash reserve,309908,Banktivity export; update quarterly,"$309,908"
+Less: USD hard liquidity floor,-100000,Non-investable; always maintained,"-$100,000"
+Less: Early-warning buffer,-50000,Stop contributions below $150K,"-$50,000"
+COP spending reserve (18-mo base),-14220,Fund slowly after tax gate cleared,"-$14,220"
+Strategic USD investable capital,195688,Remaining for ETF portfolio build,"$195,688"
+---,NA,,---
+Monthly income,7488,SS + VA Disability (guaranteed),"$7,488"
+Monthly recurring spend,-8315,"12-month average, Sep 2025–Aug 2026","-$8,315"
+Net monthly flow (before contributions),-827,Deficit; funded by reserve,-$827
+Monthly investment contribution,-5200,Funded by reserve drawdown,"-$5,200"

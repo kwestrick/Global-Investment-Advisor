@@ -1,0 +1,13 @@
+scenario,months_in_colombia,note,fixed_usd,property_usd,variable_usd,flights_usd,total_monthly_usd,coverage_months,reserve_usd,reserve_cop_millions,fogafin_cap_usd,institutions_needed
+Base presence,4,~1 month per quarter,231,209,200,150,790,12,9480,30.336,15625,1
+Base presence,4,~1 month per quarter,231,209,200,150,790,18,14220,45.504,15625,1
+Base presence,4,~1 month per quarter,231,209,200,150,790,24,18960,60.672,15625,2
+Base presence,4,~1 month per quarter,231,209,200,150,790,36,28440,91.008,15625,2
+High presence,6,Semi-resident (6 months/year),231,209,300,150,890,12,10680,34.176,15625,1
+High presence,6,Semi-resident (6 months/year),231,209,300,150,890,18,16020,51.264,15625,2
+High presence,6,Semi-resident (6 months/year),231,209,300,150,890,24,21360,68.352,15625,2
+High presence,6,Semi-resident (6 months/year),231,209,300,150,890,36,32040,102.528,15625,3
+Low presence,2,1–2 short trips/year,231,209,100,150,690,12,8280,26.496,15625,1
+Low presence,2,1–2 short trips/year,231,209,100,150,690,18,12420,39.744,15625,1
+Low presence,2,1–2 short trips/year,231,209,100,150,690,24,16560,52.992,15625,2
+Low presence,2,1–2 short trips/year,231,209,100,150,690,36,24840,79.488,15625,2

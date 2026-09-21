@@ -1,0 +1,4 @@
+threshold,threshold_usd,monthly_draw,action,months_to_threshold,approx_date
+Early-warning ($150K),150000,6027,Stop contributions immediately,26.531939605110338,Dec 2028
+Hard floor ($100K),100000,6027,Emergency review; no discretionary investing,34.82794093247055,Aug 2029
+Hard floor — no contributions,100000,827,Reserve-only burn rate if contributions paused,253.8186215235792,Nov 2047

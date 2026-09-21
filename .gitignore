@@ -10,3 +10,6 @@
 data/raw/*.qif
 data/raw/*.csv
 
+
+/.quarto/
+**/*.quarto_ipynb

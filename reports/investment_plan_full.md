@@ -26,7 +26,7 @@ This document is the definitive reference for the current investment strategy. I
 
 **The plan runs in two sequential phases:**
 
-**Phase 1 (Now — ~October 2027, ~13 months):** Redirect all $5,200/month of investment capacity toward Colombian peso (COP)-denominated income assets — primarily bank CDTs and TES government bonds. This is not a speculative bet on the Colombian market. It is a deliberate rebalancing of currency exposure from a 97.4% USD position toward an 80/20 USD/COP target, while capturing real yields of 4.7–5.7% on assets that are either government-insured or sovereign-backed.
+**Phase 1 (Now — pending tax gate clearance):** Build a COP-denominated spending reserve sized to cover 12–18 months of actual Colombia-linked expenses (~$15,000–$20,000 USD / 48–63 million COP). This is not a yield play or currency speculation. After Colombian withholding, U.S. income tax at the marginal rate (§988 ordinary income treatment), and even mild COP depreciation, the CDT's after-tax USD-equivalent yield is roughly equal to or below a U.S. Treasury bill. CDTs are **liability-matching instruments** — they fund COP-denominated spending obligations without requiring USD conversion at unfavorable rates. The value is spending-coverage certainty, not carry.
 
 **Phase 2 (After ~October 2027 onward):** Resume $5,200/month into USD-denominated assets using a 7-class global ETF portfolio. The priority positions outside the U.S. are India (INDA), broad emerging markets (VWO), Japan (EWJ), and global electric grid infrastructure (GRID), all of which score materially higher than comparable U.S. alternatives on the project's composite conviction model.
 
@@ -41,7 +41,7 @@ The $557,994 USD net worth and $310K liquid reserve are more than sufficient to 
 | Goal | Status | Notes |
 |---|---|---|
 | Preserve estate ≥ $500K | ✅ Achieved | Current US NW $558K; all 5-year scenarios exceed $500K |
-| Build COP income stream | 🔄 In Progress | Phase 1 priority; target ~$62K in COP assets |
+| Build COP spending reserve | 🔄 In Progress | 18-month coverage target ~$20K USD (62.7M COP); sized by spending need, not portfolio percentage ||
 | Long-run wealth growth | 🔄 Active | Base case reaches $743K by Year 5 |
 | Hedge COP purchasing power | 🔄 In Progress | Significant Colombia living expenses and home |
 
@@ -74,9 +74,9 @@ The user splits time between the United States and Colombia. COP-denominated inc
 | Other Assets (Hawthorne home, aircraft) | $218,206 |
 | Credit Card Liabilities | −$9,967 |
 | **US Net Worth** | **$557,994** |
-| Colombia Home (~1.2B COP ÷ 3,200) | ~$375,000 |
-| Colombia Bank Accounts (~30M COP) | ~$9,375 |
-| **Combined Net Worth** | **~$942,369** |
+| Colombia Home (~1.2B COP ÷ 3,200) | ~$375,000 | Legacy asset — designated for son Anton; not investable |
+| Colombia Bank Accounts (~30M COP) | ~$9,375 | COP cash reserve |
+| **Combined Net Worth** | **~$942,369** | Home included for tracking only; not deployable |
 
 ### Monthly Cash Flow
 
@@ -124,20 +124,42 @@ Understanding the current macro context is essential to validating the phase str
 
 ### The Problem
 
-The portfolio is **97.4% USD-denominated** against a target of **80% USD / 20% COP**. The 20% COP target reflects:
+The household has material and growing COP-denominated obligations: property costs, utilities, security, health insurance, and in-country living expenses. Based on 12 months of actual transaction data (85 Colombia-linked transactions), the spending picture is:
 
-- Significant and growing Colombia living expenses (estimated $2,000–$3,000/month when resident)
-- A $375K Colombian home whose purchasing power is measured in COP
-- Wife Anna's Colombian citizenship and long-term Colombian residency
-- Dual U.S.–Colombian citizenship in progress
+| Scenario | Monthly (USD) | Annual | 18-Month Reserve |
+|---|---:|---:|---:|
+| Low (1–2 trips/year) | $839 | $10,071 | $15,106 |
+| Base (~1 month/quarter) | $1,089 | $13,068 | **$19,603** |
+| High (6 months/year) | $1,339 | $16,066 | $24,099 |
 
-The gap is **17.4 percentage points**, representing approximately **$62,492** in COP income assets that must be built before the target is reached.
+**Fixed monthly costs regardless of physical presence (~$231/month):** Medicina Prepagada health insurance (~$200–300), Prosegur building security (~$50), UNE internet (~$60), Avianca LifeMiles subscription ($12). Variable in-country costs add $200–$750/month when present.
+
+**Fogafín insurance cap: COP 50 million per institution ≈ $15,625 USD.** The 18-month base reserve (62.7M COP) requires 2 institutions to stay fully insured. Do not concentrate more than COP 50M at any single bank.
 
 ### The Solution
 
-**Redirect all $5,200/month to COP-denominated income vehicles for approximately 13 months.** At $5,200/month, $62,492 is reached in about 12.0 months. A 13-month estimate allows for timing flexibility (CDT purchase dates, FX settlement).
+**Build a spending reserve of 12–18 months of COP-linked expenses** (~$15,000–$20,000 USD / 48–63M COP). Funded from the liquid reserve, this is reachable in 3–4 months at the current contribution rate — not 13 months.
 
-> **This is not speculation on the peso.** Even if COP depreciates modestly vs USD during this period, the 10.5% nominal CDT yield more than compensates for FX losses up to approximately 9.5% annual depreciation. The goal is to build a *cash-generating COP income stream* — not to trade FX.
+> **CDTs are a liability hedge, not a yield play.** After Colombian withholding (7%), U.S. income tax at the marginal rate under §988 ordinary income treatment, and even mild COP depreciation (5%), the CDT's after-tax USD-equivalent yield falls below a U.S. Treasury bill. The carry advantage does not survive full tax and FX accounting. The reason to hold COP assets is to fund COP obligations without currency conversion — not to earn excess yield.
+
+**CDT After-Tax Breakeven vs. U.S. Treasury Bill (22% marginal rate):**
+
+| Step | Rate |
+|---|---:|
+| Gross CDT yield | 10.50% |
+| Less: Colombian withholding (7%) | –0.74% |
+| Less: U.S. income tax (net of foreign tax credit) | –1.58% |
+| **After-tax nominal yield (COP)** | **8.19%** |
+| Less: COP inflation / Fisher adjustment | –5.93% |
+| **Real COP yield after all taxes** | **2.26%** |
+
+| COP Depreciation | CDT After-Tax (USD) | T-Bill After-Tax | Carry Advantage |
+|---|---:|---:|---:|
+| 5% (mild) | 3.19% | 3.74% | **–0.55%** |
+| 8% (moderate) | 0.19% | 3.74% | **–3.55%** |
+| 10% (severe) | –1.81% | 3.74% | **–5.55%** |
+
+> **Pre-trade requirement:** Before executing any COP instrument, obtain written guidance from a U.S.–Colombia cross-border tax professional covering: CDT withholding rate by residency status (the 7% rate is for Colombian residents; non-residents may pay more), §988 ordinary income treatment of FX gains/losses on CDT principal, FBAR/Form 8938 filing requirements, and Colombia tax residency day-count rules. See the Model Council pre-trade gate checklist.
 
 ### Preferred COP Vehicles
 
@@ -211,9 +233,9 @@ TES bonds are not purchased directly at a retail bank window. There are two prac
 5. Specify amount in units of face value (typically 1,000 COP per unit; minimum purchase commonly 1,000,000 COP face value).
 6. Confirm purchase. Bonds are held in custody at Deceval (Colombia's central securities depository) and visible in your Valores Bancolombia account.
 
-**Route B — Fondos de Inversión Colectiva (FICs) with TES exposure:**
+**Route B — Colombian FICs/Fiducias: ⚠️ DO NOT USE without written PFIC review**
 
-If the brokerage account process is complex, consider a **Fiducia o FIC de Renta Fija** at Fiduciaria Bancolombia or Credicorp Capital. These are Colombian mutual funds investing in TES, providing daily liquidity with near-TES yields. Yields are slightly lower than direct TES (~9.5–10.5%) but with same-day redemption.
+Colombian Fondos de Inversión Colectiva (FICs) and fiducias are almost certainly **Passive Foreign Investment Companies (PFICs)** under U.S. tax law. A U.S. person holding a PFIC faces Form 8621 annual reporting obligations, potentially punitive excess-distribution tax treatment, and significant compliance overhead. Do not invest in any Colombian pooled fund, fiducia, or FIC without first obtaining written guidance from a U.S. cross-border tax professional confirming the PFIC status and which election (if any) minimizes tax exposure. Until that guidance is obtained, Route A (direct TES via Valores Bancolombia) is the only acceptable path.
 
 **Practical notes:**
 - TES yields fluctuate daily with secondary market prices. Lock in when the 5-year TES is yielding ≥11% — current levels are attractive relative to history.
@@ -274,9 +296,10 @@ Once the COP rebalancing gap is closed (~October 2027), resume $5,200/month into
 
 **How to acquire:**
 
-*Via Wealthfront (current platform):*
-- Wealthfront offers automated bond allocation through its "Classic" portfolios. Set bond allocation to 25% and Wealthfront will purchase BND and similar vehicles automatically.
-- Wealthfront does not support individual bond ladder construction. For the ladder, use a separate Fidelity or Schwab account.
+*Via self-directed brokerage (Fidelity or Schwab — preferred):*
+- Open a taxable brokerage account if not already open. Purchase BND directly with monthly contributions or build a Treasury ladder through Fidelity's Fixed Income tool.
+- The Wealthfront automated investing account ($151 balance as of Sep 2026) has not been deployed and should not be the vehicle for the strategic portfolio. Wealthfront's robo-advisor applies its own allocation model that cannot implement specific sleeve targets.
+- The **Wealthfront Cash Account ($153K) should remain as-is** — it is serving as the USD liquidity reserve and should not be redirected.
 
 *Via Fidelity or Schwab (for ladder):*
 1. Open a taxable brokerage account at Fidelity (fidelity.com) or Schwab (schwab.com).
@@ -303,14 +326,12 @@ Once the COP rebalancing gap is closed (~October 2027), resume $5,200/month into
 
 **How to acquire:**
 
-*Via Wealthfront:*
-- Already supported. Set U.S. stocks allocation to 20% in Wealthfront Classic.
-- Wealthfront uses VTI or similar. This is the simplest path.
+*Via self-directed brokerage (Fidelity or Schwab — preferred):*
+1. Log into your brokerage account.
+2. Place a recurring monthly investment for VTI or SPY ($1,040/month).
+3. Enable automatic investing or set a calendar reminder for a fixed purchase date each month.
 
-*Direct purchase (if Wealthfront allocation adjustment is inconvenient):*
-1. Log into Wealthfront or a brokerage account.
-2. Place a market order for VTI or SPY in dollar amounts ($1,040/month in DCA mode).
-3. Enable automatic monthly investment if available.
+> Do not use Wealthfront's automated investing account for this allocation. The robo-advisor's model will conflict with the manual sleeve architecture defined here.
 
 ---
 
@@ -333,9 +354,9 @@ VWO (score 3.72) provides the broader EM alternative, holding India, Taiwan, Chi
 
 **How to acquire:**
 
-*Via Wealthfront:*
-- Wealthfront does not offer INDA directly in its Classic portfolio. For the India tilt, use a separate brokerage account.
-- Wealthfront does include international developed and EM ETFs; set the EM allocation and accept their default vehicle as a starting point.
+*Via self-directed brokerage (Fidelity or Schwab):*
+- Purchase INDA and VWO directly with monthly contributions.
+- **Important:** Before adding INDA, check VWO's current India weight (~20–22% of fund). If you hold a full EM allocation in VWO, adding INDA on top doubles India exposure unintentionally. Size INDA as a carved-out tilt from the EM sleeve, not as an addition to it. Consider FLIN (Franklin FTSE India ETF, ER ~0.19%) as a lower-cost India alternative — compare liquidity before purchasing.
 
 *Direct purchase of INDA (iShares MSCI India ETF):*
 1. Open or use an existing brokerage account (Fidelity, Schwab, or TD Ameritrade are all suitable).
@@ -364,8 +385,8 @@ Within this allocation, **Japan merits attention** (EWJ conviction 3.61):
 **How to acquire:**
 
 *VEA (Vanguard FTSE Developed Markets):*
-- Available in Wealthfront Classic as the international developed allocation. Set to 15% and Wealthfront handles it automatically.
-- Direct purchase: Ticker **VEA**, expense ratio 0.05%.
+- Purchase directly through your brokerage. Ticker **VEA**, expense ratio 0.05%.
+- **Important:** Before adding EWJ, check VEA's current Japan weight (~20–22% of fund). Size any Japan tilt as a carved-out portion of the VEA sleeve, not as an addition.
 
 *EWJ (iShares MSCI Japan) — optional Japan tilt:*
 - Ticker **EWJ**, expense ratio 0.50%.
@@ -377,13 +398,15 @@ Within this allocation, **Japan merits attention** (EWJ conviction 3.61):
 
 **Conviction rationale (GRID: macro tailwind 4.0 / 5.0, catalyst score 3.8 / 5.0 — top infrastructure ETF):** The global electricity grid must absorb a massive and accelerating surge in demand: electric vehicles, AI data centers, heat pumps, and industrial electrification are all layering new load on infrastructure built for a different era. The IEA estimates $21 trillion in grid investment is required globally through 2050. Unlike many "energy transition" trades, **grid investment is not optional and is not ideologically contested** — every government, left or right, is pushing it because grid failure is politically catastrophic.
 
-GRID (Global X U.S. Infrastructure Development ETF) holds companies building, upgrading, and maintaining transmission infrastructure, substations, transformers, and grid-scale power systems across the U.S., Europe, and Asia. Holdings include Eaton, Quanta Services, Hubbell, Aecom, and similar companies — not speculative startups.
+GRID (First Trust Nasdaq Clean Edge Smart Grid & Infrastructure Index Fund) holds companies building, upgrading, and managing smart-grid, advanced metering, energy storage, and clean-power delivery infrastructure. Holdings include Eaton, Quanta Services, Hubbell, ABB, and similar companies — not speculative startups.
+
+> **Ticker verification required before any trade.** GRID (First Trust) is frequently confused with **PAVE** (Global X U.S. Infrastructure Development ETF), which covers broader domestic infrastructure including roads, bridges, and utilities. Verify the sponsor name, fund name, expense ratio, and top-10 holdings before placing any order. If broader U.S. infrastructure is the intent, compare GRID, PAVE, and IFRA before deciding.
 
 **Why now:** Global transformer shortages are already a multi-year supply constraint. The backlog for large power transformers at companies like GE Vernova and ABB stretches 3–4 years. The revenue is visible and growing regardless of which political party controls any given country's energy policy.
 
 **How to acquire:**
 
-Ticker: **GRID** — Global X U.S. Infrastructure Development ETF (expense ratio: 0.47%).
+Ticker: **GRID** — First Trust Nasdaq Clean Edge Smart Grid & Infrastructure Index Fund (expense ratio: ~0.65%). Verify sponsor, name, and holdings before any purchase.
 
 1. Purchase directly through any brokerage account. Ticker GRID trades on NYSE Arca.
 2. GRID is not typically available in Wealthfront's Classic portfolio. Use a separate brokerage for this allocation.
@@ -461,6 +484,10 @@ Managing a multi-stock portfolio across two countries while dealing with MS disa
 
 China carries unquantifiable geopolitical risk (Taiwan, U.S. delisting threats, regulatory environment for foreign investors). VWO provides incidental China exposure (~25% weight) which is acceptable as part of a diversified EM basket. A dedicated China position is not warranted at current geopolitical risk levels.
 
+### Excluded: Colombia Home (Legacy Asset for Anton)
+
+The Colombia home (~1.2B COP, ~$375,000 USD at current rates) is designated for son Anton and is not expected to be sold. It is tracked in net worth statements for FX sensitivity monitoring, but it is **not** included in the investable capital base, not treated as a source of liquidity, and not factored into Phase 1 or Phase 2 deployment math. Any estate plan for the home (Colombian will, beneficiary designation, POA) should be established in Colombia with a local estate attorney, coordinating with any U.S. estate documents.
+
 ### Excluded: High-Yield Bond ETFs
 
 The bond allocation serves as a stabilizer. High-yield bonds behave like equities in a risk-off environment — the diversification benefit disappears exactly when it is most needed. Stick to investment-grade (VBTLX/BND) and government bonds (Treasuries, TES).
@@ -496,16 +523,26 @@ When COP assets reach ~62,500 USD equivalent:
 
 1. Run `scripts/08_quarterly_dual_currency_review.R` — verify the gap is closed
 2. Stop new COP CDT/TES purchases
-3. Begin Phase 2 DCA into 7-class ETF portfolio (Wealthfront + direct brokerage)
+3. Begin Phase 2 DCA into 7-class ETF portfolio via self-directed brokerage (Fidelity or Schwab)
 4. Allow existing CDTs to mature naturally (do not break early — penalties apply)
 5. Reinvest CDT maturity proceeds into Phase 2 ETFs as they mature (starting 12 months after first purchase)
 6. Update AGENTS.md and re-render all reports
 
-### Tax Reminders
+### Pre-Trade Requirements (COP Instruments)
 
-- **U.S. taxes:** ETF dividends and capital gains in taxable accounts are reportable. Wealthfront handles tax-loss harvesting automatically.
-- **Colombia taxes:** CDT interest income has 7% withholding at source for non-residents (verify current rate with an accountant). TES coupon income has different treatment. File DIAN declaration if required.
-- **FBAR/FINCEN 114:** U.S. citizens with foreign bank accounts exceeding $10,000 combined must file annually. Colombian BBVA and Bancolombia accounts are in-scope if balances exceed this threshold.
+Before executing any COP instrument — CDT, TES, or otherwise — obtain written professional guidance on:
+
+- U.S. tax treatment of Colombian CDTs: §988 ordinary income on FX gains and losses, applicable withholding rate by residency status (7% = resident rate; non-resident may be higher), and foreign tax credit availability.
+- FBAR/FinCEN 114 requirements for Colombian bank accounts (already triggered if aggregate foreign accounts exceed $10,000 — file annually).
+- Form 8938 thresholds for specified foreign financial assets.
+- Whether any Colombian FIC, fiducia, or pooled fund would be classified as a PFIC. Do not invest in any pooled vehicle without written confirmation.
+- Colombia tax residency day-count rules and potential exposure to worldwide income taxation.
+
+### Ongoing Tax Tracking
+
+- **U.S. taxes:** ETF dividends and capital gains in a self-directed taxable brokerage account are reportable. Tax-loss harvesting in a self-directed account requires manual execution or a tax-aware rebalancing approach.
+- **Colombia taxes:** CDT interest is subject to Colombian withholding at source. TES coupon income has different withholding treatment. Verify current rates with a Colombian accountant before purchase. File DIAN declaration if required.
+- **FBAR/FinCEN 114:** File annually. Colombian BBVA and Bancolombia accounts are in scope regardless of balance size.
 
 ---
 
@@ -515,14 +552,16 @@ When COP assets reach ~62,500 USD equivalent:
 
 | Risk | Likelihood | Severity | Mitigation |
 |---|---|---|---|
-| COP depreciation >15% in 12 months | Medium | Medium | CDT nominal yield compensates up to ~9.5% depreciation; hold to maturity |
+| COP depreciation >8% in 12 months | Medium | Medium | After-tax CDT USD-equivalent yield turns negative vs. T-bill at 8%+ depreciation; CDTs are held for spending coverage — continue if COP obligations remain; reduce target if Colombia presence shrinks |
 | Colombia political crisis / sovereign downgrade | Low–Medium | High | CDTs still Fogafin-insured; TES holds senior-most claim; diversify across both |
 | U.S. equity bear market (−30%+) | Medium | Medium | Guaranteed income is not equity-dependent; reserve covers 37+ months of spending |
 | Inflation re-acceleration (U.S. CPI > 5%) | Low–Medium | Medium | TIPS allocation in bond portion; shorten bond duration |
 | Sustained monthly spending > $10,000 | Medium | High | Reserve depletes faster; monitor monthly; reduce discretionary categories first |
 | VA or Social Security benefit reduction | Very Low | Very High | Any cut to guaranteed income changes the entire plan; monitor legislative risk annually |
 | Major health event / long-term care need | Low | Very High | VA + Medicare coverage is strong; $310K reserve provides buffer |
-| Wealthfront platform failure / insolvency | Very Low | Medium | SIPC insurance covers $500K; assets custodied at Apex; transfer if needed |
+| Wealthfront platform failure / insolvency | Very Low | Low | Wealthfront Cash Account ($153K) is FDIC-insured; strategic ETF portfolio uses self-directed brokerage (Fidelity/Schwab) with SIPC coverage |
+| PFIC exposure from Colombian FIC or fiducia | Low (if avoided) | Very High | Do not invest in any pooled Colombian fund without written PFIC review; Route A (direct TES via Valores Bancolombia) only |
+| COP/USD at 4,500 (severe stress) | Low–Medium | Medium | Colombia home loses ~$108K USD value (from $375K to $267K); USD net worth ($558K) still above $500K estate goal; COP reserve shrinks proportionally but spending need also falls in USD terms |
 
 ### What Would Change the Plan
 
