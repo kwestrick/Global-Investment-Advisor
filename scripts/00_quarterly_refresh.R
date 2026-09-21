@@ -76,7 +76,9 @@ cat("       Update COP home value estimate if needed.\n\n")
 
 cat("[ ] 5. ALLOCATION DECISION\n")
 cat("       Review outputs/tables/ for ranked ETF and COP vehicle lists.\n")
-cat("       Confirm or adjust monthly Wealthfront allocations.\n\n")
+cat("       Confirm or adjust monthly contributions at self-directed brokerage\n")
+cat("       (Fidelity or Schwab). Wealthfront Cash Account ($153K) is the USD\n")
+cat("       liquidity reserve — do not redirect it.\n\n")
 
 cat("[ ] 6. COMMIT RESULTS\n")
 cat("       git add -A && git commit -m 'Quarterly refresh ", format(Sys.Date(), "%Y-%m-%d"), "'\n\n", sep = "")
