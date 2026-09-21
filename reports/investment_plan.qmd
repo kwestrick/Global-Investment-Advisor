@@ -35,9 +35,9 @@ theme_sc <- read_csv("data/processed/theme_opportunity_screen_20260921.csv",
                      show_col_types = FALSE)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
-MONTHLY_INVEST  <- 5200     # Monthly Wealthfront contribution (from liquid reserve)
-COP_GAP_USD     <- 62492    # Dollar gap to close COP underweight
-MONTHS_TO_CLOSE <- 13       # Months at $5,200/mo to close COP gap
+MONTHLY_INVEST  <- 5200     # Monthly contribution to self-directed brokerage (Fidelity/Schwab)
+COP_GAP_USD     <- 19600    # Spending-based COP reserve target (base: 18-month coverage)
+MONTHS_TO_CLOSE <- 4        # Months at $5,200/mo to fund COP spending reserve
 USD_NW          <- 557994
 LIQUID          <- 309908
 
@@ -122,22 +122,22 @@ hr { border-color: #dee2e6; margin: 2rem 0; }
 <div class="kpi-card amber">
 <div class="kpi-value">97.4% USD</div>
 <div class="kpi-label">Current Currency Mix</div>
-<div class="kpi-sub">Target: 80% USD / 20% COP</div>
+<div class="kpi-sub">Target: spending-based COP reserve</div>
 </div>
 <div class="kpi-card red">
-<div class="kpi-value">−17.4pp</div>
-<div class="kpi-label">COP Underweight</div>
-<div class="kpi-sub">$62K gap to close</div>
+<div class="kpi-value">~$10K gap</div>
+<div class="kpi-label">COP Reserve Shortfall</div>
+<div class="kpi-sub">Target ~$19.6K (18-mo spending base)</div>
 </div>
 <div class="kpi-card">
 <div class="kpi-value">$5,200/mo</div>
 <div class="kpi-label">Investment Capacity</div>
-<div class="kpi-sub">From liquid reserve</div>
+<div class="kpi-sub">Self-directed brokerage (Fidelity/Schwab)</div>
 </div>
 <div class="kpi-card green">
-<div class="kpi-value">13 months</div>
-<div class="kpi-label">COP Rebalancing Period</div>
-<div class="kpi-sub">Then return to 7-class plan</div>
+<div class="kpi-value">~4 months</div>
+<div class="kpi-label">COP Reserve Build</div>
+<div class="kpi-sub">Then begin 7-class global portfolio</div>
 </div>
 <div class="kpi-card green">
 <div class="kpi-value">5.7%</div>
@@ -217,10 +217,11 @@ prioritizing COP assets in the near term while the USD/COP rebalancing gap is cl
 The plan runs in two sequential phases. Phase 1 addresses the currency imbalance; Phase 2 builds
 the long-run global portfolio.
 
-<div class="phase-header">Phase 1 — COP Rebalancing (Now through ~Oct 2027, ~13 months)</div>
+<div class="phase-header">Phase 1 — COP Reserve Build (Now through ~Jan 2027, ~3-4 months)</div>
 
-**All $5,200/month goes to Colombian COP-denominated income assets** until the 17.4pp underweight
-gap is closed (~$62K needed). No new USD equity or bond positions during this phase.
+**All $5,200/month goes to Colombian COP-denominated income assets** until the spending-based
+reserve is funded (~$19,600 target across 2 institutions). This is a liability hedge, not a yield
+play. No new USD equity or bond positions during this phase.
 
 Priority order for COP contributions:
 
@@ -462,23 +463,30 @@ cop_rank |>
 
 ### Why COP Assets First?
 
-The portfolio is 97.4% USD-denominated against a target of 80%. With wife Anna as a Colombian
-citizen and active residency in Colombia (~6+ months per year), COP purchasing power risk is real
-and material. The Colombian home (~$375K USD equivalent) is illiquid; the hedge needs to come
-from *income-generating* COP assets.
+The family incurs recurring COP-denominated costs (~$231/month fixed, plus ~$858/month during
+Colombia visits) regardless of currency performance. Wife Anna is a Colombian citizen and the
+family spends ~1-3 months per year in Colombia. The Colombian home (~$375K USD) is a legacy
+asset for son Anton and is not investable. The hedge needs to come from *income-generating* COP
+assets sized to cover spending needs.
 
-Colombia's current rate environment is exceptional for a USD investor:
+The goal is a **spending-based COP reserve** (~$19,600 USD / ~62M COP) covering 18 months of
+Colombia-linked costs across two Fogafin-insured institutions. This is a liability-matching
+strategy, not a yield play. After full U.S. and Colombian tax accounting, CDTs do not outperform
+USD T-bills in dollar terms; their value is spending-coverage certainty without requiring
+ongoing USD-to-COP conversions.
 
-- **TES 10-year nominal yield: 11.5%** with real yield ~5.7% after inflation — well above anything
-  available in the USD market on a risk-adjusted basis.
-- **CDT deposits at BBVA/Bancolombia** yield 10.2–10.5% nominal (4.5–4.7% real) and carry
-  Fogafin deposit insurance up to 50M COP — roughly equivalent to FDIC in structure.
-- Even under a bear FX scenario (COP depreciates further vs USD), the real yield remains
-  positive for a USD investor holding these assets for 1+ year.
+Colombia's current rate environment makes CDTs an effective reserve vehicle:
 
-**The 13-month COP rebalancing window does not require a view that COP will appreciate.**
-It simply uses the high nominal yield to build a cash-flow-positive COP income base before
-returning to USD asset accumulation.
+- **CDT deposits at BBVA/Bancolombia** yield 10.2–10.5% nominal. After Colombian withholding
+  (~7%) and U.S. tax (net of FTC), real COP yield is approximately 2.3% — modest, but the
+  instrument serves as a spending hedge, not a return driver.
+- **TES Colombia (direct only):** 11.2% nominal / ~5.4% real. Sovereign, no deposit cap.
+  Purchasable through Valores Bancolombia only. Do not use FICs or fiducias (PFIC risk).
+- Fogafin insurance caps at 50M COP per institution (~$15,625 USD). The 18-month base reserve
+  requires 2 institutions to stay within insured limits.
+
+**The ~4-month COP reserve build does not require a view that COP will appreciate.**
+Once funded, all contributions shift to the 7-class USD global portfolio.
 
 ### Why INDA (India)?
 

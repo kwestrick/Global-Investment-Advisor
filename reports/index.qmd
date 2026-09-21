@@ -185,9 +185,9 @@ hr { border-color: #dee2e6; margin: 1.75rem 0; }
 <div class="kpi-sub">Income minus spending</div>
 </div>
 <div class="kpi-card red">
-<div class="kpi-value">−17.4pp</div>
-<div class="kpi-label">COP Underweight</div>
-<div class="kpi-sub">80/20 target; 13mo to close</div>
+<div class="kpi-value">~$10K gap</div>
+<div class="kpi-label">COP Reserve Shortfall</div>
+<div class="kpi-sub">Spending-based target ~$19.6K; ~4mo</div>
 </div>
 <div class="kpi-card green">
 <div class="kpi-value">5.7%</div>
@@ -262,12 +262,12 @@ proj |>
 ```{r actions-chart, fig.height=3.2}
 tibble(
   Action = c(
-    "① Redirect $5,200/mo → COP assets\n   (CDTs + TES bonds, ~13 months)",
-    "② After COP gap closed:\n   Deploy into 7-class global ETF portfolio"
+    "① Fund COP spending reserve → CDTs + TES\n   (~$19.6K target; ~4 months)",
+    "② Deploy into 7-class global ETF portfolio\n   (Fidelity/Schwab; $5,200/mo ongoing)"
   ),
-  Phase = c("Phase 1 — Now", "Phase 2 — ~Oct 2027"),
-  Start_mo = c(0, 13),
-  End_mo   = c(13, 30),
+  Phase = c("Phase 1 — Now", "Phase 2 — ~Jan 2027"),
+  Start_mo = c(0, 4),
+  End_mo   = c(4, 24),
   color    = c(CLR_GREEN, CLR_NAVY)
 ) |>
   ggplot(aes(xmin = Start_mo, xmax = End_mo,
@@ -283,12 +283,12 @@ tibble(
   ) +
   scale_fill_identity() +
   scale_x_continuous(
-    breaks = c(0, 6, 13, 18, 24, 30),
-    labels = c("Now", "Mo 6", "Mo 13\n(~Oct '27)", "Mo 18", "Mo 24", "Mo 30")
+    breaks = c(0, 4, 12, 18, 24),
+    labels = c("Now", "Mo 4\n(~Jan '27)", "Mo 12", "Mo 18", "Mo 24")
   ) +
   scale_y_continuous(
     breaks = 1:2,
-    labels = c("Phase 2 — Global ETFs", "Phase 1 — COP Rebalancing")
+    labels = c("Phase 2 — Global ETFs", "Phase 1 — COP Reserve")
   ) +
   labs(title = "Allocation Roadmap", x = "Months from Now", y = NULL) +
   theme_minimal(base_size = 12) +
@@ -303,12 +303,12 @@ tibble(
 
 ```{r currency, fig.height=3}
 tibble(
-  Scenario = rep(c("Current", "Target"), each = 2),
+  Scenario = rep(c("Current", "Target\n(spending-based)"), each = 2),
   Currency = rep(c("USD", "COP"), 2),
-  Pct      = c(97.4, 2.6, 80.0, 20.0)
+  Pct      = c(97.4, 2.6, 94.5, 5.5)
 ) |>
   mutate(
-    Scenario = factor(Scenario, levels = c("Current", "Target")),
+    Scenario = factor(Scenario, levels = c("Current", "Target\n(spending-based)")),
     Currency = factor(Currency, levels = c("COP", "USD"))
   ) |>
   ggplot(aes(x = Scenario, y = Pct, fill = Currency)) +
@@ -317,18 +317,19 @@ tibble(
             position = position_stack(vjust = 0.5),
             size = 5, fontface = "bold", color = "white") +
   geom_segment(
-    data = tibble(x = 1.22, xend = 1.78, y = 97.4, yend = 80),
+    data = tibble(x = 1.22, xend = 1.78, y = 97.4, yend = 94.5),
     aes(x = x, xend = xend, y = y, yend = yend),
     inherit.aes = FALSE,
     arrow = arrow(length = unit(0.2, "cm"), ends = "last"),
     color = CLR_AMBER, linewidth = 0.8, linetype = "dashed"
   ) +
-  annotate("text", x = 1.5, y = 92, label = "17.4pp\ngap",
+  annotate("text", x = 1.5, y = 97, label = "~$10K\ngap",
            size = 3, color = CLR_AMBER, fontface = "bold") +
   scale_fill_manual(values = c("USD" = CLR_NAVY, "COP" = CLR_GREEN),
                     name = "Currency") +
   scale_y_continuous(labels = percent_format(scale = 1)) +
   labs(title = "Currency Allocation: Current vs Target",
+       subtitle = "Target = ~$19.6K COP spending reserve (~5.5% of investable assets)",
        x = NULL, y = "Allocation (%)") +
   theme_minimal(base_size = 13) +
   theme(panel.grid.major.x = element_blank())
