@@ -129,6 +129,33 @@ Understanding the current macro context is essential to validating the phase str
 > | COP reserve build | One-time lump sum wire transfer | ~$15,977–$19,602 | When rate ≥ 3,917 COP/USD AND after CPA sign-off |
 > | USD ETF portfolio | Monthly DCA contribution | $5,200/month | Ongoing — start now, independent of COP reserve |
 
+### Why the USD Portfolio Takes Priority Over the COP Reserve Right Now
+
+The COP reserve is a necessary but small liability hedge — it is **not** the primary investment
+priority. The USD ETF portfolio (Goal 2) starts immediately and runs in parallel. Here is the
+explicit rationale:
+
+| Factor | COP Reserve | USD ETF Portfolio |
+|---|---|---|
+| Capital pool | One-time lump sum from $309K liquid reserve (~$20K set-aside) | $5,200/month + ~$289K deployed over 2–3 months |
+| Timing driver | Rate trigger (COP/USD ≥ 3,917) + tax gate (CPA) | Start now |
+| Expected return (USD) | Uncertain; CDT carry advantage disappears after FX + tax | 7.5% base case (well-documented, diversified) |
+| Opportunity cost of delay | $0 — waiting improves the rate | ~$1,938/month in foregone returns on $310K at 7.5% |
+| Current COP/USD context | 3,193 — **2.6th percentile, 5yr** — expensive to convert | No FX dependency |
+
+**The current COP/USD rate (2.6th percentile) is an explicit reason to NOT rush the COP reserve.**
+At today's rate, funding the 62.6M COP reserve costs $19,602 USD. Waiting for the 35th-percentile
+rate (~3,917 COP/USD) reduces that to ~$15,977 — saving $3,625 (18.5%). The daily rate alert
+(`scripts/12_fx_monitor_alert.R`) fires automatically when the threshold is crossed. No manual
+monitoring needed.
+
+Meanwhile, every month the $289K liquid reserve sits uninvested at a bank earning 4–5% instead of
+the 7.5% base-case portfolio return costs roughly **$7,225 in annual foregone return** on that pool
+alone — far more than any COP rate timing benefit. The correct decision is to deploy the USD
+portfolio immediately and let the COP alert trigger the reserve wire when ready.
+
+---
+
 ### The Problem
 
 The household has material and growing COP-denominated obligations: property costs, utilities, security, health insurance, and in-country living expenses. Based on 12 months of actual transaction data (85 Colombia-linked transactions), the spending picture is:

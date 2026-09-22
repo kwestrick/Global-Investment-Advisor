@@ -207,23 +207,40 @@ signals |>
 
 **Key takeaway:** All momentum signals are currently neutral, meaning no major near-term catalysts
 are reinforcing or reversing the baseline conviction scores. The one standout signal is
-**Colombia TES real yield at 5.7%** (Fisher-adjusted) — classified as Attractive. This supports
-prioritizing COP assets in the near term while the USD/COP rebalancing gap is closed.
+**Colombia TES real yield at 5.7%** (Fisher-adjusted) — classified as Attractive on a real-yield
+basis. However, the current COP/USD rate (3,193 — **2.6th percentile of the 5-year range**) means
+the peso is near its strongest historically, making USD→COP conversion expensive. The COP reserve
+will be funded via a single lump-sum wire when the rate improves. The **USD ETF portfolio is the
+immediate investment priority and begins now**, in parallel with — not after — the COP reserve build.
 
 ---
 
 ## Allocation Roadmap
 
-The plan runs in two sequential phases. Phase 1 addresses the currency imbalance; Phase 2 builds
-the long-run global portfolio.
+The plan has two independent, parallel goals. They do not compete for capital and neither waits for
+the other. The $5,200/month investment contribution goes entirely to the USD ETF portfolio — always.
+The COP reserve is funded separately, by a one-time lump-sum wire from the liquid reserve, timed
+to a favorable exchange rate.
 
-<div class="phase-header">Phase 1 — COP Reserve Build (Now through ~Jan 2027, ~3-4 months)</div>
+::: note-box
+**Why the USD portfolio takes priority over the COP reserve right now:**
+The current COP/USD rate (3,193) sits at the **2.6th percentile of the past 5 years** — the peso
+is historically very strong, making USD→COP conversion near its most expensive in recent history.
+Rushing the COP reserve build at this rate would cost ~$3,600 more than waiting for a better entry.
+Meanwhile, every month the USD ETF portfolio is not invested represents ~$1,600–$1,900 in foregone
+expected returns (7.5% on ~$310K). The math clearly favors starting the USD portfolio immediately
+and waiting for the COP rate trigger before wiring reserve funds.
+:::
 
-**All $5,200/month goes to Colombian COP-denominated income assets** until the spending-based
-reserve is funded (~$19,600 target across 2 institutions). This is a liability hedge, not a yield
-play. No new USD equity or bond positions during this phase.
+<div class="phase-header">Goal 1 — COP Reserve Build (One-Time Wire, Rate-Triggered, Tax-Gated)</div>
 
-Priority order for COP contributions:
+The COP spending reserve (~$19,600 / 62.6M COP) is funded by a **one-time lump-sum wire** from the
+USD liquid reserve — **not from the $5,200/month investment budget.** Execution waits for two gates:
+(1) COP/USD ≥ 3,917 (35th percentile, 5-year history — a daily alert fires when triggered), and
+(2) written CPA sign-off on §988 treatment, FBAR filing status, and Colombian withholding rate. The
+$5,200/month contributions to Fidelity/Schwab proceed regardless of where the COP rate stands.
+
+Preferred COP vehicles when the transfer is executed:
 
 ```{r cop-phase1-table}
 cop_rank |>
@@ -272,10 +289,11 @@ cop_rank |>
 - **TES Colombia 5-Year** — 11.2% nominal / 5.4% real. Sovereign; no deposit insurance needed. Add once CDT limits approached.
 :::
 
-<div class="phase-header">Phase 2 — 7-Class Global Portfolio (After COP gap is closed)</div>
+<div class="phase-header">Goal 2 — 7-Class Global Portfolio (Start Immediately, $5,200/month)</div>
 
-Resume the $5,200/month in USD-denominated assets, deployed across the target allocation.
-Rebalance existing holdings toward these targets as well.
+Deploy $5,200/month into Fidelity or Schwab **now**, across the target allocation below.
+Also deploy the liquid reserve ($309K less ~$20K COP set-aside = ~$289K deployable) over a
+2–3 month window. This runs in parallel with — and does not wait for — the COP reserve build.
 
 ```{r phase2-allocation-table}
 investable <- 309908 + 39847  # current investable base
@@ -461,32 +479,48 @@ cop_rank |>
 
 ## Investment Rationale
 
-### Why COP Assets First?
+### COP Reserve: Parallel Liability Hedge, Not Investment Priority
 
 The family incurs recurring COP-denominated costs (~$231/month fixed, plus ~$858/month during
 Colombia visits) regardless of currency performance. Wife Anna is a Colombian citizen and the
-family spends ~1-3 months per year in Colombia. The Colombian home (~$375K USD) is a legacy
-asset for son Anton and is not investable. The hedge needs to come from *income-generating* COP
-assets sized to cover spending needs.
+family spends ~1–3 months per year in Colombia. The Colombian home (~$375K USD) is a legacy
+asset for son Anton and is not investable. The hedge needs to come from *liquid* COP assets
+sized to cover spending needs — a liability hedge, not a return-maximizing investment.
 
-The goal is a **spending-based COP reserve** (~$19,600 USD / ~62M COP) covering 18 months of
-Colombia-linked costs across two Fogafin-insured institutions. This is a liability-matching
-strategy, not a yield play. After full U.S. and Colombian tax accounting, CDTs do not outperform
-USD T-bills in dollar terms; their value is spending-coverage certainty without requiring
-ongoing USD-to-COP conversions.
+**Why the USD ETF portfolio takes priority over the COP reserve right now:**
 
-Colombia's current rate environment makes CDTs an effective reserve vehicle:
+The current COP/USD rate (3,193 — 2.6th percentile, 5-year history) means the peso is near its
+strongest in five years. This is the worst time to rush USD→COP conversion:
 
-- **CDT deposits at BBVA/Bancolombia** yield 10.2–10.5% nominal. After Colombian withholding
-  (~7%) and U.S. tax (net of FTC), real COP yield is approximately 2.3% — modest, but the
-  instrument serves as a spending hedge, not a return driver.
+- **Opportunity cost of delaying the USD portfolio:** At 7.5% expected return on ~$310K
+  deployable, each month of delay costs roughly **$1,938 in foregone expected returns**.
+- **Cost of rushing the COP reserve at today's rate:** Funding the 62.6M COP reserve now
+  costs ~$19,602. Waiting for the 35th-percentile rate (~3,917 COP/USD) reduces that to
+  ~$15,977 — a **$3,625 savings for roughly 0–11 months of patience**.
+- **The math favors starting the USD portfolio immediately** and executing the COP reserve
+  wire when the rate trigger fires. The two goals are funded from different capital pools
+  (COP reserve from liquid reserve; USD portfolio from $5,200/month + reserve deployment)
+  and do not compete.
+
+**What the COP reserve actually is:**
+
+A **spending-based liability hedge** (~$19,600 / 62.6M COP) covering 18 months of Colombia-linked
+costs across two Fogafin-insured institutions. It is funded by a single lump-sum wire when both
+gates are cleared — not by monthly contributions. After full U.S. and Colombian tax accounting,
+CDTs do not outperform USD T-bills in dollar terms; their value is spending-coverage certainty,
+not excess yield.
+
+**Reserve vehicle summary (for when the transfer executes):**
+
+- **CDT deposits at BBVA/Bancolombia:** 10.2–10.5% nominal. After Colombian withholding (~7%)
+  and U.S. tax (net of FTC), real COP yield is ~2.3% — modest, but the instrument serves as
+  a spending hedge, not a return driver. Fogafin-insured up to 50M COP per institution.
 - **TES Colombia (direct only):** 11.2% nominal / ~5.4% real. Sovereign, no deposit cap.
   Purchasable through Valores Bancolombia only. Do not use FICs or fiducias (PFIC risk).
-- Fogafin insurance caps at 50M COP per institution (~$15,625 USD). The 18-month base reserve
-  requires 2 institutions to stay within insured limits.
 
-**The ~4-month COP reserve build does not require a view that COP will appreciate.**
-Once funded, all contributions shift to the 7-class USD global portfolio.
+**The COP reserve does not require a view that COP will appreciate.** Its purpose is to
+eliminate the need for ongoing USD-to-COP conversions during Colombia visits. Once funded,
+it simply sits in CDTs and renews at prevailing rates — no further action needed.
 
 ### Why INDA (India)?
 
