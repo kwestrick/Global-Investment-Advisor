@@ -653,3 +653,87 @@ Supporting functions:
 - Does not incorporate political event prediction
 - Does not replace professional FX advice
 
+---
+
+## Future Work
+
+Items queued for future research, development, or implementation. Not yet scoped or scheduled.
+
+---
+
+### FW-01: USD/COP FOREX Forecasting Model (1–12 Month Horizon)
+
+**Status:** Queued — not yet started
+**Category:** Quantitative research + model development
+**Priority:** Medium (informs CDT sizing and conversion timing; complements existing Phase 4 decision-support module)
+
+#### Problem Statement
+
+The existing Phase 4 module (`R/fx_forecasting.R`) deliberately avoids point forecasting in favor of historical percentile context and GARCH volatility bands. This is intellectually honest but leaves a gap: no directional signal over a 1–12 month horizon. A well-designed forecasting model could help answer:
+
+> "Given current macro conditions, is the peso more likely to be stronger or weaker in 3, 6, or 12 months than it is today?"
+
+This is distinct from the current module's question ("is now a historically cheap rate?"), and would add a forward-looking directional layer to the conversion decision framework.
+
+#### Why This Is Hard
+
+- **Meese-Rogoff result (1983):** Structural FX models underperform a random walk out-of-sample. The result has been largely replicated across currencies and time periods.
+- **COP-specific noise:** COP/USD is driven by Brent crude, Colombia fiscal dynamics, global EM risk sentiment (VIX), and Fed policy — four noisy, partly unpredictable series.
+- **Structural breaks:** Gustavo Petro's election (2022), oil price shocks, and post-COVID EM capital flow regime shifts make pre-2022 data less reliable as training data.
+- **Data scarcity:** At monthly frequency, even 10 years of data = 120 observations — too few for complex models.
+
+#### Candidate Approaches (to research and compare)
+
+| Approach | Horizon | Package | Honest Assessment |
+|---|---|---|---|
+| VAR / VECM with macro drivers | 1–6 months | `vars` | Theoretically grounded; often fails Meese-Rogoff out-of-sample |
+| ARIMA + exogenous regressors (ARIMAX) | 1–3 months | `forecast` / `fable` | Simple baseline; unlikely to beat random walk directionally |
+| GARCH-X (GARCH with macro covariates) | Volatility only | `rugarch` | Extends current Phase 4 module; not directional |
+| Regime-switching (Markov-switching) | 3–12 months | `MSwM`, `depmixS4` | Captures structural breaks; interpretable; worth exploring |
+| STAR / SETAR (nonlinear threshold AR) | 1–6 months | `tsDyn` | Handles asymmetric mean-reversion; reasonable for EM FX |
+| Random forest / XGBoost on macro features | 3–12 months | `tidymodels` + `xgboost` | Non-linear; needs careful feature engineering and walk-forward CV |
+| Principal components of macro drivers | 6–12 months | base R + `prcomp` | Useful for dimensionality reduction; pairs well with any model |
+| Bayesian VAR (BVAR) | 3–12 months | `BVAR` | Shrinkage priors help with short samples; respects uncertainty |
+
+#### Recommended Research Sequence
+
+1. **Establish a proper baseline:** Fit a random walk (no-change forecast) and an AR(1) on COP/USD log returns. This is the benchmark to beat. If no model consistently beats it, stop there.
+2. **Feature engineering:** Build a macro feature set — Brent log-returns, DXY z-score, VIX z-score, Colombia CPI surprise, Banrep rate differential vs. Fed funds, Colombia fiscal balance (annual). Compute rolling correlations with future COP returns at 1, 3, 6, 12-month horizons to identify which features have genuine predictive signal.
+3. **Walk-forward cross-validation:** Never use static train/test splits for time series. Use an expanding window with re-estimation at each step. Evaluate directional accuracy (sign of return), RMSE, and MAE — separately.
+4. **Directional accuracy is the target metric:** For a conversion-timing decision, being right about the direction (peso weakening vs. strengthening) matters more than minimizing RMSE. Report both but optimize for direction.
+5. **Honest benchmark comparison:** If the best model's directional accuracy is not meaningfully above 55% on held-out walk-forward data, do not implement it. Publish the null result.
+6. **If a model passes:** Integrate into `R/fx_forecasting.R` as an optional `cop_directional_forecast()` function. Output should be a probability distribution over peso direction (e.g., "60% probability peso weaker in 6 months"), not a point rate.
+
+#### Backtesting Requirements
+
+- Minimum 5 years of out-of-sample walk-forward evaluation
+- Re-estimate model parameters at each step (no look-ahead bias)
+- Report: directional accuracy, Sharpe-equivalent of a signal-following strategy, maximum drawdown if naively traded
+- Compare against: random walk, AR(1), and the current percentile-only signal from Phase 4
+
+#### Implementation Notes (if model passes backtesting)
+
+- New function: `cop_directional_forecast(series, macro_data, horizon_months = c(3, 6, 12))`
+- Output schema: `horizon_months`, `prob_weaker`, `prob_stronger`, `prob_neutral`, `model_type`, `confidence`, `last_fit_date`
+- Add to `print_cop_brief()` as an optional section
+- Add directional probability to `reports/cop_usd_monitor.html`
+- Trigger alert email only when both percentile AND directional signal are aligned (reduces false positives)
+
+#### Files to Create (when work begins)
+
+| File | Purpose |
+|---|---|
+| `notebooks/cop_usd_forecasting_research.qmd` | Research notebook: feature analysis, model comparison, backtest results |
+| `R/fx_directional_model.R` | Trained model functions (only if backtesting passes) |
+| `scripts/13_cop_usd_directional_model.R` | Standalone run script |
+| `data/processed/cop_macro_features.csv` | Cleaned feature matrix for model development |
+
+#### Falsification Criteria
+
+Do not proceed to implementation if:
+- No model achieves > 55% directional accuracy on walk-forward out-of-sample evaluation
+- The best model does not outperform a simple "buy when > 65th percentile" rule from Phase 4
+- Feature importance analysis reveals only spurious correlations with no economic rationale
+
+**Note:** Absence of a useful model is a valid and publishable finding within this research system. The Phase 4 percentile + GARCH approach remains the production signal until/unless this research yields a model that demonstrably improves on it.
+
