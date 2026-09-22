@@ -114,13 +114,12 @@ metrics <- tryCatch({
 log_timestamp("Sending email notification...")
 
 send_snapshot_email <- function(metrics, render_ok) {
-  creds_file <- file.path(Sys.getenv("HOME"), ".blastula_gmail_creds")
   if (!requireNamespace("blastula", quietly = TRUE)) {
     log_timestamp("WARNING: blastula package not installed — skipping email. Run: install.packages('blastula')")
     return(invisible(NULL))
   }
-  if (!file.exists(creds_file)) {
-    log_timestamp("WARNING: Email credentials not configured — skipping email. Run: source('scripts/setup_email_credentials.R')")
+  if (nchar(Sys.getenv("GMAIL_APP_PASSWORD")) == 0) {
+    log_timestamp("WARNING: GMAIL_APP_PASSWORD not set in .Renviron — skipping email. Run: source('scripts/setup_email_credentials.R')")
     return(invisible(NULL))
   }
 
@@ -172,7 +171,13 @@ This is automated research output, not personalized financial advice.
       to      = "kwestrick@gmail.com",
       from    = "kwestrick@gmail.com",
       subject = subject,
-      credentials = blastula::creds_file(creds_file)
+      credentials = blastula::creds_envvar(
+        user        = "kwestrick@gmail.com",
+        pass_envvar = "GMAIL_APP_PASSWORD",
+        host        = "smtp.gmail.com",
+        port        = 465,
+        use_ssl     = TRUE
+      )
     )
     log_timestamp("  ✓ Email sent to kwestrick@gmail.com")
   }, error = function(e) {
