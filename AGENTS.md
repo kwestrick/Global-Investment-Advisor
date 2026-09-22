@@ -585,3 +585,71 @@ After Colombian withholding, U.S. income tax (§988 ordinary income treatment), 
 - **Projections:** `project_net_worth(current_nw, monthly=5200, return=0.075, years=5)`
 - **Dashboard:** `source("scripts/04_quarterly_wealth_dashboard.R")`
 
+---
+
+## Phase 4 Status: In Progress (USD/COP FOREX Decision-Support Module)
+
+**Approved on:** September 21, 2026
+**Started on:** September 21, 2026
+
+### Design Rationale
+
+Exchange rate point forecasting is unreliable (Meese-Rogoff 1983: random walk beats structural models out-of-sample). COP/USD is especially noisy — driven by Brent crude prices, Colombia fiscal situation, global EM risk appetite, and Fed policy. Rather than a false-precision point forecast, the module answers a more tractable question:
+
+> **"Is now a relatively good time to convert USD to COP?"**
+
+### Module: `R/fx_forecasting.R`
+
+Two primary analytical layers:
+
+1. **Historical percentile context** — where does the current COP/USD rate sit relative to history (1Y, 3Y, 5Y lookbacks)? A rate in the 70th+ percentile means the peso is historically weak — COP assets are cheaper in USD terms.
+2. **GARCH(1,1) volatility bands** — realistic uncertainty intervals over a forward horizon (30/60/90 days). Uses `rugarch`. Does NOT claim to predict direction; shows the plausible range given current volatility regime.
+
+Supporting functions:
+- `prepare_cop_series(fx)` — extract clean date/rate from standard `fx` tibble schema
+- `cop_historical_percentile(series, lookback_years)` — percentile rank + label
+- `cop_garch_bands(series, horizon_days)` — fit GARCH(1,1), simulate forward paths, return quantile bands
+- `cop_macro_signals()` — pull Brent crude, DXY, VIX as contextual macro signals
+- `cop_conversion_signal(series, bands)` — synthesize into Favorable / Neutral / Unfavorable
+- `plot_cop_bands(series, bands)` — ggplot: historical rate + GARCH uncertainty cone
+- `print_cop_brief(series)` — console summary for quarterly workflow
+
+### Package Dependencies (Phase 4)
+
+| Package | Purpose | CRAN |
+|---|---|---|
+| `rugarch` | GARCH model fitting and simulation | Yes |
+| `tidyquant` | Already in use for FX data | Yes |
+| `ggplot2` | Already in use for charts | Yes |
+
+### Integration Points
+
+- Feeds from `fetch_cop_exchange_rate()` in `R/colombia_indicators.R`
+- Accepts the `fx` tibble already in session (columns: date, geography, indicator_code, indicator_name, category, value, unit, source, frequency)
+- `print_cop_brief()` should be called from `scripts/00_quarterly_refresh.R`
+- `plot_cop_bands()` output saved to `outputs/charts/cop_usd_forecast_bands_YYYY-MM-DD.png`
+
+### Decision Framework
+
+| Percentile (5Y lookback) | GARCH Regime | Conversion Signal |
+|---|---|---|
+| ≥ 65th (peso historically weak) | Any | Favorable |
+| 35th–65th (mid-range) | Low volatility | Neutral |
+| 35th–65th (mid-range) | High volatility | Cautious |
+| ≤ 35th (peso historically strong) | Any | Unfavorable |
+
+### Files
+
+| File | Purpose |
+|---|---|
+| `R/fx_forecasting.R` | Core module — percentile + GARCH + signals + plot |
+| `scripts/11_cop_usd_forecast.R` | Standalone run script |
+| `outputs/charts/cop_usd_forecast_bands_*.png` | Saved charts |
+
+### What This Module Does NOT Do
+
+- Does not produce a point forecast ("COP will be X in 90 days")
+- Does not recommend a specific conversion amount (that is a personal financial decision)
+- Does not incorporate political event prediction
+- Does not replace professional FX advice
+
