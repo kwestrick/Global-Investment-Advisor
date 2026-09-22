@@ -695,6 +695,16 @@ This is distinct from the current module's question ("is now a historically chea
 | Principal components of macro drivers | 6–12 months | base R + `prcomp` | Useful for dimensionality reduction; pairs well with any model |
 | Bayesian VAR (BVAR) | 3–12 months | `BVAR` | Shrinkage priors help with short samples; respects uncertainty |
 
+#### Priority Starting Points
+
+Of the eight candidate approaches, two are most likely to yield useful signal given COP's specific characteristics and data constraints — start here before exploring others:
+
+1. **Markov Regime-Switching** (`MSwM`, `depmixS4`) — COP/USD has exhibited at least two distinct regimes since 2020: a high-volatility weakening phase (2022–2024) and a carry-trade-driven strengthening phase (2025–2026). Regime-switching models explicitly capture these structural breaks rather than averaging over them. The Petro election (2022) and the post-VIX-spike recovery (2025) are natural candidate regime boundaries. If regimes are identifiable and persistent, transition probabilities give a probabilistic directional signal without requiring a point forecast.
+
+2. **Bayesian VAR (BVAR)** (`BVAR` package) — At monthly frequency, 10 years of data yields ~120 observations — too few for unrestricted VAR without overfitting. Bayesian shrinkage priors (Minnesota prior) regularize the coefficient estimates, making BVAR substantially more reliable than standard VAR on short samples. Include Brent log-returns, DXY z-score, VIX z-score, and the Banrep–Fed rate differential as covariates. BVAR also naturally produces posterior predictive distributions rather than point forecasts, which aligns with the goal of outputting directional probabilities rather than a single number.
+
+Both approaches are interpretable (critical for understanding *why* a signal fires), handle structural breaks better than purely statistical time-series models, and have been shown to outperform random walks in EM FX contexts more often than linear alternatives.
+
 #### Recommended Research Sequence
 
 1. **Establish a proper baseline:** Fit a random walk (no-change forecast) and an AR(1) on COP/USD log returns. This is the benchmark to beat. If no model consistently beats it, stop there.
