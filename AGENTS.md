@@ -587,10 +587,10 @@ After Colombian withholding, U.S. income tax (§988 ordinary income treatment), 
 
 ---
 
-## Phase 4 Status: In Progress (USD/COP FOREX Decision-Support Module)
+## Phase 4 Status: Complete (USD/COP FOREX Decision-Support Module)
 
 **Approved on:** September 21, 2026
-**Started on:** September 21, 2026
+**Completed on:** September 22, 2026
 
 ### Design Rationale
 
@@ -638,13 +638,19 @@ Supporting functions:
 | 35th–65th (mid-range) | High volatility | Cautious |
 | ≤ 35th (peso historically strong) | Any | Unfavorable |
 
-### Files
+### Files Delivered
 
 | File | Purpose |
 |---|---|
-| `R/fx_forecasting.R` | Core module — percentile + GARCH + signals + plot |
+| `R/fx_forecasting.R` | Core module — 7 functions: percentile, GARCH, macro signals, conversion signal, plot, brief |
 | `scripts/11_cop_usd_forecast.R` | Standalone run script |
-| `outputs/charts/cop_usd_forecast_bands_*.png` | Saved charts |
+| `scripts/12_fx_monitor_alert.R` | Two-channel daily alert (yield-play 80th pct + reserve 35th pct; separate cooldowns and state) |
+| `reports/cop_usd_monitor.html` | Dashboard page: signal, GARCH chart, macro drivers, driver analysis, alert status |
+| `reports/index.html` | Updated with USD/COP Monitor nav card (orange accent) |
+| `scripts/00_quarterly_refresh.R` | Updated — Step 4/5 runs FOREX signal automatically |
+| `scripts/auto_weekly_snapshot.R` | Refreshes cop_usd_monitor.html weekly |
+| `outputs/charts/cop_usd_forecast_bands_*.png` | Saved GARCH band charts |
+| `outputs/fx_monitor_state.rds` | State file — tracks last alert date per channel independently |
 
 ### What This Module Does NOT Do
 
@@ -652,6 +658,75 @@ Supporting functions:
 - Does not recommend a specific conversion amount (that is a personal financial decision)
 - Does not incorporate political event prediction
 - Does not replace professional FX advice
+
+---
+
+## Analytical Findings — Sep 22, 2026 (COP Reserve Strategy Correction)
+
+### 1. COP Reserve Build: Lump Sum, Not DCA, Not $5,200/Month
+
+The prior framing — pacing the COP reserve build at $5,200/month — was incorrect in two ways:
+
+1. **The $5,200/month is for the USD ETF portfolio only.** It is funded from income + liquid reserve drawdown and should go entirely to Fidelity or Schwab for the 7-class ETF allocation. No portion of it should be redirected to COP reserve building.
+2. **Dollar-cost averaging is not appropriate for a cash spending reserve.** DCA is for equity positions where timing uncertainty over a volatile asset matters. A COP reserve is a liability hedge — the right sizing method is the spending need (62.6M COP), and the right transfer method is a one-time lump sum from the liquid reserve ($309K), timed to a better exchange rate.
+
+**Two goals, two separate mechanisms:**
+
+| Goal | Mechanism | Amount | Timing |
+|---|---|---|---|
+| COP reserve build | One-time lump-sum wire (via Wise) | ~$15,977–$19,602 | When rate ≥ 3,917 COP/USD AND after CPA sign-off |
+| USD ETF portfolio | Monthly DCA | $5,200/month | Ongoing — now — independent of COP reserve |
+
+### 2. COP Reserve Rate Trigger: 35th Percentile (~3,917 COP/USD)
+
+Computed from the 5-year daily COP/USD series as of Sep 22, 2026:
+
+- **Current rate:** 3,193 COP/USD (2.6th percentile, 5yr) — peso historically very strong
+- **5-year range:** 3,044 – 5,106 COP/USD
+- **35th percentile:** 3,917 COP/USD — suggested rate trigger for reserve funding
+
+**Scenario analysis — USD cost of 62.6M COP reserve:**
+
+| Scenario | COP/USD | USD Needed | USD Savings vs. Today |
+|---|---:|---:|---:|
+| Transfer now (2.6th pct) | 3,193 | $19,602 | — |
+| 25th percentile | 3,853 | $16,245 | $3,357 |
+| **35th pct — trigger** | **3,917** | **$15,977** | **$3,625** |
+| 50th percentile | 4,022 | $15,563 | $4,039 |
+
+**Wait-risk stats:** The 35th-percentile rate has been hit or exceeded in **65% of trading days** over the past 5 years. The longest consecutive stretch without hitting it was **242 trading days (~11.5 months)**. Waiting is likely but not guaranteed. Revisit after 6 months if not triggered.
+
+### 3. Tax Gate Is the Binding Constraint (Not the Rate)
+
+The rate trigger is necessary but not sufficient. Before wiring any funds:
+
+- **FBAR risk is immediate:** Existing Colombian accounts (~30M COP ≈ $9,375 USD) are already near the $10,000 aggregate FBAR threshold. Exchange rate moves alone — without new deposits — could push the USD-equivalent above $10,000 and trigger an unfiled obligation.
+- **CPA sign-off required on:** §988 ordinary income treatment, FBAR filing status, Colombian withholding rate by residency status (7% resident rate may not apply — non-resident rate may be higher), and PFIC risk for any non-CDT instruments.
+- **Reference document:** `reports/cpa_colombia_tax_checklist.md` — 34-question briefing across 8 sections (§988, FBAR, FATCA, withholding, PFIC, estate/gift, dual citizenship, compliance).
+
+### 4. Two-Channel FX Alert (scripts/12_fx_monitor_alert.R)
+
+The daily FX monitor now fires two independent alert channels:
+
+| Channel | Trigger | Cooldown | Subject Prefix | Purpose |
+|---|---|---|---|---|
+| Yield-play alert | COP/USD ≥ 80th pct (~4,596) | 14 days | `[GIA ALERT]` | Large USD→COP deployments (TES, CDTs above reserve) |
+| Reserve alert | COP/USD ≥ 35th pct (~3,917) | 30 days | `[GIA]` | One-time reserve wire (triggers pre-transfer checklist in email body) |
+
+State file (`outputs/fx_monitor_state.rds`) tracks each channel's last alert date independently. Backward-compatible with the old single-channel format.
+
+### New Files (Sep 22, 2026)
+
+| File | Purpose |
+|---|---|
+| `reports/cpa_colombia_tax_checklist.md` | 34-question CPA briefing: §988, FBAR, FATCA, Colombian withholding, PFIC, estate, dual citizenship |
+
+### Updated Files (Sep 22, 2026)
+
+| File | Change |
+|---|---|
+| `scripts/12_fx_monitor_alert.R` | Two independent alert channels with separate cooldowns and state tracking |
+| `reports/investment_plan_full.md` | Section 5 rewritten: goal-separation callout, rate-trigger table, one-time transfer plan; Section 6 clarified as parallel/independent |
 
 ---
 

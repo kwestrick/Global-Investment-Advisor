@@ -120,7 +120,14 @@ Understanding the current macro context is essential to validating the phase str
 
 ---
 
-## 5. Phase 1 — COP Rebalancing (Now through ~October 2027)
+## 5. Phase 1 — COP Reserve Build (One-Time, Tax-Gated, Rate-Triggered)
+
+> **Two goals, two separate mechanisms.** This section covers **Goal 1 only**: building the COP spending reserve via a single lump-sum wire transfer. It is independent of the USD investment portfolio (Goal 2, Section 6). The $5,200/month contribution plan is for Goal 2 — it does not pace the COP reserve build.
+>
+> | Goal | Mechanism | Amount | Timing |
+> |---|---|---|---|
+> | COP reserve build | One-time lump sum wire transfer | ~$15,977–$19,602 | When rate ≥ 3,917 COP/USD AND after CPA sign-off |
+> | USD ETF portfolio | Monthly DCA contribution | $5,200/month | Ongoing — start now, independent of COP reserve |
 
 ### The Problem
 
@@ -138,7 +145,7 @@ The household has material and growing COP-denominated obligations: property cos
 
 ### The Solution
 
-**Build a spending reserve of 12–18 months of COP-linked expenses** (~$15,000–$20,000 USD / 48–63M COP). Funded from the liquid reserve, this is reachable in 3–4 months at the current contribution rate — not 13 months.
+**Build a spending reserve of 12–18 months of COP-linked expenses** (~$15,000–$20,000 USD / 48–63M COP) via a **one-time lump-sum wire transfer** from the USD liquid reserve. This is not funded from the $5,200/month investment budget — it is drawn directly from the $309K cash reserve, which has 37+ months of runway at current burn rate. No monthly pacing or DCA is needed or appropriate for a one-time liability hedge.
 
 > **CDTs are a liability hedge, not a yield play.** After Colombian withholding (7%), U.S. income tax at the marginal rate under §988 ordinary income treatment, and even mild COP depreciation (5%), the CDT's after-tax USD-equivalent yield falls below a U.S. Treasury bill. The carry advantage does not survive full tax and FX accounting. The reason to hold COP assets is to fund COP obligations without currency conversion — not to earn excess yield.
 
@@ -245,23 +252,43 @@ Colombian Fondos de Inversión Colectiva (FICs) and fiducias are almost certainl
 
 ---
 
-### Phase 1 Monthly Contribution Schedule
+### COP Reserve Transfer Plan (Rate-Triggered, One-Time)
 
-| Month | Vehicle | Amount (COP) | Approx. USD |
+**Do not transfer until both gates are cleared:**
+1. ✅ **Tax gate:** Written guidance from a U.S.–Colombia cross-border CPA on §988 treatment, FBAR filing, and Colombian withholding rate for your residency status. See `reports/cpa_colombia_tax_checklist.md` for the full question list.
+2. ✅ **Rate gate:** COP/USD ≥ **3,917** (35th percentile of the 5-year range). The Phase 4 monitoring script (`scripts/12_fx_monitor_alert.R`) currently fires at the 80th percentile for yield-play sizing; the COP reserve trigger is a separate, lower bar set for cost-of-funding, not for timing a trade.
+
+**Scenario analysis — USD cost of the 62.6M COP reserve target:**
+
+| Scenario | COP/USD Rate | USD Needed | USD Savings vs. Today |
+|---|---:|---:|---:|
+| Transfer now (2.6th pct, current) | 3,193 | $19,602 | — |
+| 10th percentile | 3,673 | $17,040 | $2,562 |
+| 25th percentile | 3,853 | $16,245 | $3,357 |
+| **35th pct — suggested trigger** | **3,917** | **$15,977** | **$3,625** |
+| 50th percentile | 4,022 | $15,563 | $4,039 |
+| 65th percentile | 4,144 | $15,102 | $4,500 |
+
+*Note: The 35th percentile rate (3,917 COP/USD) has been hit or exceeded in **65% of trading days over the past 5 years**. The longest consecutive stretch without reaching it was 242 trading days (~11.5 months). Waiting is likely, not guaranteed. If the COP remains historically strong beyond 6 months, re-evaluate.*
+
+**Transfer structure (when gates are cleared):**
+
+| Wire | Destination | COP Amount | Approx. USD at Trigger |
 |---|---|---|---|
-| 1–3 | BBVA CDT 360 Days | 5,000,000–8,000,000 | ~$1,563–$2,500 |
-| 1–3 | Bancolombia CDT 360 Days | 5,000,000–8,000,000 | ~$1,563–$2,500 |
-| 4–6 | Continue splitting between both CDTs | — | ~$5,200/month total |
-| 7–9 | Begin adding TES 5Y once CDT limits approached | — | ~$5,200/month total |
-| 10–13 | TES 5Y and/or TES 10Y, depending on rate environment | — | ~$5,200/month total |
+| Wire 1 | BBVA Colombia (savings → CDT) | 31,300,000 COP | ~$7,989 |
+| Wire 2 | Bancolombia (savings → CDT) | 31,300,000 COP | ~$7,989 |
+| **Total** | 2 institutions | **62,600,000 COP** | **~$15,977** |
 
-Adjust based on current COP/USD rate at the time of transfer. Transfer USD to COP via Wise to minimize FX costs.
+- Keep each institution below Fogafín 50M COP cap
+- Use **Wise** (formerly TransferWise) for USD→COP conversion at near-interbank rates. Avoid correspondent bank wires (1–2% FX spread)
+- Convert both wires on the same day to lock a consistent rate
+- After funds clear, purchase CDTs directly through each bank's app (see Vehicle 1 and Vehicle 2 steps above)
 
 ---
 
 ## 6. Phase 2 — 7-Class Global ETF Portfolio
 
-Once the COP rebalancing gap is closed (~October 2027), resume $5,200/month into the USD portfolio using the following 7-class target allocation. Also begin deploying the liquid reserve ($310K minus the $100K floor = $210K deployable) into this allocation over a 2–3 month window.
+The USD ETF portfolio runs **in parallel with and independently of** the COP reserve build. Do not wait for the COP reserve to be fully funded before starting contributions — the two goals are funded from different pools ($5,200/month from income/reserve drawdown for USD ETFs; a one-time lump sum from cash reserves for COP). Begin $5,200/month contributions to Fidelity or Schwab immediately using the following 7-class target allocation. Also begin deploying the liquid reserve ($310K minus the $100K floor = $210K deployable) into this allocation over a 2–3 month window.
 
 ### Target Allocation
 

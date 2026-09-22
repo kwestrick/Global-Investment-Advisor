@@ -1,0 +1,9 @@
+[2026-09-22 11:12:31] [FX Monitor] === COP/USD FOREX Monitor Started === 
+[2026-09-22 11:12:32] [FX Monitor] Fetching COP/USD data... 
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+[2026-09-22 11:12:35] [FX Monitor] Current COP/USD: 3,212 
+[2026-09-22 11:12:35] [FX Monitor] 5-year percentile: 3.1th — Historically Strong Peso (Unfavorable for USD→COP conversion) 
+[2026-09-22 11:12:35] [FX Monitor] Percentile 3.1 < threshold 80. No alert needed. 
+[2026-09-22 11:12:35] [FX Monitor] === Monitor complete. No alert sent. === 
