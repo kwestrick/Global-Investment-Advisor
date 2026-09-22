@@ -159,8 +159,8 @@ send_quarterly_email <- function(metrics, render_ok, ql = quarter_label()) {
     log_timestamp("WARNING: blastula package not installed — skipping email. Run: install.packages('blastula')")
     return(invisible(NULL))
   }
-  if (nchar(Sys.getenv("GMAIL_APP_PASSWORD")) == 0) {
-    log_timestamp("WARNING: GMAIL_APP_PASSWORD not set in .Renviron — skipping email. Run: source('scripts/setup_email_credentials.R')")
+  if (nchar(Sys.getenv("GMAIL_PERSONAL_APP_PASSWORD")) == 0) {
+    log_timestamp("WARNING: GMAIL_PERSONAL_APP_PASSWORD not set in .Renviron — skipping email. Run: source('scripts/setup_email_credentials.R')")
     return(invisible(NULL))
   }
 
@@ -206,14 +206,15 @@ This is automated research output, not personalized financial advice.
 
   tryCatch({
     email <- blastula::compose_email(body = blastula::html(body_html))
+    from_addr <- Sys.getenv("GMAIL_PERSONAL_FROM", unset = "kwestrick@gmail.com")
     blastula::smtp_send(
       email,
-      to      = "kwestrick@gmail.com",
-      from    = "kwestrick@gmail.com",
+      to      = from_addr,
+      from    = from_addr,
       subject = subject,
       credentials = blastula::creds_envvar(
-        user        = "kwestrick@gmail.com",
-        pass_envvar = "GMAIL_APP_PASSWORD",
+        user        = from_addr,
+        pass_envvar = "GMAIL_PERSONAL_APP_PASSWORD",
         host        = "smtp.gmail.com",
         port        = 465,
         use_ssl     = TRUE

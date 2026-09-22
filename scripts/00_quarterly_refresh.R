@@ -22,28 +22,50 @@ cat("========================================\n\n")
 # ---------------------------------------------------------------------------
 # 1. Market data: prices for 48 ETFs (country + theme universe)
 # ---------------------------------------------------------------------------
-cat("Step 1/4: Collecting market data...\n")
+cat("Step 1/5: Collecting market data...\n")
 source("scripts/01_collect_market_data.R")
 cat("  ✓ Market data collected.\n\n")
 
 # ---------------------------------------------------------------------------
 # 2. Global screening: conviction scores for all ETFs
 # ---------------------------------------------------------------------------
-cat("Step 2/4: Screening global assets...\n")
+cat("Step 2/5: Screening global assets...\n")
 source("scripts/02_screen_global_assets.R")
 cat("  ✓ Global screening complete.\n\n")
 
 # ---------------------------------------------------------------------------
 # 3. Live indicator pipeline + monthly allocation recommendation
 # ---------------------------------------------------------------------------
-cat("Step 3/4: Running indicator-driven portfolio ranking...\n")
+cat("Step 3/5: Running indicator-driven portfolio ranking...\n")
 source("scripts/09_indicator_driven_portfolio_ranking.R")
 cat("  ✓ Portfolio ranking complete.\n\n")
 
 # ---------------------------------------------------------------------------
-# 4. Render monthly allocation brief
+# 4. USD/COP FOREX conversion signal
 # ---------------------------------------------------------------------------
-cat("Step 4/4: Rendering monthly allocation brief...\n")
+cat("Step 4/5: Running USD/COP FOREX conversion signal...\n")
+tryCatch({
+  source("R/fx_forecasting.R")
+  source("R/colombia_indicators.R")
+  cop_raw <- fetch_cop_exchange_rate(start_date = Sys.Date() - 10 * 365)
+  if (!is.null(cop_raw) && nrow(cop_raw) > 0) {
+    cop_series <- prepare_cop_series(cop_raw)
+    print_cop_brief(cop_series, run_garch = TRUE, horizon_days = 90)
+    chart_path <- glue::glue("outputs/charts/cop_usd_forecast_bands_{Sys.Date()}.png")
+    garch_out  <- cop_garch_bands(cop_series, horizon_days = 90)
+    plot_cop_bands(cop_series, garch_out, history_days = 365, save_path = chart_path)
+  } else {
+    cat("  WARNING: COP/USD data unavailable — skipping FOREX signal.\n")
+  }
+}, error = function(e) {
+  cat("  WARNING: FOREX signal failed:", conditionMessage(e), "\n")
+})
+cat("  ✓ FOREX signal complete.\n\n")
+
+# ---------------------------------------------------------------------------
+# 5. Render monthly allocation brief
+# ---------------------------------------------------------------------------
+cat("Step 5/5: Rendering monthly allocation brief...\n")
 if (!requireNamespace("quarto", quietly = TRUE)) {
   stop("Package 'quarto' is required. Install with: install.packages('quarto')")
 }

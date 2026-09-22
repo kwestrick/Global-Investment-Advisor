@@ -39,6 +39,24 @@ log_timestamp("Step 3/4: Rendering snapshot HTML pages...")
 library(quarto)
 render_ok <- TRUE
 
+# Also regenerate COP/USD monitor page
+tryCatch({
+  source("R/fx_forecasting.R")
+  source("R/colombia_indicators.R")
+  cop_raw <- fetch_cop_exchange_rate(start_date = Sys.Date() - 10 * 365)
+  if (!is.null(cop_raw) && nrow(cop_raw) > 0) {
+    cop_series   <- prepare_cop_series(cop_raw)
+    cop_garch    <- cop_garch_bands(cop_series, horizon_days = 90)
+    cop_macro    <- tryCatch(cop_macro_signals(), error = function(e) NULL)
+    cop_pcts     <- cop_historical_percentile(cop_series, lookback_years = c(1, 3, 5))
+    cop_sig      <- cop_conversion_signal(cop_pcts, cop_garch, cop_macro)
+    cop_chart_p  <- glue::glue("outputs/charts/cop_usd_forecast_bands_{Sys.Date()}.png")
+    plot_cop_bands(cop_series, cop_garch, history_days = 365, save_path = cop_chart_p)
+    source("scripts/11_cop_usd_forecast.R")
+  }
+}, error = function(e) log_timestamp(paste("WARNING: COP monitor refresh failed:", e$message)))
+log_timestamp("  ✓ COP/USD monitor refreshed")
+
 for (qmd in c("reports/index.qmd", "reports/snapshot.qmd")) {
   tryCatch({
     quarto_render(qmd, quiet = TRUE)
@@ -54,7 +72,7 @@ log_timestamp("Step 4/4: Committing and pushing to git...")
 today_str <- format(Sys.Date(), "%Y-%m-%d")
 commit_msg <- paste0("Auto weekly snapshot refresh — ", today_str)
 
-system(paste0('cd "', proj_root, '" && git add reports/index.html reports/snapshot.html reports/index_files/ outputs/ data/processed/ 2>/dev/null; git diff --cached --quiet || git commit -m "', commit_msg, '"'))
+system(paste0('cd "', proj_root, '" && git add reports/index.html reports/snapshot.html reports/cop_usd_monitor.html reports/index_files/ outputs/ data/processed/ 2>/dev/null; git diff --cached --quiet || git commit -m "', commit_msg, '"'))
 system(paste0('cd "', proj_root, '" && git push origin main 2>/dev/null'))
 log_timestamp("  ✓ Git push complete")
 
@@ -118,8 +136,8 @@ send_snapshot_email <- function(metrics, render_ok) {
     log_timestamp("WARNING: blastula package not installed — skipping email. Run: install.packages('blastula')")
     return(invisible(NULL))
   }
-  if (nchar(Sys.getenv("GMAIL_APP_PASSWORD")) == 0) {
-    log_timestamp("WARNING: GMAIL_APP_PASSWORD not set in .Renviron — skipping email. Run: source('scripts/setup_email_credentials.R')")
+  if (nchar(Sys.getenv("GMAIL_PERSONAL_APP_PASSWORD")) == 0) {
+    log_timestamp("WARNING: GMAIL_PERSONAL_APP_PASSWORD not set in .Renviron — skipping email. Run: source('scripts/setup_email_credentials.R')")
     return(invisible(NULL))
   }
 
@@ -166,14 +184,15 @@ This is automated research output, not personalized financial advice.
 
   tryCatch({
     email <- blastula::compose_email(body = blastula::html(body_html))
+    from_addr <- Sys.getenv("GMAIL_PERSONAL_FROM", unset = "kwestrick@gmail.com")
     blastula::smtp_send(
       email,
-      to      = "kwestrick@gmail.com",
-      from    = "kwestrick@gmail.com",
+      to      = from_addr,
+      from    = from_addr,
       subject = subject,
       credentials = blastula::creds_envvar(
-        user        = "kwestrick@gmail.com",
-        pass_envvar = "GMAIL_APP_PASSWORD",
+        user        = from_addr,
+        pass_envvar = "GMAIL_PERSONAL_APP_PASSWORD",
         host        = "smtp.gmail.com",
         port        = 465,
         use_ssl     = TRUE

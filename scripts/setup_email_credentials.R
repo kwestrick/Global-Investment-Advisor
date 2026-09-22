@@ -2,8 +2,8 @@
 # One-time setup for Gmail SMTP credentials used by the automated email alerts.
 # Run this interactively in RStudio — do NOT run in crontab.
 #
-# Credentials are stored as an environment variable (GMAIL_APP_PASSWORD) in
-# your .Renviron file rather than a separate credentials file.
+# Credentials are stored as environment variables (GMAIL_PERSONAL_APP_PASSWORD
+# and GMAIL_PERSONAL_FROM) in your .Renviron file rather than a separate credentials file.
 #
 # ── Prerequisites ──────────────────────────────────────────────────────────────
 # Step 1. Enable 2-Step Verification on your Google account:
@@ -15,8 +15,9 @@
 #         - Select device: "Other" → name it "GIA Automation"
 #         - Copy the 16-character password shown (no spaces)
 #
-# Step 3. Open your .Renviron file and add this line:
-#         GMAIL_APP_PASSWORD=your16charpassword
+# Step 3. Open your .Renviron file and add these lines:
+#         GMAIL_PERSONAL_APP_PASSWORD=your16charpassword
+#         GMAIL_PERSONAL_FROM=kwestrick@gmail.com
 #
 #         You can open it with:
 #           usethis::edit_r_environ()   # or just open the file directly in RStudio
@@ -32,17 +33,17 @@ if (!requireNamespace("blastula", quietly = TRUE)) {
 library(blastula)
 
 # Verify the env var is set
-app_pw <- Sys.getenv("GMAIL_APP_PASSWORD")
+app_pw <- Sys.getenv("GMAIL_PERSONAL_APP_PASSWORD")
 if (nchar(app_pw) == 0) {
   stop(
-    "\nGMAIL_APP_PASSWORD is not set in your environment.\n",
+    "\nGMAIL_PERSONAL_APP_PASSWORD is not set in your environment.\n",
     "Add the following line to your .Renviron file:\n\n",
-    "  GMAIL_APP_PASSWORD=your16charpassword\n\n",
+    "  GMAIL_PERSONAL_APP_PASSWORD=your16charpassword\n\n",
     "Then run: readRenviron('~/.Renviron')  and re-source this script."
   )
 }
 
-message("✓ GMAIL_APP_PASSWORD found (", nchar(app_pw), " characters). Sending test email...")
+message("✓ GMAIL_PERSONAL_APP_PASSWORD found (", nchar(app_pw), " characters). Sending test email...")
 
 # Send a test email using creds_envvar — no file written outside the project
 tryCatch({
@@ -67,7 +68,7 @@ This is a test email confirming that automated email notifications are configure
     subject     = "[GIA] Email notification test — setup successful",
     credentials = creds_envvar(
       user        = "kwestrick@gmail.com",
-      pass_envvar = "GMAIL_APP_PASSWORD",
+      pass_envvar = "GMAIL_PERSONAL_APP_PASSWORD",
       host        = "smtp.gmail.com",
       port        = 465,
       use_ssl     = TRUE
@@ -79,3 +80,4 @@ This is a test email confirming that automated email notifications are configure
   message("  Double-check your App Password — it should be 16 characters, no spaces.")
   message("  Also confirm 2-Step Verification is enabled on your Google account.")
 })
+
