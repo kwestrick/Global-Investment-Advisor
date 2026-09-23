@@ -43,13 +43,13 @@ spending <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_spendi
                      show_col_types = FALSE)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
-USD_NW         <- 557994
-COMBINED_NW    <- 557994 + 375000 + 9375   # incl. Colombia home + accounts
+USD_NW         <- 700715   # updated Sep 23, 2026 from new Banktivity export
+COMBINED_NW    <- 700715 + 375000 + 9375   # incl. Colombia home + accounts
 MONTHLY_INCOME <- 7488
 MONTHLY_SPEND  <- 8315
 NET_FLOW       <- MONTHLY_INCOME - MONTHLY_SPEND
 ANNUAL_FLOW    <- NET_FLOW * 12
-LIQUID         <- 309908
+LIQUID         <- 162709   # non-IRA liquid (WF Cash $153,492 + checking ~$9,217)
 
 CLR_NAVY  <- "#1e3a5f"
 CLR_GREEN <- "#4a9e7a"
@@ -171,23 +171,23 @@ hr { border-color: #dee2e6; margin: 1.75rem 0; }
 
 ---
 
-<div class="section-label">Portfolio at a Glance — September 21, 2026</div>
+<div class="section-label">Portfolio at a Glance — September 23, 2026</div>
 
 ::: kpi-grid
 <div class="kpi-card">
-<div class="kpi-value">$558K</div>
+<div class="kpi-value">$701K</div>
 <div class="kpi-label">US Net Worth</div>
 <div class="kpi-sub">Assets – Liabilities</div>
 </div>
 <div class="kpi-card green">
-<div class="kpi-value">$942K</div>
+<div class="kpi-value">$1,076K</div>
 <div class="kpi-label">Combined NW</div>
 <div class="kpi-sub">Includes Colombia assets</div>
 </div>
 <div class="kpi-card green">
-<div class="kpi-value">$310K</div>
-<div class="kpi-label">Liquid Reserve</div>
-<div class="kpi-sub">37+ months of runway</div>
+<div class="kpi-value">$163K</div>
+<div class="kpi-label">Non-IRA Liquid</div>
+<div class="kpi-sub">~27 months total runway</div>
 </div>
 <div class="kpi-card amber">
 <div class="kpi-value">−$827</div>
@@ -258,7 +258,7 @@ proj |>
                      expand = expansion(mult = c(0.02, 0.28))) +
   labs(
     title    = "5-Year Net Worth Projection",
-    subtitle = "Starting $558K  |  –$9,924/year net consumption  |  Shaded band = scenario range",
+    subtitle = "Starting $701K  |  –$9,924/year net consumption  |  Shaded band = scenario range",
     x = NULL, y = "Net Worth"
   ) +
   theme_minimal(base_size = 13) +
@@ -269,38 +269,47 @@ proj |>
 
 <div class="section-label">Two Most Important Actions Right Now</div>
 
-```{r actions-chart, fig.height=3.2}
-tibble(
+```{r actions-chart, fig.height=3.8}
+actions <- tibble(
   Action = c(
-    "① Fund COP spending reserve → CDTs + TES\n   (~$19.6K target; ~4 months)",
-    "② Deploy into 7-class global ETF portfolio\n   (Fidelity/Schwab; $5,200/mo ongoing)"
+    "① Transfer WF Joint → Fidelity via ACATS\n   (in-kind; DECIDED Sep 23)",
+    "② $5,200/mo ETF DCA at Fidelity\n   (7-class allocation; ongoing now)",
+    "③ Fund COP reserve — one-time lump sum\n   (gate-triggered: rate ≥ 3,917 + CPA)"
   ),
-  Phase = c("Phase 1 — Now", "Phase 2 — ~Jan 2027"),
-  Start_mo = c(0, 4),
-  End_mo   = c(4, 24),
-  color    = c(CLR_GREEN, CLR_NAVY)
+  Label = c("Immediate", "Phase 2 — Ongoing", "Phase 1 — Gate-Triggered"),
+  Start_mo = c(0,   0, 6),
+  End_mo   = c(0.5, 24, 8),
+  color    = c(CLR_AMBER, CLR_NAVY, CLR_GREEN)
 ) |>
+  mutate(Label = factor(Label, levels = c("Phase 1 — Gate-Triggered",
+                                           "Phase 2 — Ongoing",
+                                           "Immediate")))
+
+actions |>
   ggplot(aes(xmin = Start_mo, xmax = End_mo,
-             ymin = as.numeric(factor(Phase)) - 0.35,
-             ymax = as.numeric(factor(Phase)) + 0.35,
+             ymin = as.numeric(Label) - 0.35,
+             ymax = as.numeric(Label) + 0.35,
              fill = color)) +
   geom_rect(color = "white", linewidth = 0.4) +
   geom_text(
-    aes(x = (Start_mo + End_mo) / 2,
-        y = as.numeric(factor(Phase)),
+    aes(x = pmax((Start_mo + End_mo) / 2, 4),
+        y = as.numeric(Label),
         label = Action),
-    color = "white", size = 3.2, lineheight = 1.3, fontface = "bold"
+    color = "white", size = 3.0, lineheight = 1.3, fontface = "bold"
   ) +
   scale_fill_identity() +
   scale_x_continuous(
-    breaks = c(0, 4, 12, 18, 24),
-    labels = c("Now", "Mo 4\n(~Jan '27)", "Mo 12", "Mo 18", "Mo 24")
+    breaks = c(0, 6, 12, 18, 24),
+    labels = c("Now", "Mo 6", "Mo 12", "Mo 18", "Mo 24"),
+    expand = expansion(mult = c(0, 0.02))
   ) +
   scale_y_continuous(
-    breaks = 1:2,
-    labels = c("Phase 2 — Global ETFs", "Phase 1 — COP Reserve")
+    breaks = 1:3,
+    labels = c("Phase 1 — COP Reserve\n(Gate-Triggered)",
+               "Phase 2 — Global ETFs\n(Ongoing Now)",
+               "Immediate\n(1–2 Weeks)")
   ) +
-  labs(title = "Allocation Roadmap", x = "Months from Now", y = NULL) +
+  labs(title = "Three Current Actions", x = "Months from Now", y = NULL) +
   theme_minimal(base_size = 12) +
   theme(panel.grid.major.y = element_blank(),
         panel.grid.minor   = element_blank(),

@@ -455,13 +455,15 @@ After Colombian withholding, U.S. income tax (§988 ordinary income treatment), 
 
 ### 4. Balance Sheet Stress Scenarios (COP/USD)
 
+*Updated Sep 23, 2026 to reflect new Banktivity export (USD NW $700,715).*
+
 | Scenario | COP/USD | Colombia Home (USD) | USD NW | Combined NW | vs. Estate Goal |
 |---|---:|---:|---:|---:|---:|
-| Base | 3,200 | $375,000 | $557,994 | $942,369 | +$442,369 |
-| Stress 1 | 3,600 | $333,333 | $557,994 | $899,661 | +$399,661 |
-| Stress 2 | 4,500 | $266,667 | $557,994 | $831,327 | +$331,327 |
+| Base | 3,200 | $375,000 | $700,715 | $1,075,715 | +$575,715 |
+| Stress 1 | 3,600 | $333,333 | $700,715 | $1,034,048 | +$534,048 |
+| Stress 2 | 4,500 | $266,667 | $700,715 | $967,382 | +$467,382 |
 
-**Key finding:** USD net worth ($557,994) already exceeds the $500K estate goal by $57,994 without any COP assets. The estate goal is not at risk from COP depreciation at any plausible exchange rate. However, the Colombia home's USD value declines by ~$108K under the 4,500 scenario — a meaningful wealth effect to monitor annually.
+**Key finding:** USD net worth ($700,715) exceeds the $500K estate goal by $200,715 (140% of target) without any COP assets. The estate goal is not at risk from COP depreciation at any plausible exchange rate. However, the Colombia home's USD value declines by ~$108K under the 4,500 scenario — a meaningful wealth effect to monitor annually.
 
 ---
 
@@ -469,14 +471,16 @@ After Colombian withholding, U.S. income tax (§988 ordinary income treatment), 
 
 **Completed on:** September 21, 2026
 
-**User Financial Profile (from Banktivity export 2026-09-21):**
+**User Financial Profile (updated from Banktivity export 2026-09-23):**
 - **Age:** 64, in wheelchair, MS disability
 - **Guaranteed Income:** $7,488/month (Social Security $3,100 + VA Disability $4,388)
-- **Current Net Worth:** $557,994 ✓ EXCEEDS $500k goal
-- **Liquid Assets:** $309,908 (checking/savings, 135+ months of expenses)
-- **Investments:** $39,847 (bond ladder core)
+- **Current Net Worth:** $700,715 ✓ EXCEEDS $500k goal (140% of target, +$200,715 surplus)
+- **Liquid Assets:** $310,013 (checking/savings; essentially unchanged from Sep 21)
+- **Investments:** $184,217 (bond ladder $103,287; Wealthfront Joint $80,619 ⚠️; other $311)
 - **Other Assets:** $218,206 (Hawthorne home, Aircraft loan)
-- **Liabilities:** $9,967 (credit cards only—excellent position)
+- **Liabilities:** $11,720 (credit cards — up from $9,967; normal spend)
+
+> ✅ **Wealthfront Joint account ($80,619):** DECIDED Sep 23, 2026 — Transfer to Fidelity Joint taxable brokerage via in-kind ACATS immediately. No tax event on the transfer; modest LTCG (~$1,200–$2,400) expected at reallocation. Advances ETF portfolio crossover point from month 15 → month 7 and adds ~$117K to 5-year ETF value. Step-by-step ACATS instructions now in `reports/investment_plan_full.md` Section 6.
 - **Monthly Spending (recurring, actual):** $8,315/month (Sep 2025–Aug 2026 transaction analysis; see `data/processed/2026-09-21_spending_by_category.csv`)
   - Initial estimate of $2,300/month was significantly understated — actual lifestyle includes heavy travel, dining, Colombia-related purchases
   - Large one-time items (Colombia car purchase $23,914; cruises $9,719 + $6,434; etc.) add ~$6,700/month on top of recurring
@@ -539,12 +543,12 @@ After Colombian withholding, U.S. income tax (§988 ordinary income treatment), 
 - **Phase 1:** Deploy $209,908 over 2-3 months (maintain $100k emergency reserve)
 - **Phase 2:** Dollar-cost average $5,200/month per allocation percentages
 
-**5-Year Net Worth Projections (from baseline $557,994):**
+**5-Year Net Worth Projections (from updated baseline $700,715 — Sep 23, 2026):**
 | Scenario | Return | Year 1 | Year 3 | Year 5 |
 |---|---|---|---|---|
-| Conservative | 5.0% | $652.5k | $830k | $1.03M |
-| Base Case | 7.5% | $664.9k | $898k | $1.17M |
-| Optimistic | 9.0% | $677.8k | $967k | $1.25M |
+| Conservative | 5.0% | $798.2k | $1.01M | $1.24M |
+| Base Case | 7.5% | $815.7k | $1.07M | $1.37M |
+| Optimistic | 9.0% | $826.2k | $1.11M | $1.45M |
 
 **Key Insights:**
 - Estate goal ($500k) exceeded by $57,994 (112% of target)
@@ -746,7 +750,7 @@ Reviewed `reports/investment_plan_model_council_revised.md` (revised by Claude O
 8. $150K early-warning liquidity trigger (stop contributions before hitting the $100K floor).
 9. Look-through requirement (India inside VWO, Japan inside VEA) before adding tilts.
 
-**Two decisions the Council deferred but which the Sep 22 follow-up work resolved:**
+- Investable capital base — $310,013 liquid + $184,217 investments = $494,229 total. Bond ladder ($103,287) already covers the 20% bonds target. Wealthfront Joint ($80,619) requires a transfer decision. Roughly $160–210K of liquid reserve remains deployable above the $100–150K floor.
 - Bond weight — given the $7,488/mo guaranteed income acting as a bond substitute, 15–20% for drawdown ballast is reasonable rather than the 10–25% range.
 - Investable capital base — $309,908 minus a $100–150K floor = roughly $160–210K deployable.
 
@@ -812,6 +816,65 @@ Evaluated whether a small IGF or NFRA sleeve belongs in the four-bucket framewor
 
 **Revisit if:** a specific income need emerges, or GRID's concentration/volatility becomes a standalone concern — treat any future addition as a swap within the existing thematic-tilt band, not an addition to it.
 
+### 8. Bond Weight Resolved: 20% (Drawdown Study, Sep 23, 2026)
+
+**Status:** Resolved — no longer a working figure.
+
+**Study parameters:** SPY (equity proxy) + AGG (bond proxy) + 4.8% cash (11% fixed), Jan 2015 – Sep 2026 monthly returns, with a 2008-type stress overlay (SPY −56%, AGG +5%).
+
+**Key findings:**
+
+2. **Liquidity runway:** Monthly deficit ($8,315 spend − $7,488 income) = $827/month. Liquid reserves ($310,013) cover **375 months (31.2 years)** of this deficit with no investment sales — at any portfolio value including zero.d sleeve cannot meaningfully add to an already-vast income cushion. Bonds are not needed as an income source.
+
+2. **Liquidity runway:** Monthly deficit ($8,315 spend − $7,488 income) = $827/month. Liquid reserves ($309,908) cover **375 months (31.2 years)** of this deficit with no investment sales — at any portfolio value including zero.
+
+3. **Marginal drawdown value of bonds is poor:**
+
+| Bond % | Ann Return | Max Drawdown (2015–2026) | Dollar Loss on $349,755 | Total Liquid at Trough |
+|---:|---:|---:|---:|---:|
+| 0% | 12.9% | −21.1% | −$73,920 | $585,743 |
+| 15% | 11.1% | −19.7% | −$68,746 | $590,917 |
+| 20% | 10.5% | −19.2% | −$67,030 | $592,633 |
+| 27% | 9.7% | −18.5% | −$64,633 | $595,030 |
+| 30% | 9.3% | −18.2% | −$63,608 | $596,055 |
+
+   Each 5pp of bonds reduces max drawdown by ~0.5pp but costs ~0.9pp in annual return. The total liquid assets at trough differ by only ~$10K between 0% and 30% bonds — negligible relative to 375-month runway.
+
+4. **2008-type stress (SPY −56%):** At 0% bonds, total liquid at trough = **$485,345** (587 months of deficit). At 20% bonds: **$528,015**. At 27% bonds: **$542,950**. No allocation creates a forced-sale situation.
+
+5. **Correlation caveat:** In 2022, AGG fell ~13% while SPY fell ~18% — the traditional diversification benefit disappears in high-inflation regimes. The bond sleeve provides volatility reduction in normal cycles but not necessarily in inflationary bear markets.
+
+**Decision: Bond weight finalized at 20%** (top of the Model Council's 15–20% recommended range). Rationale: 20% provides meaningful psychological ballast without material opportunity cost; going to 27% recovers only ~$2,400 in additional trough liquidity while costing ~0.8pp/year in expected return over a 20–30 year horizon.
+
+**New allocation (finalized Sep 23, 2026; DCA restructured same day):**
+
+| Asset Class | % | Funding Source | Monthly DCA |
+|---|---:|---|---:|
+| Bonds / Ladder | 20% | **MassMutual IRA rollover Oct 2027** | **$0** |
+| U.S. Large Cap | 24% | Monthly DCA | $1,560 |
+| Emerging Markets | 18% | Monthly DCA | $1,170 |
+| International Developed | 18% | Monthly DCA | $1,170 |
+| Cash Reserve | 11% | Monthly DCA | $715 |
+| Commodities / Transition | 5% | Monthly DCA | $325 |
+| Infrastructure (GRID) | 4% | Monthly DCA | $260 |
+| **Total** | **100%** | | **$5,200** |
+
+**Bond sleeve restructured (Sep 23, 2026):** The MassMutual account ($147,304) was identified as a **Traditional IRA** (American Freedom Liberty 5 MVA fixed deferred annuity, issue date Oct 6, 2022). Key implications:
+- **Cannot be DCA source:** Every withdrawal from a Traditional IRA = ordinary income. It cannot fund monthly contributions to a taxable ETF portfolio.
+- **Surrender period ends Oct 6, 2027** (12.5 months from today). Do not touch until then.
+- **Rollover plan:** On or after Oct 6, 2027, initiate a trustee-to-trustee direct rollover from MassMutual to a Fidelity Traditional IRA. Invest in BND or a Treasury ladder inside the IRA (asset-location optimization: bonds generate ordinary income, best sheltered in tax-deferred wrapper).
+- **Bond sleeve pre-funded:** $103,287 (existing bond ladder) + $147,304 (IRA rollover) = $250,591 — exceeds the 20% target. Zero monthly DCA needed for bonds. The $1,040/month previously allocated to bonds is redistributed proportionally to the six remaining positions.
+- **RMDs:** Begin at age 73 (~9 years). Estimated annual RMD ~$10,000–$11,000 at that time.
+
+**Corrected non-IRA liquid reserve (Sep 23, 2026):** $162,709 (not $310,013).
+- Wealthfront Cash Account: $153,492 — this is the DCA source (ACH to Fidelity/Schwab)
+- Chase/BOA checking/savings: ~$9,217 — operational float
+- MassMutual $147,304: Traditional IRA — not accessible without tax consequence until rollover
+- **Runway at $5,200/mo:** soft floor ($50K) hit at month 19; hard floor ($30K) at month 23
+- **Crossover (ETF > liquid):** month 15 without WF Joint transfer; month 7 with WF Joint transferred
+- **Wealthfront Joint ($80,619):** transfer to Fidelity/Schwab taxable account — advances crossover from month 15 → month 7 and adds $117K to 5-year ETF value
+- **Lump-sum deployment cancelled:** prior plan called for deploying $210K from liquid reserves; corrected plan uses DCA only (non-IRA pool too small for lump-sum without breaching operational floor)
+
 ### 7. GRID Reference Data Added to ETF Universe (Sep 23, 2026)
 
 Added `expense_ratio_pct`, `tilt_cap_min_pct`, `tilt_cap_max_pct`, and `tilt_cap_notes` columns to `create_theme_etf_universe()` in `R/screening.R`. Only GRID (0.56%, tilt cap 3–4%) and PAVE (0.47%, comparison-only, not held) are populated; all other tickers carry `NA` until independently verified — do not backfill with memorized figures. Regenerated `data/external/theme_etf_universe_20260923.csv` from the updated function. Prior dated snapshots (`_20260921.csv`, `_20260922.csv`) were left untouched per the project's snapshot convention.
@@ -825,7 +888,11 @@ Added `expense_ratio_pct`, `tilt_cap_min_pct`, `tilt_cap_max_pct`, and `tilt_cap
 | `reports/investment_plan.qmd` | `phase2-allocation-table` chunk and "Why GRID" narrative rebuilt to match; re-rendered `reports/investment_plan.html` |
 | `R/screening.R` | `create_theme_etf_universe()` extended with expense ratio and tilt-cap columns; GRID and PAVE populated |
 | `data/external/theme_etf_universe_20260923.csv` | New dated snapshot reflecting the schema change |
-| `AGENTS.md` | This findings section added (Council assessment + GRID look-through, expense ratio, tilt sizing, IGF/NFRA, allocation rebuild) |
+| `AGENTS.md` | This findings section added (Council assessment + GRID look-through, expense ratio, tilt sizing, IGF/NFRA, allocation rebuild, bond weight resolved at 20%); updated same day with MassMutual IRA identification, corrected $162,709 non-IRA liquid, bond sleeve DCA restructured to $0, monthly amounts redistributed |
+| `reports/investment_plan_full.md` | Section 6 intro corrected (liquid $162,709, lump-sum deployment cancelled); allocation table restructured (bonds $0 DCA, IRA rollover Oct 2027, equity DCA redistributed); Position 1 rewritten with MassMutual product details, rollover instructions, asset-location rationale |
+| `outputs/charts/corrected_reserve_projection_2026-09-23.png` | New chart: $162,709 liquid start, $30K/$50K recalibrated floors, Oct 2027 IRA rollover event line, WF Joint crossover scenarios |
+| `reports/investment_plan_full.md` | Bond weight resolved: Position 1 header + conviction rationale updated from 27% (working) to 20% (final); allocation table rebuilt; total liquid runway and guaranteed-income bond-equivalent figures added |
+| `reports/investment_plan.qmd` | `phase2-allocation-table` chunk updated to 20% bonds, 24% US, 18% Intl Dev, 18% EM |
 
 ---
 
@@ -920,4 +987,42 @@ Do not proceed to implementation if:
 - Feature importance analysis reveals only spurious correlations with no economic rationale
 
 **Note:** Absence of a useful model is a valid and publishable finding within this research system. The Phase 4 percentile + GARCH approach remains the production signal until/unless this research yields a model that demonstrably improves on it.
+
+---
+
+## FW-01 Status: CLOSED — Null Result Confirmed (Sep 23, 2026)
+
+**Plan file:** N/A (research, not a deliverable phase)
+**Notebook:** `notebooks/cop_usd_forecasting_research.qmd`
+**Feature matrix:** `data/processed/cop_macro_features.csv` (101 rows, 8 drivers)
+
+### Colombia Macro Driver Fetch Routine (implemented Sep 23, 2026)
+
+Function `fetch_colombia_macro_drivers()` added to `R/colombia_indicators.R`.
+Fetches 4 monthly FRED series via `fredr`:
+
+| FRED ID | Description | Latest |
+|---|---|---|
+| `COLIRSTCI01STM` | Colombia overnight/call money rate (Banrep proxy) | Aug 2026 |
+| `COLCPALTT01GYM` | Colombia CPI, all items, YoY % change | Apr 2025 (~5 mo lag) |
+| `COLIRLTLT01STM` | Colombia 10Y TES government bond yield | Aug 2026 |
+| `FEDFUNDS` | US Federal Funds effective rate | Aug 2026 |
+
+Derived outputs: `rate_differential` (Banrep − Fed Funds), `colombia_cpi_surprise` (MoM Δ in CPI YoY), `tes_10y_yield`.
+
+### Final Results
+
+| Model | RMSE | MAE | Dir Acc | Hold-out months |
+|---|---:|---:|---:|---:|
+| Random Walk | 0.0338 | 0.0261 | 46.2% | 65 |
+| AR(1) | 0.0352 | 0.0267 | 44.6% | 65 |
+| ARIMAX (rate diff + TES 10Y) | 0.0366 | 0.0286 | 44.6% | 65 |
+
+**8 drivers × 4 horizons = 32 correlation tests. Significant at p < 0.05: 0.**
+
+ARIMAX (Colombia-specific exogenous regressors) is worse than the random walk on all metrics.
+
+**Verdict:** Both falsification criteria triggered. Do not proceed to Markov or BVAR development. Phase 4 percentile + GARCH is production signal.
+
+**Earliest sensible revisit:** January 2027 — post-2022 subsample analysis (targeting 48+ months of post-Petro data). No other credible path identified until higher-frequency Colombia CPI data becomes available programmatically.
 

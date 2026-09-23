@@ -8,7 +8,7 @@ source("R/data_import.R")
 
 # ---- Configuration ----
 
-qif_file <- "data/raw/2026-09-21_fullBanktivity.qif"  # Update quarterly
+qif_file <- "data/raw/2026-09-23_fullBanktivity.qif"  # Update quarterly
 target_estate <- 500000
 monthly_contribution <- 5200
 annual_return_base <- 0.075

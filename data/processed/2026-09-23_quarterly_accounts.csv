@@ -1,0 +1,20 @@
+account_name,account_type,balance,account_category
+BOA Checking,Bank,847.89,Checking/Savings
+BOA Savings,Bank,1307.26,Checking/Savings
+Chase Savings,Bank,527.5,Checking/Savings
+Chase checking,Bank,6533.56,Checking/Savings
+MassMutual - Annuities and Insurance Checking,Bank,147304.44,Checking/Savings
+Wealthfront Cash Account,Bank,153491.92,Checking/Savings
+Chase Amazon Visa 5154,CCard,-1516.89,Credit Card
+Chase Marriott Bonvoy,CCard,-1705.5,Credit Card
+Citi /AAdvantage Executive World Elite Mastercard,CCard,-8135.64,Credit Card
+Hilton Honors AMEX 1009,CCard,-361.56,Credit Card
+Kenneth's Rollover IRA Fidelity Go,Invst,12.88,Investment
+Kenneth's TODI Fidelity Go,Invst,252.43,Investment
+Kenneth's Trad IRA Fidelity Go,Invst,71.16,Investment
+Resurety Stock,Invst,0,Investment
+SEP-IRA,Invst,-25.14,Investment
+Wealthfront Individual Bond Ladder,Invst,103286.6,Investment
+Wealthfront Joint Automated Investing Account,Invst,80618.9,Investment
+Aircraft loan,Oth A,93205.6,Other Asset
+Hawthorne home,Oth A,125000,Other Asset

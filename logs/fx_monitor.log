@@ -7,3 +7,16 @@ Registered S3 method overwritten by 'quantmod':
 [2026-09-22 11:12:35] [FX Monitor] 5-year percentile: 3.1th — Historically Strong Peso (Unfavorable for USD→COP conversion) 
 [2026-09-22 11:12:35] [FX Monitor] Percentile 3.1 < threshold 80. No alert needed. 
 [2026-09-22 11:12:35] [FX Monitor] === Monitor complete. No alert sent. === 
+[2026-09-23 08:30:01] [FX Monitor] === COP/USD FOREX Monitor Started === 
+[2026-09-23 08:30:02] [FX Monitor] Fetching COP/USD data... 
+Registered S3 method overwritten by 'quantmod':
+  method            from
+  as.zoo.data.frame zoo 
+[2026-09-23 08:30:05] [FX Monitor] Current COP/USD: 3,201 
+[2026-09-23 08:30:05] [FX Monitor] 5-year percentile: 2.7th — Historically Strong Peso (Unfavorable for USD→COP conversion) 
+[2026-09-23 08:30:05] [FX Monitor] Reserve trigger (35th pct): 3,917 COP/USD 
+[2026-09-23 08:30:05] [FX Monitor] Yield trigger   (80th pct): 4,351 COP/USD 
+[2026-09-23 08:30:05] [FX Monitor] Yield-play alert triggered:  FALSE 
+[2026-09-23 08:30:05] [FX Monitor] Reserve alert triggered:     FALSE 
+[2026-09-23 08:30:05] [FX Monitor] Neither threshold reached. No action needed. 
+[2026-09-23 08:30:05] [FX Monitor] === Monitor complete. No alerts sent. === 

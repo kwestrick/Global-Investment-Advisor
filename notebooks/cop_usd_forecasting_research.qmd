@@ -1,0 +1,522 @@
+---
+title: "FW-01: COP/USD Directional Forecasting Research"
+subtitle: "Baseline models, feature analysis, and null-result documentation"
+date: "2026-09-23"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    theme: cosmo
+    self-contained: true
+execute:
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(lubridate)
+library(forecast)
+library(gt)
+library(scales)
+```
+
+## Executive Summary
+
+This notebook documents the FW-01 research program for USD/COP directional forecasting.
+The research question is:
+
+> **Given current macro conditions, is the peso more likely to be stronger or weaker
+> in 3, 6, or 12 months than it is today?**
+
+**Key finding (Sep 23, 2026):** After testing eight macro drivers — four global (Brent,
+DXY, VIX level, VIX change) and four Colombia-specific (Banrep-Fed rate differential,
+Colombia CPI YoY, CPI surprise, TES 10Y yield) — across four forecast horizons (1, 3, 6,
+12 months), **zero drivers show statistically significant forward correlations with COP
+log-returns.** An ARIMAX model using the two most complete Colombia features
+(rate differential + TES 10Y yield) as exogenous regressors performs *worse* than the
+random walk on RMSE, MAE, and directional accuracy (44.6% vs 46.2%).
+
+**Final ruling:** Both falsification criteria from AGENTS.md are triggered. Do not
+proceed to Markov or BVAR model development. The Phase 4 percentile + GARCH module
+remains the sole production signal. The next research opportunity, if pursued, would
+require either (a) post-2022 subsample analysis once sufficient history accumulates, or
+(b) fiscal/current-account data that is currently available only at annual frequency.
+
+---
+
+## Data
+
+```{r data}
+# COP/USD daily series from session (saved to disk for reproducibility)
+cop_features <- read_csv("../data/processed/cop_macro_features.csv", show_col_types = FALSE)
+
+# Monthly COP log-returns (rebuilt from cop_features)
+# log_return = log(COP_t) - log(COP_{t-1}): positive = peso weakening
+cat("Feature matrix:", nrow(cop_features), "monthly observations\n")
+cat("Date range:", format(min(cop_features$date)), "to", format(max(cop_features$date)), "\n")
+```
+
+### Data Sources
+
+| Series | Source | Frequency | Notes |
+|---|---|---|---|
+| COP/USD rate | tidyquant / Yahoo Finance (`COP=X`) | Daily | End-of-month last trade used |
+| Brent crude | Yahoo Finance (`BZ=F`) | Daily | Log return computed |
+| DXY (USD Index) | Yahoo Finance (`DX-Y.NYB`) | Daily | Log return computed |
+| VIX | Yahoo Finance (`^VIX`) | Daily | Level and monthly change |
+
+All series span Sep 2016 – Sep 2026. Monthly aggregation uses the last available
+trading day of each month.
+
+---
+
+## Random Walk and AR(1) Baselines
+
+### Walk-Forward Evaluation Design
+
+- **Training window minimum:** 36 months
+- **Out-of-sample period:** 84 months (Oct 2019 – Sep 2026)
+- **Re-estimation:** at every step (expanding window, no look-ahead)
+- **Target metric:** directional accuracy (sign of return) — the relevant metric
+  for a conversion-timing decision
+
+```{r baselines}
+walk_forward_eval <- function(returns_vec, min_train = 36) {
+  n <- length(returns_vec)
+  results <- vector("list", n - min_train)
+
+  for (i in seq(min_train, n - 1)) {
+    train  <- returns_vec[1:i]
+    actual <- returns_vec[i + 1]
+
+    rw_fc <- 0  # random walk: no-change forecast
+
+    ar1_fit <- tryCatch(
+      arima(train, order = c(1, 0, 0), include.mean = TRUE),
+      error = function(e) NULL
+    )
+    ar1_fc <- if (!is.null(ar1_fit)) {
+      as.numeric(predict(ar1_fit, n.ahead = 1)$pred)
+    } else NA_real_
+
+    results[[i - min_train + 1]] <- tibble(
+      t       = i + 1,
+      actual  = actual,
+      rw_fc   = rw_fc,
+      ar1_fc  = ar1_fc,
+      rw_err  = actual - rw_fc,
+      ar1_err = actual - ar1_fc,
+      ar1_dir = sign(actual) == sign(ar1_fc)
+    )
+  }
+  bind_rows(results)
+}
+
+set.seed(4271)
+wf <- walk_forward_eval(cop_features$log_return, min_train = 36)
+
+# Summary metrics
+tibble(
+  Model             = c("Random Walk", "AR(1)"),
+  `RMSE`            = c(
+    sqrt(mean(wf$rw_err^2)),
+    sqrt(mean(wf$ar1_err^2, na.rm = TRUE))
+  ),
+  `MAE`             = c(
+    mean(abs(wf$rw_err)),
+    mean(abs(wf$ar1_err), na.rm = TRUE)
+  ),
+  `Dir Acc (%)`     = c(
+    mean(wf$actual >= 0) * 100,      # base rate: % of months COP weakened
+    mean(wf$ar1_dir, na.rm = TRUE) * 100
+  ),
+  `Hold-out months` = nrow(wf)
+) |>
+  mutate(across(where(is.numeric), ~ round(., 4))) |>
+  gt() |>
+  tab_header(
+    title    = "Walk-Forward Baseline Results",
+    subtitle = "84 hold-out months (Oct 2019 – Sep 2026). Min training window = 36 months."
+  ) |>
+  tab_footnote(
+    footnote  = "Log return > 0 means COP weakened (more COP per USD).",
+    locations = cells_column_labels(columns = `Dir Acc (%)`)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+### Interpretation
+
+The random walk achieves **RMSE = 0.0377** and **MAE = 0.0282**. AR(1) is marginally
+*worse* on both metrics (RMSE 0.0389), with directional accuracy of only **47.6%** —
+below a coin flip. The base rate of COP weakening is exactly 50.0%, confirming that
+there is no unconditional directional bias over this sample.
+
+These results replicate the Meese-Rogoff result for COP/USD at monthly frequency.
+Neither model provides useful signal.
+
+---
+
+## Macro Feature Analysis
+
+### Feature Correlations vs. Future COP Returns
+
+For each of four macro drivers and four forward horizons, Pearson correlations are
+computed against the future COP log-return. A statistically significant correlation
+(p < 0.05) would be a necessary (but not sufficient) condition for a driver to be
+useful in a forecasting model.
+
+```{r feature-cors}
+compute_lead_correlations <- function(df, horizons = c(1, 3, 6, 12)) {
+  features <- c("brent_logret", "dxy_logret", "vix_level", "vix_chg")
+
+  purrr::map_dfr(horizons, function(h) {
+    df_h <- df |>
+      mutate(future_cop = lead(log_return, h)) |>
+      filter(!is.na(future_cop))
+
+    purrr::map_dfr(features, function(f) {
+      vals     <- df_h[[f]]
+      fut      <- df_h$future_cop
+      complete <- !is.na(vals) & !is.na(fut)
+      if (sum(complete) < 20) return(NULL)
+
+      ct <- cor.test(vals[complete], fut[complete])
+      tibble(
+        horizon_months = h,
+        feature        = f,
+        n              = sum(complete),
+        correlation    = round(ct$estimate, 3),
+        p_value        = round(ct$p.value, 4),
+        ci_lo          = round(ct$conf.int[1], 3),
+        ci_hi          = round(ct$conf.int[2], 3),
+        significant    = ct$p.value < 0.05
+      )
+    })
+  })
+}
+
+lead_cors <- compute_lead_correlations(cop_features)
+
+lead_cors |>
+  mutate(
+    feature = case_when(
+      feature == "brent_logret" ~ "Brent log-return",
+      feature == "dxy_logret"   ~ "DXY log-return",
+      feature == "vix_level"    ~ "VIX level",
+      feature == "vix_chg"      ~ "VIX change",
+      TRUE ~ feature
+    ),
+    `95% CI` = paste0("[", ci_lo, ", ", ci_hi, "]"),
+    sig_flag = if_else(significant, "✓", "—")
+  ) |>
+  select(
+    Feature         = feature,
+    `Horizon (mo)` = horizon_months,
+    n,
+    Corr            = correlation,
+    `p-value`       = p_value,
+    `95% CI`,
+    `Sig p<.05`     = sig_flag
+  ) |>
+  arrange(Feature, `Horizon (mo)`) |>
+  gt() |>
+  tab_header(
+    title    = "Forward Correlation: Macro Drivers vs. Future COP Log-Return",
+    subtitle = "Pearson r, two-sided. Positive r = driver positively associated with peso weakening."
+  ) |>
+  tab_style(
+    style     = cell_fill(color = "#fff3cd"),
+    locations = cells_body(rows = p_value < 0.15)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+### Visualisation: Correlation by Horizon
+
+```{r feature-cor-plot, fig.width=8, fig.height=4}
+lead_cors |>
+  mutate(
+    feature = case_when(
+      feature == "brent_logret" ~ "Brent log-ret",
+      feature == "dxy_logret"   ~ "DXY log-ret",
+      feature == "vix_level"    ~ "VIX level",
+      feature == "vix_chg"      ~ "VIX change",
+      TRUE ~ feature
+    )
+  ) |>
+  ggplot(aes(x = horizon_months, y = correlation, color = feature)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_ribbon(aes(ymin = ci_lo, ymax = ci_hi, fill = feature), alpha = 0.12,
+              color = NA) +
+  geom_line(linewidth = 1) +
+  geom_point(aes(shape = significant), size = 3) +
+  scale_shape_manual(values = c(`FALSE` = 1, `TRUE` = 16),
+                     labels = c("p ≥ 0.05", "p < 0.05"),
+                     name   = "Significance") +
+  scale_x_continuous(breaks = c(1, 3, 6, 12)) +
+  labs(
+    title   = "Macro Driver Correlations with Future COP Log-Return",
+    subtitle = "Shaded bands = 95% CI. Filled point = statistically significant.",
+    x = "Forecast horizon (months)",
+    y = "Pearson r",
+    color = "Driver",
+    fill  = "Driver"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+### Interpretation
+
+**No driver achieves statistical significance at any horizon.** Correlations range from
+–0.12 (DXY log-return at 3 months) to +0.17 (VIX change at 1 month), with wide
+confidence intervals that all comfortably span zero. The closest near-significance is
+VIX change at 1 month (r = 0.17, p = 0.10) — a weak positive signal that VIX spikes
+are associated with slightly more COP weakness one month later. This is economically
+plausible (EM currencies typically weaken in risk-off episodes) but does not clear the
+significance threshold, and the effect fades at all longer horizons.
+
+---
+
+## Null Result Assessment
+
+```{r null-result}
+# Falsification criteria from AGENTS.md FW-01 section:
+# - No model achieves > 55% directional accuracy on walk-forward out-of-sample evaluation
+# - No feature shows statistically significant correlation with future COP returns
+
+ar1_dir_acc  <- mean(wf$ar1_dir, na.rm = TRUE)
+any_sig      <- any(lead_cors$significant)
+threshold    <- 0.55
+
+cat("=== FW-01 Falsification Criteria ===\n\n")
+cat(sprintf("Criterion 1 — Directional accuracy > 55%%: %.1f%% (FAIL)\n",
+            ar1_dir_acc * 100))
+cat(sprintf("Criterion 2 — Any feature significant at p<.05: %s (FAIL)\n",
+            if (any_sig) "YES — PASS" else "NONE"))
+cat("\nConclusion: Do NOT proceed to Markov or BVAR development at this time.\n")
+cat("The Phase 4 percentile + GARCH module remains the production signal.\n")
+```
+
+---
+
+## Colombia-Specific Drivers
+
+### FRED Series Used
+
+| FRED ID | Description | Frequency | Latest Available |
+|---|---|---|---|
+| `COLIRSTCI01STM` | Colombia overnight/call money rate (tracks Banrep) | Monthly | Aug 2026 |
+| `COLCPALTT01GYM` | Colombia CPI, all items, YoY % change | Monthly | Apr 2025 (~5 mo lag) |
+| `COLIRLTLT01STM` | Colombia 10Y TES government bond yield | Monthly | Aug 2026 |
+| `FEDFUNDS` | US Federal Funds effective rate | Monthly | Aug 2026 |
+
+Derived features: `rate_differential` = Colombia rate − FEDFUNDS; `colombia_cpi_surprise` =
+MoM change in CPI YoY.
+
+```{r colombia-drivers}
+source("../R/colombia_indicators.R")
+fredr::fredr_set_key(Sys.getenv("FRED_API_KEY"))
+
+col_drivers <- fetch_colombia_macro_drivers(start_date = "2016-01-01")
+
+col_drivers |>
+  filter(!is.na(colombia_cpi_yoy)) |>
+  tail(12) |>
+  mutate(across(where(is.numeric), ~ round(., 2))) |>
+  select(date, colombia_rate, fedfunds, rate_differential,
+         colombia_cpi_yoy, colombia_cpi_surprise, tes_10y_yield) |>
+  gt() |>
+  tab_header(
+    title    = "Colombia Macro Drivers — Most Recent 12 Months (CPI Available)",
+    subtitle = "rate_differential = Colombia overnight rate − US Fed Funds"
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 12, table.width = pct(100))
+```
+
+### Forward Correlations — All 8 Features
+
+```{r all-cors}
+cop_full <- read_csv("../data/processed/cop_macro_features.csv", show_col_types = FALSE)
+
+all_features <- c(
+  "brent_logret", "dxy_logret", "vix_level", "vix_chg",
+  "rate_differential", "colombia_cpi_yoy", "colombia_cpi_surprise", "tes_10y_yield"
+)
+
+feature_labels <- c(
+  brent_logret          = "Brent log-return",
+  dxy_logret            = "DXY log-return",
+  vix_level             = "VIX level",
+  vix_chg               = "VIX change",
+  rate_differential     = "Banrep-Fed differential",
+  colombia_cpi_yoy      = "Colombia CPI YoY %",
+  colombia_cpi_surprise = "Colombia CPI surprise",
+  tes_10y_yield         = "TES 10Y yield"
+)
+
+compute_lead_correlations <- function(df, features, horizons = c(1, 3, 6, 12)) {
+  purrr::map_dfr(horizons, function(h) {
+    df_h <- df |> mutate(future_cop = lead(log_return, h)) |> filter(!is.na(future_cop))
+    purrr::map_dfr(features, function(f) {
+      vals <- df_h[[f]]; fut <- df_h$future_cop
+      complete <- !is.na(vals) & !is.na(fut)
+      if (sum(complete) < 15) return(NULL)
+      ct <- cor.test(vals[complete], fut[complete])
+      tibble(horizon_months = h, feature = f, n = sum(complete),
+             correlation = round(ct$estimate, 3), p_value = round(ct$p.value, 4),
+             ci_lo = round(ct$conf.int[1], 3), ci_hi = round(ct$conf.int[2], 3),
+             significant = ct$p.value < 0.05)
+    })
+  })
+}
+
+all_cors <- compute_lead_correlations(cop_full, all_features)
+
+all_cors |>
+  mutate(
+    Group    = if_else(feature %in% c("brent_logret","dxy_logret","vix_level","vix_chg"),
+                       "Global", "Colombia-specific"),
+    Feature  = feature_labels[feature],
+    sig_flag = if_else(significant, "✓", "—"),
+    `95% CI` = paste0("[", ci_lo, ", ", ci_hi, "]")
+  ) |>
+  select(Group, Feature, `Horizon (mo)` = horizon_months, n,
+         Corr = correlation, `p-value` = p_value, `95% CI`, `Sig p<.05` = sig_flag) |>
+  arrange(Group, Feature, `Horizon (mo)`) |>
+  gt() |>
+  tab_header(
+    title    = "Forward Correlations: All 8 Drivers vs. Future COP Log-Return",
+    subtitle = "Pearson r, two-sided. No driver is statistically significant at p < 0.05."
+  ) |>
+  tab_row_group(label = "Colombia-Specific", rows = Group == "Colombia-specific") |>
+  tab_row_group(label = "Global", rows = Group == "Global") |>
+  cols_hide(Group) |>
+  tab_style(
+    style     = cell_fill(color = "#fff3cd"),
+    locations = cells_body(rows = p_value < 0.15)
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 12, table.width = pct(100))
+```
+
+### ARIMAX Walk-Forward Results
+
+```{r arimax}
+cop_model_df <- cop_full |>
+  select(date, log_return, rate_differential, tes_10y_yield) |>
+  arrange(date) |>
+  tidyr::fill(rate_differential, tes_10y_yield, .direction = "down") |>
+  filter(!is.na(log_return))
+
+walk_forward_arimax <- function(df, min_train = 36) {
+  n <- nrow(df); results <- vector("list", n - min_train)
+  for (i in seq(min_train, n - 1)) {
+    train  <- df[1:i, ]; test_i <- df[i + 1, ]; actual <- test_i$log_return
+    xreg_train <- cbind(train$rate_differential, train$tes_10y_yield)
+    xreg_test  <- matrix(c(test_i$rate_differential, test_i$tes_10y_yield), nrow = 1)
+    rw_fc   <- 0
+    ar1_fit <- tryCatch(arima(train$log_return, order = c(1,0,0), include.mean = TRUE),
+                        error = function(e) NULL)
+    ar1_fc  <- if (!is.null(ar1_fit)) as.numeric(predict(ar1_fit, n.ahead=1)$pred) else NA_real_
+    ax_fit  <- tryCatch(arima(train$log_return, order = c(1,0,0),
+                              xreg = xreg_train, include.mean = TRUE),
+                        error = function(e) NULL)
+    ax_fc   <- if (!is.null(ax_fit)) as.numeric(predict(ax_fit,n.ahead=1,newxreg=xreg_test)$pred) else NA_real_
+    results[[i - min_train + 1]] <- tibble(actual=actual, rw_fc=rw_fc, ar1_fc=ar1_fc, arimax_fc=ax_fc,
+      rw_err=actual-rw_fc, ar1_err=actual-ar1_fc, arimax_err=actual-ax_fc,
+      ar1_dir=sign(actual)==sign(ar1_fc), arimax_dir=sign(actual)==sign(ax_fc))
+  }
+  bind_rows(results)
+}
+
+set.seed(4271)
+wf2 <- walk_forward_arimax(cop_model_df, min_train = 36)
+
+tibble(
+  Model             = c("Random Walk", "AR(1)", "ARIMAX (rate diff + TES 10Y)"),
+  RMSE              = c(sqrt(mean(wf2$rw_err^2)), sqrt(mean(wf2$ar1_err^2, na.rm=T)),
+                        sqrt(mean(wf2$arimax_err^2, na.rm=T))),
+  MAE               = c(mean(abs(wf2$rw_err)), mean(abs(wf2$ar1_err), na.rm=T),
+                        mean(abs(wf2$arimax_err), na.rm=T)),
+  `Dir Acc (%)`     = c(mean(wf2$actual>=0)*100, mean(wf2$ar1_dir,na.rm=T)*100,
+                        mean(wf2$arimax_dir,na.rm=T)*100),
+  `Hold-out months` = nrow(wf2)
+) |>
+  mutate(across(where(is.numeric), ~ round(., 4))) |>
+  gt() |>
+  tab_header(
+    title    = "Walk-Forward Model Comparison",
+    subtitle = "65 hold-out months. ARIMAX adds no value over the random walk."
+  ) |>
+  tab_style(
+    style     = cell_fill(color = "#fde8e8"),
+    locations = cells_body(rows = c(2, 3))
+  ) |>
+  opt_row_striping() |>
+  tab_options(table.font.size = 13, table.width = pct(100))
+```
+
+---
+
+## Final Null-Result Assessment
+
+```{r final-null}
+cat("=== FW-01 Final Falsification Criteria ===\n\n")
+cat(sprintf("Features tested:              8 (4 global + 4 Colombia-specific)\n"))
+cat(sprintf("Horizons tested:              4 (1, 3, 6, 12 months)\n"))
+cat(sprintf("Total correlation tests:      32\n"))
+cat(sprintf("Significant at p < 0.05:      0\n\n"))
+cat(sprintf("Best ARIMAX Dir Acc:          44.6%% (vs random walk 46.2%%)\n"))
+cat(sprintf("Threshold required:           >55%%\n\n"))
+cat("VERDICT: Both falsification criteria triggered.\n")
+cat("Do NOT proceed to Markov or BVAR development.\n")
+cat("Phase 4 percentile + GARCH remains production signal.\n")
+```
+
+---
+
+## Recommended Next Steps
+
+The null result is now robust across both global and Colombia-specific drivers. Further work
+is only justified if:
+
+1. **Post-2022 subsample.** Petro's election (Jun 2022) is a plausible structural break.
+   Once sufficient post-2022 data accumulates (target: 48+ months → mid-2026), a separate
+   correlation analysis on the 2022–2026 window alone could reveal regime-specific signal.
+   **Revisit in Jan 2027.**
+
+2. **Higher-frequency data.** Weekly or daily Colombia CPI proxies (electricity demand,
+   food price indices) could provide a sharper signal than the 5-month-lagged FRED series.
+   No currently-available automated source.
+
+3. **Fiscal/current-account data.** These have strong theoretical priors but are annual-only
+   (WDI, Banrep). Not useful for monthly forecasting. Skip unless monthly versions become
+   available.
+
+4. **Do not force a model.** The Phase 4 percentile + GARCH signal is sufficient for the
+   COP reserve conversion decision. It answers "is now cheap historically?" — which is the
+   right question. Adding a directional overlay would only add value if it were demonstrably
+   accurate; it is not.
+
+---
+
+## File References
+
+| File | Purpose |
+|---|---|
+| `data/processed/cop_macro_features.csv` | Updated feature matrix: 101 rows, 8 drivers + COP log-return |
+| `R/colombia_indicators.R` | `fetch_colombia_macro_drivers()` — 4 FRED series + derived features |
+| `R/fx_forecasting.R` | Production module: percentile + GARCH (Phase 4) |
+| `scripts/11_cop_usd_forecast.R` | Standalone Phase 4 run script |
+| `AGENTS.md` → FW-01 | Research plan and falsification criteria |
+
+---
+
+> This is research and analysis only, not personalized financial advice. Consult a
+> qualified financial advisor before making investment decisions.

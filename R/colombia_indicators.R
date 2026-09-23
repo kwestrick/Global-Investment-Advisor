@@ -546,6 +546,94 @@ generate_colombia_income_forecast <- function(
     dplyr::arrange(scenario, year, vehicle_id)
 }
 
+# ---- Live data: Colombia macro drivers for FX forecasting -------------------
+
+#' Fetch Colombia-specific macro drivers for COP/USD forecasting research.
+#'
+#' Pulls four monthly FRED series and computes derived features:
+#'   - COLIRSTCI01STM  : Colombia overnight/call money rate (%, monthly) — tracks Banrep policy rate
+#'   - COLCPALTT01GYM  : Colombia CPI, all items, YoY % change (monthly, ~4-5 month lag)
+#'   - COLIRLTLT01STM  : Colombia 10Y TES government bond yield (%, monthly) — risk premium signal
+#'   - FEDFUNDS        : US Federal Funds effective rate (%, monthly)
+#'
+#' Derived columns:
+#'   - rate_differential    : Colombia overnight rate - FEDFUNDS (carry spread)
+#'   - colombia_cpi_yoy     : Colombia CPI YoY % (direct from FRED series)
+#'   - colombia_cpi_surprise: Month-over-month change in CPI YoY (unexpected inflation proxy)
+#'   - tes_10y_yield        : Colombia 10Y TES yield (credit/duration risk premium)
+#'
+#' @param start_date Date or character "YYYY-MM-DD". Defaults to 2015-01-01.
+#' @param end_date Date or character "YYYY-MM-DD". Defaults to today.
+#' @return Tibble with columns:
+#'   date, colombia_rate, fedfunds, rate_differential,
+#'   colombia_cpi_yoy, colombia_cpi_surprise, n_missing.
+#'   Returns NULL with a warning on full failure.
+fetch_colombia_macro_drivers <- function(
+  start_date = as.Date("2015-01-01"),
+  end_date   = Sys.Date()
+) {
+  if (!requireNamespace("fredr", quietly = TRUE)) {
+    stop("Package 'fredr' is required. Install with install.packages('fredr').")
+  }
+
+  key <- tryCatch(fredr::fredr_get_key(), error = function(e) "")
+  if (is.null(key) || nchar(key) == 0) {
+    stop(
+      "FRED API key not set. Add FRED_API_KEY=<your_key> to ~/.Renviron, ",
+      "then restart R and run fredr::fredr_set_key(Sys.getenv('FRED_API_KEY'))."
+    )
+  }
+
+  fetch_one <- function(series_id, col_name) {
+    tryCatch(
+      fredr::fredr(
+        series_id         = series_id,
+        observation_start = as.Date(start_date),
+        observation_end   = as.Date(end_date),
+        frequency         = "m"             # force monthly aggregation
+      ) |>
+        dplyr::select(date, value) |>
+        dplyr::rename(!!col_name := value) |>
+        dplyr::filter(!is.na(.data[[col_name]])),
+      error = function(e) {
+        warning("FRED series '", series_id, "' failed: ", conditionMessage(e))
+        NULL
+      }
+    )
+  }
+
+  colombia_rate_raw <- fetch_one("COLIRSTCI01STM", "colombia_rate")
+  cpi_raw           <- fetch_one("COLCPALTT01GYM", "colombia_cpi_yoy")
+  tes10y_raw        <- fetch_one("COLIRLTLT01STM", "tes_10y_yield")
+  fedfunds_raw      <- fetch_one("FEDFUNDS",        "fedfunds")
+
+  if (is.null(colombia_rate_raw) && is.null(cpi_raw)) {
+    warning("fetch_colombia_macro_drivers: both Colombia rate series failed.")
+    return(NULL)
+  }
+
+  # Join on date — outer join so we keep all months present in any series
+  combined <- fedfunds_raw |>
+    dplyr::full_join(colombia_rate_raw, by = "date") |>
+    dplyr::full_join(cpi_raw,           by = "date") |>
+    dplyr::full_join(tes10y_raw,        by = "date") |>
+    dplyr::arrange(date) |>
+    dplyr::mutate(
+      # Carry spread: how much more Colombia pays over the Fed
+      rate_differential = colombia_rate - fedfunds,
+
+      # CPI surprise: unexpected acceleration/deceleration vs. prior month
+      colombia_cpi_surprise = colombia_cpi_yoy - dplyr::lag(colombia_cpi_yoy),
+
+      # Count missing values per row for diagnostics
+      n_missing = is.na(colombia_rate) + is.na(fedfunds) +
+                  is.na(colombia_cpi_yoy) + is.na(tes_10y_yield)
+    ) |>
+    dplyr::filter(date >= as.Date(start_date), date <= as.Date(end_date))
+
+  combined
+}
+
 # ---- Summary: Colombia snapshot ----------------------------------------------
 
 #' Print a concise Colombia investment snapshot to the console.

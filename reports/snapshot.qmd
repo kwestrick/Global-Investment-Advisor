@@ -46,11 +46,11 @@ MONTHLY_INCOME  <- 7488          # SS $3,100 + VA Disability $4,388
 MONTHLY_SPEND   <- 8315          # 12-month recurring average
 NET_FLOW        <- MONTHLY_INCOME - MONTHLY_SPEND   # –$827
 ANNUAL_FLOW     <- NET_FLOW * 12                    # –$9,924
-USD_NW          <- 557994
-COP_HOME_USD    <- 375000        # 1.2B COP ÷ 3,200 COP/USD
-COP_BANK_USD    <-   9375        # 30M COP ÷ 3,200 COP/USD
+USD_NW          <- 700715        # updated Sep 23, 2026 from new Banktivity export
+COP_HOME_USD    <- 375000        # 1.2B COP ÷ 3,200 COP/USD — unchanged
+COP_BANK_USD    <-   9375        # 30M COP ÷ 3,200 COP/USD — unchanged
 COMBINED_NW     <- USD_NW + COP_HOME_USD + COP_BANK_USD
-LIQUID_RESERVE  <- 309908
+LIQUID_RESERVE  <- 162709        # non-IRA liquid: WF Cash $153,492 + checking ~$9,217; MassMutual IRA excluded (locked until Oct 2027)
 
 # ── Palette ───────────────────────────────────────────────────────────────────
 CLR_NAVY  <- "#1e3a5f"
@@ -308,15 +308,17 @@ large_items |>
 ## Asset Allocation
 
 ```{r allocation-chart}
-investable <- 309908 + 39847  # liquid + investments = $349,755
+investable <- 310013 + 184217  # updated Sep 23, 2026: liquid + investments = $494,230
 
+# Wealthfront Individual Bond Ladder: $103,287 | Wealthfront Joint: $80,619
+# Joint still in robo-advisor — review transfer to Fidelity/Schwab
 current <- tibble(
   asset_class   = c("Bonds / Ladder", "Cash / Liquid Reserve",
                     "U.S. Large Cap", "Intl. Developed",
                     "Emerging Markets", "Infrastructure", "Commodities"),
-  current_pct   = c(39847 / investable * 100,
-                    309908 / investable * 100, 0, 0, 0, 0, 0),
-  target_pct    = c(25, 10, 20, 15, 15, 10, 5)
+  current_pct   = c(103287 / investable * 100,
+                    310013 / investable * 100, 0, 0, 0, 0, 0),
+  target_pct    = c(20, 11, 24, 18, 18, 4, 5)
 )
 
 current |>
@@ -397,11 +399,10 @@ new COP-denominated income-generating investments (CDTs, TES bonds).
 
 ## 5-Year Net Worth Projection
 
-*Based on $557,994 starting net worth, –$827/month net cash flow (income minus recurring spending),
-and no additional one-time expenditures. Returns applied to the full investable base.*
+*Based on $700,715 starting net worth (Sep 23, 2026 Banktivity export), –$827/month net cash flow (income minus recurring spending), and no additional one-time expenditures. Returns applied to the full investable base.*
 
 ```{r projection-chart}
-nw0 <- 557994
+nw0 <- 700715  # updated Sep 23, 2026
 
 proj <- crossing(
   tibble(

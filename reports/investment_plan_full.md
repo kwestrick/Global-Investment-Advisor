@@ -1,6 +1,6 @@
 # Full Investment Plan
 ## Global Investment Advisor — Kenneth Westrick
-**As of:** September 21, 2026  
+**As of:** September 23, 2026 (updated)  
 **Document type:** Standing reference — update quarterly
 
 ---
@@ -30,7 +30,7 @@ This document is the definitive reference for the current investment strategy. I
 
 **Phase 2 (After ~October 2027 onward):** Resume $5,200/month into USD-denominated assets using a 7-class global ETF portfolio. The priority positions outside the U.S. are India (INDA), broad emerging markets (VWO), Japan (EWJ), and global electric grid infrastructure (GRID), all of which score materially higher than comparable U.S. alternatives on the project's composite conviction model.
 
-The $557,994 USD net worth and $310K liquid reserve are more than sufficient to sustain the strategy through either phase. The $500K estate goal is already exceeded and will remain exceeded under all three projection scenarios.
+The $700,715 USD net worth is more than sufficient to sustain the strategy through either phase. **Note:** only $162,709 of the $310K liquid reserve is non-IRA and freely accessible; the remaining $147,304 is the MassMutual Traditional IRA (locked until Oct 6, 2027). The $500K estate goal is exceeded by $200,715 (140% of target) and will remain exceeded under all three projection scenarios.
 
 ---
 
@@ -40,7 +40,7 @@ The $557,994 USD net worth and $310K liquid reserve are more than sufficient to 
 
 | Goal | Status | Notes |
 |---|---|---|
-| Preserve estate ≥ $500K | ✅ Achieved | Current US NW $558K; all 5-year scenarios exceed $500K |
+| Preserve estate ≥ $500K | ✅ Achieved | Current US NW $701K (140% of target); all 5-year scenarios exceed $500K |
 | Build COP spending reserve | 🔄 In Progress | 18-month coverage target ~$20K USD (62.7M COP); sized by spending need, not portfolio percentage ||
 | Long-run wealth growth | 🔄 Active | Base case reaches $743K by Year 5 |
 | Hedge COP purchasing power | 🔄 In Progress | Significant Colombia living expenses and home |
@@ -49,7 +49,7 @@ The $557,994 USD net worth and $310K liquid reserve are more than sufficient to 
 
 - **No individual stock exposure** to NVIDIA, Microsoft, Alphabet, Meta, or Amazon. The user explicitly excludes concentrated AI-sector positions. ETFs that incidentally hold these are acceptable, but no single-company positions.
 - **Income reliability:** $7,488/month guaranteed income (Social Security $3,100 + VA Disability $4,388) must remain protected. No strategies that require surrendering, pledging, or encumbering guaranteed income streams.
-- **Liquidity floor:** Keep at least $100,000 in immediately liquid USD accounts at all times. Current liquid reserve is $310K; the floor is never to be crossed below $100K.
+- **Liquidity floor:** Keep at least $30,000 in immediately liquid non-IRA USD accounts at all times ($50K soft warning). **Corrected Sep 23, 2026:** true non-IRA liquid is $162,709 (Wealthfront Cash $153,492 + Chase/BOA ~$9,217). MassMutual $147,304 is a Traditional IRA — not accessible without tax consequence until the Oct 2027 rollover.
 - **Simplicity requirement:** The portfolio must be manageable from a wheelchair, remotely, in two countries. No strategies requiring active trading, frequent monitoring, or complex tax structures.
 - **No leverage, no options, no margin.**
 
@@ -65,18 +65,20 @@ The user splits time between the United States and Colombia. COP-denominated inc
 
 ## 3. Current Financial Position
 
-### Balance Sheet (September 21, 2026)
+### Balance Sheet (September 23, 2026)
 
-| Category | Balance |
-|---|---|
-| Checking / Savings (USD) | $309,908 |
-| Investments (Wealthfront bond ladder) | $39,847 |
-| Other Assets (Hawthorne home, aircraft) | $218,206 |
-| Credit Card Liabilities | −$9,967 |
-| **US Net Worth** | **$557,994** |
+| Category | Balance | Notes |
+|---|---|---|
+| Checking / Savings (USD) | $310,013 | Essentially unchanged from Sep 21 |
+| Investments | $184,217 | Bond ladder $103,287; Wealthfront Joint $80,619 ⚠️; other FAs $311 |
+| Other Assets (Hawthorne home, aircraft) | $218,206 | Unchanged |
+| Credit Card Liabilities | −$11,720 | Up from $9,967 — normal ongoing spend |
+| **US Net Worth** | **$700,715** | Up from $557,994 (+$142,721 / +25.6%) |
 | Colombia Home (~1.2B COP ÷ 3,200) | ~$375,000 | Legacy asset — designated for son Anton; not investable |
 | Colombia Bank Accounts (~30M COP) | ~$9,375 | COP cash reserve |
-| **Combined Net Worth** | **~$942,369** | Home included for tracking only; not deployable |
+| **Combined Net Worth** | **~$1,075,715** | Home included for tracking only; not deployable |
+
+> ✅ **Wealthfront Joint ($80,619) — DECISION: Transfer to Fidelity Joint taxable brokerage immediately via ACATS.** Decided Sep 23, 2026. Moves the ETF portfolio crossover point (ETF > liquid reserve) from month 15 → month 7 and adds ~$117K to the 5-year ETF value. No tax event on the in-kind ACATS transfer itself. After arrival at Fidelity, check the embedded gain before selling Wealthfront's positions to reallocate — expect a modest LTCG event (~15% on ~$8–16K of gains ≈ $1,200–$2,400). See Section 6 for transfer instructions.
 
 ### Monthly Cash Flow
 
@@ -315,57 +317,109 @@ Colombian Fondos de Inversión Colectiva (FICs) and fiducias are almost certainl
 
 ## 6. Phase 2 — 7-Class Global ETF Portfolio
 
-The USD ETF portfolio runs **in parallel with and independently of** the COP reserve build. Do not wait for the COP reserve to be fully funded before starting contributions — the two goals are funded from different pools ($5,200/month from income/reserve drawdown for USD ETFs; a one-time lump sum from cash reserves for COP). Begin $5,200/month contributions to Fidelity or Schwab immediately using the following 7-class target allocation. Also begin deploying the liquid reserve ($310K minus the $100K floor = $210K deployable) into this allocation over a 2–3 month window.
+The USD ETF portfolio runs **in parallel with and independently of** the COP reserve build. Do not wait for the COP reserve to be fully funded before starting contributions — the two goals are funded from different pools ($5,200/month from reserve drawdown for USD ETFs; a one-time lump sum from cash reserves for COP). Begin $5,200/month contributions to Fidelity or Schwab immediately using the following 7-class target allocation.
+
+> ⚠️ **Corrected Sep 23, 2026 — Non-IRA liquid reserve is $162,709, not $310,013.** The MassMutual account ($147,304) is a Traditional IRA (American Freedom Liberty 5 MVA annuity, issue date Oct 6 2022). IRA funds cannot be used as a DCA source for a taxable brokerage without triggering ordinary income taxes on every withdrawal. The true freely accessible liquid reserve is $162,709 (Wealthfront Cash $153,492 + Chase/BOA checking/savings ~$9,217). **Do not deploy a lump sum from liquid reserves into ETFs** — the non-IRA pool is not large enough to absorb lump-sum deployment without pushing against the $30K–$50K operational floor within months. Fund the ETF portfolio through $5,200/month DCA only, sourced from the Wealthfront Cash Account via ACH.
 
 ### Target Allocation
 
-**Rebuilt Sep 23, 2026** to reflect GRID's finalized 3%–4% tilt-cap sizing (see Position 5). The 6 percentage points freed from Infrastructure's legacy 10% weight were redistributed proportionally across the other six sleeves — no single sleeve was arbitrarily favored.
+**Rebuilt Sep 23, 2026** to reflect GRID's finalized 3%–4% tilt-cap sizing (see Position 5). **Bond weight resolved Sep 23, 2026** at 20% following a quantitative bond/drawdown study (see Analytical Findings). **Bond sleeve funding restructured Sep 23, 2026:** the bond sleeve is funded by the MassMutual IRA rollover (Oct 2027) — monthly DCA for bonds is $0; the $1,040/month previously allocated to bonds is redistributed proportionally across the six remaining positions.
 
-| Asset Class | Target % | Target $ (current base) | Monthly DCA | Vehicle |
+| Asset Class | Target % | Funding Source | Monthly DCA | Vehicle |
 |---|---|---|---|---|
-| Bonds / Ladder | 27% | $94,434 | $1,404 | VBTLX or bond ladder |
-| U.S. Large Cap | 21% | $73,449 | $1,092 | SPY or VTI |
-| Emerging Markets | 16% | $55,961 | $832 | VWO or INDA |
-| International Developed | 16% | $55,961 | $832 | VEA |
-| Cash Reserve | 11% | $38,473 | $572 | HYSA / Money Market |
-| Commodities / Transition | 5% | $17,488 | $260 | COPX or URA |
-| Infrastructure | 4% | $13,990 | $208 | GRID |
-| **Total** | **100%** | **$349,755** | **$5,200** | |
+| Bonds / Ladder | 20% | **MassMutual IRA rollover Oct 2027** | **$0** | BND or Treasury ladder (inside Fidelity IRA) |
+| U.S. Large Cap | 24% | Monthly DCA | $1,560 | SPY or VTI |
+| Emerging Markets | 18% | Monthly DCA | $1,170 | VWO or INDA |
+| International Developed | 18% | Monthly DCA | $1,170 | VEA |
+| Cash Reserve | 11% | Monthly DCA | $715 | HYSA / Money Market |
+| Commodities / Transition | 5% | Monthly DCA | $325 | COPX or URA |
+| Infrastructure | 4% | Monthly DCA | $260 | GRID |
+| **Total** | **100%** | | **$5,200** | |
 
-*Investable base = $309,908 liquid + $39,847 current investments = $349,755. Cash reserve target keeps $38,473 in liquid accounts, reducing the effective "deployable" amount. Proportional scaling factor applied to the other six sleeves: 96/90 ≈ 1.067, then rounded to whole percentage points (rounding introduces ±$1–2K noise versus exact proportional dollars — immaterial at this precision).*
+*Bond sleeve ($0 DCA): the MassMutual Individual Bond Ladder ($103,287) already partially funds the 20% target. The MassMutual American Freedom Liberty 5 MVA Traditional IRA ($147,304) rolls to a Fidelity Traditional IRA on or after October 6, 2027 (surrender period expiry), fully funding the bond sleeve within the IRA — see Position 1. Monthly DCA redirected from bonds to the six equity/cash/tilt positions proportionally (scale factor 5,200/4,160 ≈ 1.25 applied to prior amounts). Wealthfront Joint ($80,619): transfer to Fidelity/Schwab taxable account — this seeds the equity portfolio immediately and advances the crossover point (ETF > liquid reserve) from month 15 to month 7. Non-IRA liquid corrected to $162,709 (Wealthfront Cash $153,492 + Chase/BOA ~$9,217); lump-sum deployment not recommended given the narrow runway to the $30K–$50K operational floor.*
 
 ---
 
-### Position 1: Bonds / Bond Ladder (27% — $94,434)
+### Wealthfront Joint → Fidelity: ACATS Transfer (Immediate Action — Decided Sep 23, 2026)
 
-**Conviction rationale:** Bonds serve two roles in this portfolio: income generation and drawdown buffering. With U.S. CPI at 3.4% and the Fed holding rates elevated, intermediate-term yields (4.0–4.5%) offer real yields near zero to modestly positive — not compelling on a standalone basis, but essential portfolio ballast given the guaranteed-income context. The 27% allocation (up from a legacy 25%, after the Sep 23 GRID-driven table rebuild) is deliberately higher than typical equity-heavy portfolios because: (1) the income streams are already equity-like in their growth characteristics, and (2) the disability context means the ability to tolerate a large equity drawdown is more constrained than for a healthy 64-year-old. This is a range, not a precise optimum — the Model Council left the exact bond weight unresolved (10%–25% range) pending a bond/TIPS drawdown study; treat 27% as a working figure to revisit alongside that analysis.
+> ✅ **Decided Sep 23, 2026.** Transfer the Wealthfront Joint Automated Investing Account ($80,619) to a Fidelity Joint taxable brokerage account via in-kind ACATS. This seeds the equity portfolio immediately and advances the ETF crossover point (ETF > liquid reserve) from month 15 → month 7. No tax event on the transfer itself. After arrival, check embedded gains before selling — expect a modest LTCG event at reallocation (~$1,200–$2,400 at 15% on ~$8–16K estimated gains).
 
-**Why now:** Not acutely attractive at current yields, but appropriate as structural allocation. Do not extend duration aggressively — U.S. inflation risk remains two-sided.
+**Step 1 — Open a Fidelity Joint Taxable Brokerage Account (if not yet done)**
+1. Go to fidelity.com → Open an Account → Taxable Brokerage → **Joint Tenants with Right of Survivorship (JTWROS)**
+2. Both you and Anna must provide SSN, date of birth, address, and consent
+3. No funding required at opening — the ACATS transfer seeds it. Takes 1–3 business days.
 
-**Preferred vehicles:**
+**Step 2 — Initiate the ACATS at Fidelity (receiving firm always initiates)**
+1. Log into Fidelity → Accounts & Trade → **Transfer of Assets** (or search "transfer from another firm")
+2. Delivering firm: search **"Wealthfront"** — Fidelity has it as a DTC participant
+3. Account number: your Wealthfront Joint account number (found in Wealthfront → Settings → Account Details)
+4. Transfer type: **Full account transfer** — select **in-kind** (positions move as-is; do not liquidate at Wealthfront)
+5. Submit — Fidelity sends the ACATS request to Wealthfront automatically
+
+**Step 3 — After arrival at Fidelity**
+- Transfer completes in 5–7 business days after Fidelity initiates; Wealthfront cannot block a full ACATS transfer (regulatory right)
+- Positions arrive with their original Wealthfront cost basis transferred
+- Before selling, review embedded gains: Wealthfront accounts at this balance are typically 80–90% long-term. Expected gain ~$8–16K → ~$1,200–$2,400 federal tax at 15%. Confirm from the actual cost basis shown at Fidelity before selling.
+- Positions compatible with the 7-class allocation (VTI, VWO, VEA/VXUS-equivalents) can be kept as-is; sell incompatible positions (MUB, TLT, etc.) and redeploy per the allocation table above
+
+*This transfer requires no action at Wealthfront, no withdrawal penalty, no surrender charge, and no spousal consent beyond the joint account opening.*
+
+---
+
+### Position 1: Bonds / Bond Ladder (20% — funded by MassMutual IRA rollover)
+
+> **🗓 Scheduled event: October 6, 2027 — MassMutual IRA rolls to Fidelity Traditional IRA.** No monthly DCA needed. The bond sleeve is pre-funded. See rollover instructions below.
+
+**Conviction rationale:** Bonds serve one role in this portfolio: drawdown buffering. They are not needed as an income source. A Sep 23, 2026 quantitative study (SPY + AGG monthly returns, Jan 2015–Sep 2026; 2008-type stress overlay) established that: (1) the $7,488/month guaranteed income is equivalent to a ~$2.1M bond portfolio at current 10Y Treasury yields — 6× the investable portfolio — making formal bond allocation redundant as an income proxy; (2) even in a 2008-type scenario (SPY −56%), total liquid assets at trough remain well above $485K at 0% bonds; and (3) each 5pp of bonds reduces historical max drawdown by only ~0.5pp while costing ~0.9pp in annual return. The 20% allocation provides meaningful psychological ballast without the material opportunity cost of higher weights. Bond weight is a resolved figure.
+
+**Important caveat:** In high-inflation regimes (e.g., 2022), bonds and equities fall together. The 20% sleeve reduces volatility in normal cycles but offers limited protection in inflationary bear markets. TIPS (5–10% of the bond sleeve) can partially mitigate this.
+
+**Current bond assets (Sep 23, 2026):**
+
+| Account | Balance | Status |
+|---|---:|---|
+| Wealthfront Individual Bond Ladder | $103,287 | Held at Wealthfront; partially funds the bond target |
+| MassMutual American Freedom Liberty 5 MVA (IRA) | $147,304 | Locked until Oct 6, 2027 — roll to Fidelity IRA then |
+
+Combined: $250,591 — **exceeds the 20% target**. Once the MassMutual IRA rolls over, no additional bond purchases are needed.
+
+**MassMutual IRA — product details and rollover plan:**
+
+| Attribute | Detail |
+|---|---|
+| Product | American Freedom Liberty 5 MVA (fixed deferred annuity) |
+| Tax qualification | Traditional IRA |
+| Issue date | October 6, 2022 |
+| Surrender period ends | **October 6, 2027** (12.5 months from today) |
+| Surrender charge (Year 5 rate, from Oct 6 2026) | Confirm from contract; likely 4–5% |
+| MVA | Market Value Adjustment applies if surrendered early; likely slightly negative (rates higher than at issue) |
+| Free withdrawal provision | Typically 10%/year (~$14,730) without surrender charges — but still taxable ordinary income |
+| RMDs | Begin at age 73 (~9 years); estimated annual RMD ~$10,000–$11,000 at that time |
+
+**Action (do not act until October 6, 2027):**
+
+Do nothing until the surrender period expires. Do not take free withdrawals — this is a Traditional IRA, and any distribution is ordinary income regardless of surrender-charge status.
+
+On or after October 6, 2027:
+1. Call MassMutual (or initiate online) and request a **trustee-to-trustee direct rollover** to a Fidelity Traditional IRA.
+2. Confirm: (a) the MVA adjustment at that date (may be positive or slightly negative), (b) that the surrender charge has dropped to 0%, and (c) the total rollover amount.
+3. At Fidelity: invest the rolled-over balance in BND (Vanguard Total Bond Market ETF) or a Treasury ladder — bonds belong inside a Traditional IRA because they generate ordinary income, which is tax-inefficient in a taxable account but irrelevant inside a tax-deferred wrapper.
+4. Do not transfer to a Roth IRA — that would be a taxable conversion, not a rollover.
+
+**Preferred vehicles (inside the Fidelity Traditional IRA):**
 
 | Vehicle | Why |
 |---|---|
-| Vanguard Total Bond Market (VBTLX / BND) | Broad diversification, low cost (0.03% ER), Vanguard-managed |
-| Individual Treasury Ladder (3Y, 5Y, 7Y) | Locks in current yields, eliminates interest rate price risk, matches income to timeline |
+| Vanguard Total Bond Market ETF (BND) | Broad diversification, low cost (0.03% ER), ideal for IRA |
+| Individual Treasury Ladder (3Y, 5Y, 7Y) | Locks in current yields; held to maturity inside IRA eliminates price volatility |
 | TIPS (inflation-protected) | Consider 5–10% of bond allocation if inflation re-accelerates above 4% |
 
-**How to acquire:**
-
-*Via self-directed brokerage (Fidelity or Schwab — preferred):*
-- Open a taxable brokerage account if not already open. Purchase BND directly with monthly contributions or build a Treasury ladder through Fidelity's Fixed Income tool.
-- The Wealthfront automated investing account ($151 balance as of Sep 2026) has not been deployed and should not be the vehicle for the strategic portfolio. Wealthfront's robo-advisor applies its own allocation model that cannot implement specific sleeve targets.
-- The **Wealthfront Cash Account ($153K) should remain as-is** — it is serving as the USD liquidity reserve and should not be redirected.
-
-*Via Fidelity or Schwab (for ladder):*
-1. Open a taxable brokerage account at Fidelity (fidelity.com) or Schwab (schwab.com).
-2. Navigate to Fixed Income → U.S. Treasuries → New Issue Auctions.
-3. Purchase Treasuries at auction in $5,000–$10,000 increments across 3, 5, and 7-year maturities.
-4. Hold to maturity. Reinvest principal at prevailing rates when each rung matures.
+**Why bonds inside the IRA, equities in taxable:**
+Bond interest (ordinary income) is shielded inside the IRA; equity long-term capital gains are taxed at preferential rates in a taxable account. Holding bonds in the IRA and equities in taxable is optimal asset location — it maximizes after-tax return without changing total allocation.
 
 ---
 
-### Position 2: U.S. Large Cap (21% — $73,449)
+### Position 2: U.S. Large Cap (24% — $1,560/mo DCA)
 
 **Conviction rationale (score: baseline 3.0):** The U.S. large cap is not the highest-conviction position — it is the anchor. The S&P 500 currently trades at ~21x forward earnings, above its 30-year average but not obviously in bubble territory. U.S. corporate earnings growth is resilient, and the technology-heavy index benefits from global network effects regardless of where the user lives. The 20% weight is deliberately smaller than a typical U.S.-centric portfolio, reflecting the view that international equities offer better forward risk/reward at current relative valuations.
 
@@ -384,14 +438,14 @@ The USD ETF portfolio runs **in parallel with and independently of** the COP res
 
 *Via self-directed brokerage (Fidelity or Schwab — preferred):*
 1. Log into your brokerage account.
-2. Place a recurring monthly investment for VTI or SPY ($1,092/month).
+2. Place a recurring monthly investment for VTI or SPY ($1,560/month).
 3. Enable automatic investing or set a calendar reminder for a fixed purchase date each month.
 
 > Do not use Wealthfront's automated investing account for this allocation. The robo-advisor's model will conflict with the manual sleeve architecture defined here.
 
 ---
 
-### Position 3: Emerging Markets — India Tilt (16% — $55,961)
+### Position 3: Emerging Markets — India Tilt (18% — $1,170/mo DCA)
 
 **Conviction rationale (INDA: 3.75 / 5.0 — highest in universe):** This is the portfolio's single highest-conviction position outside Colombia. India is the only major economy combining: (1) the world's fastest-growing large economy (~7% real GDP growth projected through 2028), (2) a working-age demographic expansion continuing through 2045 (vs. China and Europe contracting), (3) active manufacturing diversification investment from U.S. and European multinationals ("China+1"), and (4) a liquid, well-regulated equity market accessible via liquid U.S.-listed ETFs.
 
@@ -426,7 +480,7 @@ VWO (score 3.72) provides the broader EM alternative, holding India, Taiwan, Chi
 
 ---
 
-### Position 4: International Developed Markets (16% — $55,961)
+### Position 4: International Developed Markets (18% — $1,170/mo DCA)
 
 **Conviction rationale (VEA: 3.65 / 5.0):** European and Japanese equities trade at significant valuation discounts to U.S. equities on every standard metric (P/E, P/B, EV/EBITDA). VEA is the simplest vehicle: it covers all developed-market non-U.S. equities in a single, low-cost fund with ~$100B+ in assets and a 0.05% expense ratio.
 

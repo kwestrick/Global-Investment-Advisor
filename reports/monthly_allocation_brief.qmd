@@ -155,9 +155,9 @@ cards <- tibble::tibble(
   metric = c("Monthly Income", "Monthly Spend", "Net Cash Flow",
              "Liquid Reserve", "Wealthfront Deposit", "COP/USD Rate"),
   value  = c("$7,488", "$8,315", "–$827",
-             "$309,908", "$5,200/mo", paste0(cop_rate_fmt, " COP")),
+             "$310,013", "$5,200/mo", paste0(cop_rate_fmt, " COP")),
   note   = c("SS + VA Disability", "Actual, Sep '25–Aug '26", "Funded from reserve",
-             "37+ months runway", "Drawn from reserve", "Live rate")
+             "375+ months runway", "Drawn from reserve", "Live rate")
 )
 
 cards |>
@@ -177,7 +177,7 @@ cards |>
 ```
 
 ::: {.callout-important}
-**Net cash flow is –$827/month.** The planned $5,200/month Wealthfront deposit is funded from the $309k liquid reserve, not from income surplus. At this rate the reserve supports 37+ months of both the deficit and the Wealthfront contributions before adjustment is needed.
+**Net cash flow is –$827/month.** The $5,200/month investment contribution is funded from the $310k liquid reserve drawdown, not from income surplus. Liquid reserves cover 375+ months at current burn rate. ⚠️ The Wealthfront Joint account jumped from $151 to $80,619 in the Sep 23 export — these assets are in robo-advisor mode and may need to be transferred to Fidelity/Schwab for manual sleeve allocation.
 :::
 
 ---
@@ -265,7 +265,7 @@ ggplot(alloc_data, aes(x = type, y = pct, fill = currency)) +
   scale_y_continuous(labels = percent_format(scale = 1)) +
   coord_flip() +
   labs(title = "Investable Asset Currency Exposure",
-       subtitle = "Current vs 80/20 USD/COP target | $359k investable base",
+       subtitle = "Current vs 80/20 USD/COP target | $494k investable base (Sep 23, 2026)",
        x = NULL, y = "% of investable assets", fill = NULL) +
   theme_minimal(base_size = 12) +
   theme(legend.position = "right")
@@ -282,7 +282,7 @@ ggplot(alloc_data, aes(x = type, y = pct, fill = currency)) +
 ```{r projection-chart, fig.height=4, fig.width=9}
 source("R/personal_wealth_monitoring.R")
 
-current_nw  <- 557994
+current_nw  <- 700715  # updated Sep 23, 2026 from new Banktivity export
 monthly_def <- -827
 
 scen_list <- list(
@@ -312,7 +312,7 @@ ggplot(proj_data, aes(x = year, y = balance, color = scenario)) +
                      limits = c(450000, NA), expand = expansion(mult = c(0, 0.15))) +
   scale_x_continuous(breaks = 0:5) +
   labs(title = "5-Year Net Worth Projection (Corrected Assumptions)",
-       subtitle = "Starting: $558k | Cash flow: –$827/month | USD assets only",
+       subtitle = "Starting: $701k (Sep 23, 2026) | Cash flow: –$827/month | USD assets only",
        x = "Year", y = "Net Worth (USD)", color = NULL) +
   theme_minimal(base_size = 12) +
   theme(legend.position = "bottom")
@@ -342,7 +342,7 @@ proj_table |>
   opt_stylize(style = 1, color = "blue")
 ```
 
-All three scenarios exceed the $500k estate goal through Year 5. Growth is driven by investment returns on the $349k investable base (projected at 7.5% base case) rather than new contributions — since income and spending are roughly break-even.
+All three scenarios exceed the $500k estate goal through Year 5. Growth is driven by investment returns on the $494k investable base (updated Sep 23, 2026; projected at 7.5% base case) rather than new contributions — since income and spending are roughly break-even.
 
 ---
 

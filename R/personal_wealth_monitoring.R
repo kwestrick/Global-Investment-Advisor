@@ -500,5 +500,149 @@ assess_fx_rebalancing_need <- function(
   )
 }
 
+# ---- Four-bucket framework ----
+# Organises the portfolio into the four buckets recommended by the Model Council
+# (Sep 21, 2026): USD Operating Reserve / COP Spending Reserve /
+# Defensive Long-Term / Global Growth.
+
+#' Classify Banktivity accounts into the four-bucket framework.
+#'
+#' @param accounts_df Tibble from import_qif_accounts(). Standard QIF schema.
+#' @return The same tibble with an added `bucket` column.
+classify_four_buckets <- function(accounts_df) {
+  accounts_df |>
+    dplyr::mutate(
+      bucket = dplyr::case_when(
+        account_category == "Checking/Savings" ~ "USD Operating Reserve",
+        account_category == "Investment"       ~ "Defensive Long-Term",
+        account_category %in% c("Credit Card",
+                                "Other Liability") ~ "Liability",
+        TRUE                                   ~ "Other"
+      )
+    )
+}
+
+#' Summarise balances by four-bucket framework.
+#'
+#' Combines USD account data with COP reserve and (optionally) a separately
+#' tracked equity portfolio that has not yet appeared in the QIF export.
+#'
+#' @param accounts_df Tibble from import_qif_accounts().
+#' @param cop_bank_usd Numeric. COP bank accounts in USD at current spot rate.
+#'   Default 9375 (30M COP / 3,200 COP per USD, Sep 2026).
+#' @param equity_usd Numeric. Self-directed ETF portfolio balance (Fidelity /
+#'   Schwab). Default 0 (not yet funded).
+#' @param cop_per_usd Numeric. COP / USD spot rate used for translation.
+#' @return Tibble with columns: bucket, balance_usd, pct_of_total, as_of.
+summarize_four_buckets <- function(
+  accounts_df,
+  cop_bank_usd = 9375,
+  equity_usd   = 0,
+  cop_per_usd  = 3200
+) {
+  # Pull USD investable accounts by bucket
+  usd_buckets <- classify_four_buckets(accounts_df) |>
+    dplyr::filter(!bucket %in% c("Liability", "Other")) |>
+    dplyr::group_by(bucket) |>
+    dplyr::summarise(balance_usd = sum(balance, na.rm = TRUE), .groups = "drop")
+
+  # COP spending reserve row
+  cop_row <- tibble::tibble(bucket = "COP Spending Reserve",
+                            balance_usd = cop_bank_usd)
+
+  # Global Growth row — only add if equity portfolio is funded
+  growth_row <- if (equity_usd > 0) {
+    tibble::tibble(bucket = "Global Growth", balance_usd = equity_usd)
+  } else {
+    tibble::tibble(bucket = "Global Growth", balance_usd = 0)
+  }
+
+  result <- dplyr::bind_rows(usd_buckets, cop_row, growth_row) |>
+    dplyr::arrange(match(bucket, c("USD Operating Reserve",
+                                   "COP Spending Reserve",
+                                   "Defensive Long-Term",
+                                   "Global Growth"))) |>
+    dplyr::mutate(
+      pct_of_total    = balance_usd / sum(balance_usd, na.rm = TRUE) * 100,
+      as_of           = Sys.Date(),
+      cop_per_usd_used = cop_per_usd
+    )
+
+  result
+}
+
+#' Compare current bucket balances to targets and generate action guidance.
+#'
+#' Targets:
+#'   - USD Operating Reserve: $100–150K floor (absolute, not a % target).
+#'   - COP Spending Reserve:  $15,977–$19,602 (spending-based sizing).
+#'   - Defensive Long-Term:   20% of investable portfolio ($349,755 base).
+#'   - Global Growth:         69% of investable portfolio.
+#'
+#' @param bucket_summary Tibble from summarize_four_buckets().
+#' @param investable Numeric. Total investable base. Default 349755.
+#' @param usd_reserve_floor Numeric. Minimum USD operating reserve (lower). Default 100000.
+#' @param usd_reserve_ceil  Numeric. Minimum USD operating reserve (upper). Default 150000.
+#' @param cop_reserve_lo    Numeric. COP reserve lower bound (USD). Default 15977.
+#' @param cop_reserve_hi    Numeric. COP reserve upper bound (USD). Default 19602.
+#' @return Tibble with current balance, target, status, and action for each bucket.
+assess_bucket_targets <- function(
+  bucket_summary,
+  investable       = 349755,
+  usd_reserve_floor = 100000,
+  usd_reserve_ceil  = 150000,
+  cop_reserve_lo    = 15977,
+  cop_reserve_hi    = 19602
+) {
+  targets <- tibble::tibble(
+    bucket          = c("USD Operating Reserve", "COP Spending Reserve",
+                        "Defensive Long-Term",   "Global Growth"),
+    target_lo_usd   = c(usd_reserve_floor, cop_reserve_lo,
+                        investable * 0.20,  investable * 0.69),
+    target_hi_usd   = c(usd_reserve_ceil,  cop_reserve_hi,
+                        investable * 0.20,  investable * 0.69),
+    target_label    = c(
+      paste0("$", format(round(usd_reserve_floor / 1000), big.mark = ","), "K–",
+             format(round(usd_reserve_ceil  / 1000), big.mark = ","), "K floor"),
+      paste0("$", format(round(cop_reserve_lo / 1000, 1), nsmall = 1), "K–",
+             format(round(cop_reserve_hi / 1000, 1), nsmall = 1), "K (18-mo reserve)"),
+      paste0("20% of investable ($", format(round(investable * 0.20), big.mark = ","), ")"),
+      paste0("69% of investable ($", format(round(investable * 0.69), big.mark = ","), ")")
+    )
+  )
+
+  bucket_summary |>
+    dplyr::select(bucket, balance_usd, as_of) |>
+    dplyr::left_join(targets, by = "bucket") |>
+    dplyr::mutate(
+      status = dplyr::case_when(
+        balance_usd >= target_lo_usd & balance_usd <= target_hi_usd ~ "\u2713 On target",
+        balance_usd < target_lo_usd  ~ "\u26a0 Below target",
+        balance_usd > target_hi_usd  ~ "\u2022 Above target",
+        TRUE ~ "—"
+      ),
+      gap_usd = target_lo_usd - balance_usd,
+      action = dplyr::case_when(
+        status == "\u2713 On target" ~ "Hold",
+        status == "\u26a0 Below target" & bucket == "USD Operating Reserve" ~
+          paste0("Do not draw below $",
+                 format(round(usd_reserve_floor), big.mark = ","),
+                 " — pause ETF contributions if reserves approach floor"),
+        status == "\u26a0 Below target" & bucket == "COP Spending Reserve" ~
+          paste0("Wire $", format(round(gap_usd), big.mark = ","),
+                 " USD to COP when rate \u2265 3,917 COP/USD AND after CPA sign-off"),
+        status == "\u26a0 Below target" & bucket == "Defensive Long-Term" ~
+          paste0("Deploy $", format(round(gap_usd), big.mark = ","),
+                 " into VBTLX / bond ladder via Fidelity/Schwab"),
+        status == "\u26a0 Below target" & bucket == "Global Growth" ~
+          paste0("Deploy $", format(round(gap_usd), big.mark = ","),
+                 " via $5,200/month DCA into equity ETF sleeves"),
+        status == "\u2022 Above target" ~ "Monitor — excess funds can accelerate Global Growth DCA",
+        TRUE ~ "Review"
+      )
+    ) |>
+    dplyr::select(bucket, balance_usd, target_label, status, action, as_of)
+}
+
 # ---- Helper: String concatenation operator ----
 `%+%` <- function(x, y) paste0(x, y)

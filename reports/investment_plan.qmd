@@ -46,8 +46,8 @@ theme_sc <- read_csv(latest_file("data/processed", "^theme_opportunity_screen_\\
 MONTHLY_INVEST  <- 5200     # Monthly contribution to self-directed brokerage (Fidelity/Schwab)
 COP_GAP_USD     <- 19600    # Spending-based COP reserve target (base: 18-month coverage)
 MONTHS_TO_CLOSE <- 4        # Months at $5,200/mo to fund COP spending reserve
-USD_NW          <- 557994
-LIQUID          <- 309908
+USD_NW          <- 700715   # updated Sep 23, 2026 from new Banktivity export
+LIQUID          <- 162709   # non-IRA liquid only (WF Cash $153,492 + checking ~$9,217); MassMutual IRA excluded
 
 # ── Palette ───────────────────────────────────────────────────────────────────
 CLR_NAVY  <- "#1e3a5f"
@@ -304,27 +304,29 @@ Also deploy the liquid reserve ($309K less ~$20K COP set-aside = ~$289K deployab
 2–3 month window. This runs in parallel with — and does not wait for — the COP reserve build.
 
 ```{r phase2-allocation-table}
-investable <- 309908 + 39847  # current investable base
+investable <- 310013 + 184217  # updated Sep 23, 2026 from new Banktivity export
 
-# Rebuilt Sep 23, 2026: GRID's tilt-cap sizing finalized at 4% (top of the
-# 3%-4% band). The 6pp freed from its legacy 10% weight was redistributed
-# proportionally across the other six sleeves, then rounded to whole points.
+# Rebuilt Sep 23, 2026: GRID tilt-cap at 4%; bond weight resolved at 20% by
+# quantitative drawdown study (Sep 23, 2026). 7pp freed from bonds redistributed
+# proportionally to the three equity sleeves (scale ≈ 1.132, rounded to whole points).
+# Note: bond ladder ($103,287) already funds the 20% target; Wealthfront Joint
+# ($80,619) DECIDED Sep 23 2026 — transfer to Fidelity Joint via ACATS immediately.
 tibble(
   `Asset Class`    = c("Bonds / Ladder", "U.S. Large Cap", "Emerging Markets",
                         "International Developed", "Cash Reserve",
                         "Commodities / Transition", "Infrastructure"),
   Vehicle          = c("VBTLX or bond ladder", "SPY or VTI", "VWO or INDA",
                        "VEA", "HYSA / Money Market", "COPX or URA", "GRID"),
-  `Target %`       = c(27, 21, 16, 16, 11, 5, 4),
-  `Target $ (now)` = round(c(27, 21, 16, 16, 11, 5, 4) / 100 * investable),
-  `Monthly $ DCA`  = round(c(27, 21, 16, 16, 11, 5, 4) / 100 * 5200)
+  `Target %`       = c(20, 24, 18, 18, 11, 5, 4),
+  `Target $ (now)` = round(c(20, 24, 18, 18, 11, 5, 4) / 100 * investable),
+  `Monthly $ DCA`  = round(c(20, 24, 18, 18, 11, 5, 4) / 100 * 5200)
 ) |>
   gt() |>
   tab_header(
     title    = "Phase 2 Target Allocation",
     subtitle = paste0("Investable base ≈ $",
                       format(round(investable / 1000), big.mark = ","), "K  |  ",
-                      "Monthly DCA = $5,200  |  Rebuilt Sep 23, 2026 (GRID sized at 4%)")
+                      "Monthly DCA = $5,200  |  Bond weight finalized 20% (Sep 23, 2026)")
   ) |>
   fmt_currency(columns = c(`Target $ (now)`, `Monthly $ DCA`), decimals = 0) |>
   fmt_percent(columns = `Target %`, scale_values = FALSE, decimals = 0) |>
@@ -344,6 +346,72 @@ tibble(
   opt_row_striping() |>
   tab_options(table.font.size = 13, table.width = pct(100))
 ```
+
+### Bond Weight Derivation (Quantitative Study, Sep 23, 2026) {.unnumbered}
+
+The 20% bond allocation is the result of a quantitative drawdown study, not a rule of thumb. The
+study modeled SPY (equity proxy) + AGG (bond proxy) at bond weights from 0% to 30%, holding cash
+fixed at 11%, using Jan 2015 – Sep 2026 monthly returns. A 2008-type stress scenario (SPY −56%,
+AGG +5%) was overlaid.
+
+```{r bond-drawdown-study}
+# Reproduce the study's key-stats table from parameters — no live download required.
+params <- tibble::tibble(
+  bond_pct   = c(0, 15, 20, 25, 27, 30),
+  ann_return = c(12.9, 11.1, 10.5, 9.9, 9.7, 9.3),
+  max_dd     = c(-21.1, -19.7, -19.2, -18.7, -18.5, -18.2),
+  dollar_loss = c(-73920, -68746, -67030, -65317, -64633, -63608),
+  total_liq  = c(585743, 590917, 592633, 594346, 595030, 596055)
+)
+
+params |>
+  dplyr::mutate(
+    `Bond %`          = paste0(bond_pct, "%"),
+    `Ann Return`      = paste0(ann_return, "%"),
+    `Max Drawdown`    = paste0(max_dd, "%"),
+    `$ Loss on $350K` = scales::dollar(dollar_loss),
+    `Total Liquid at Trough` = scales::dollar(total_liq)
+  ) |>
+  dplyr::select(`Bond %`, `Ann Return`, `Max Drawdown`,
+                `$ Loss on $350K`, `Total Liquid at Trough`) |>
+  gt::gt() |>
+  gt::tab_header(
+    title    = "Bond Weight Trade-off Study — Jan 2015 – Sep 2026",
+    subtitle = "SPY + AGG + 11% cash (fixed). 2008-type stress overlay (SPY −56%, AGG +5%)."
+  ) |>
+  gt::tab_style(
+    style     = list(gt::cell_fill(color = "#e8f5e9"), gt::cell_text(weight = "bold")),
+    locations = gt::cells_body(rows = 3)   # 20% row
+  ) |>
+  gt::opt_row_striping() |>
+  gt::tab_options(table.font.size = 13, table.width = gt::pct(100)) |>
+  gt::tab_footnote(
+    footnote  = "Selected weight. Each additional 5pp of bonds reduces max drawdown ~0.5pp but costs ~0.9pp/year in return.",
+    locations = gt::cells_body(columns = `Bond %`, rows = 3)
+  )
+```
+
+::: note-box
+**Why the bond weight is 20%, not higher:**
+
+1. **Guaranteed income substitutes for bonds.** The $7,488/month income stream has a present-value
+   equivalent of ~$2.09M at 4.3% Treasury yields — roughly 6× the investable portfolio. Bonds are
+   not needed as an income source.
+
+2. **Liquidity runway is 31+ years.** The $827/month spending deficit is covered by $309K in liquid
+   reserves for 375 months with no investment sales at all.
+
+3. **Marginal benefit is negligible.** Going from 20% to 27% bonds saves only ~$2,400 in trough
+   liquidity under a 2008-type stress scenario — while costing ~0.8pp/year in expected return over
+   a 20–30 year horizon.
+
+4. **2022 correlation caveat.** In 2022, AGG fell ~13% while SPY fell ~18%. Bond diversification
+   disappears in high-inflation regimes. The sleeve provides psychological ballast, not an
+   inflation-proof hedge.
+
+20% sits at the top of the Model Council's recommended 15–20% range and provides meaningful
+drawdown ballast without meaningful opportunity cost.
+:::
 
 ---
 
@@ -611,7 +679,7 @@ funds (IGF, NFRA) exist but serve a different, more defensive role — see the n
 
 ### Why not U.S. Large Cap as the core position?
 
-The S&P 500 is not excluded — it remains 21% of the Phase 2 target. However, the starting
+The S&P 500 is not excluded — it remains 24% of the Phase 2 target. However, the starting
 position is effectively 89% cash/liquid (which shadows USD performance). The marginal
 investment dollar adds more diversification and return potential in non-U.S. assets at
 current valuations. U.S. large cap will be built systematically in Phase 2 via SPY/VTI.
@@ -643,7 +711,7 @@ tibble(
     "INDA position built via DCA over months; position sizing limits single-country risk",
     "BOJ moves are telegraphed; EWJ position is modest within portfolio",
     "U.S. TIPS or I-bonds can hedge; bond ladder shortens duration in high inflation",
-    "Liquid reserve ($310K) provides 37+ months of runway; monitor monthly",
+    "Non-IRA liquid reserve ($162K) provides ~27 months of total drawdown runway; monitor monthly",
     "VA + Medicare provide primary coverage; Colombian Medicina Prepagada adds backup"
   )
 ) |>
