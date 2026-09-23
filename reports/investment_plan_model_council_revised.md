@@ -327,8 +327,9 @@ The USD portfolio should be built from broad, liquid, low-cost U.S.-listed ETFs.
 
 Before execution:
 
-- Confirm GRID’s actual sponsor, name, expense ratio, holdings, and top-10 concentration.
-- Compare GRID with PAVE, IFRA, and broader infrastructure alternatives.
+- ✅ **Verified (Sep 23, 2026):** GRID is the First Trust NASDAQ Clean Edge Smart Grid Infrastructure Index Fund; top holdings Schneider Electric (9.27%), Eaton (9.26%), Johnson Controls (8.46%), ABB (7.82%), Quanta Services (7.74%); 128 holdings, top-10 ≈ 59.8%; expense ratio conflicting (~0.56%–0.70%). **Decision: keep the GRID ticker** — the prior error was the description (PAVE's name), not the ticker. GRID fits both the electrification thesis and the non-U.S. mandate (holds European industrials); PAVE is 100% U.S.
+- GRID vs. PAVE: PAVE is broader U.S. capex, 102 holdings, top-10 ≈ 31.7%, lower volatility (~7.7% vs. ~10.6%), 0.47% expense ratio. Use PAVE only if switching to a U.S. capex thesis, in which case it belongs in the U.S. equity sleeve.
+- Still to confirm before trading: GRID's exact expense ratio on the First Trust fund page.
 - Compare INDA with lower-cost India alternatives such as FLIN.
 - Quantify India exposure inside VWO before adding any India-specific tilt.
 - Quantify Japan exposure inside VEA before adding EWJ.

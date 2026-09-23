@@ -730,6 +730,50 @@ State file (`outputs/fx_monitor_state.rds`) tracks each channel's last alert dat
 
 ---
 
+## Analytical Findings — Sep 23, 2026 (Model Council Final Review + GRID/PAVE Verification)
+
+### 1. Model Council Review — Final Assessment
+
+Reviewed `reports/investment_plan_model_council_revised.md` (revised by Claude Opus 5, GPT 5.6 Sol, Gemini 3.1 Pro) against `reports/investment_plan_full.md`. The Council's material corrections are sound and accepted:
+
+1. GRID/PAVE product confusion — plan described GRID using PAVE's name (now corrected).
+2. CDT yield compared against zero instead of yield-bearing USD alternatives (T-bills) — overstated carry.
+3. Colombian FICs as a TES access route create PFIC exposure (Form 8621).
+4. $310K liquid reserve was triple-counted as reserve + contribution engine + investable capital.
+5. 80/20 USD/COP target replaced with spending-based COP reserve sizing.
+6. Tax gates converted from post-implementation reminders to pre-trade gates.
+7. Four-bucket framework (USD operating reserve / COP spending reserve / defensive long-term / global growth) improves on the flat 7-class allocation.
+8. $150K early-warning liquidity trigger (stop contributions before hitting the $100K floor).
+9. Look-through requirement (India inside VWO, Japan inside VEA) before adding tilts.
+
+**Two decisions the Council deferred but which the Sep 22 follow-up work resolved:**
+- Bond weight — given the $7,488/mo guaranteed income acting as a bond substitute, 15–20% for drawdown ballast is reasonable rather than the 10–25% range.
+- Investable capital base — $309,908 minus a $100–150K floor = roughly $160–210K deployable.
+
+### 2. GRID vs. PAVE Verification (completed)
+
+| Attribute | **GRID** (First Trust) | **PAVE** (Global X) |
+|---|---|---|
+| Full name | NASDAQ Clean Edge Smart Grid Infrastructure Index Fund | U.S. Infrastructure Development ETF |
+| Thesis | Electrification / power-grid buildout | Broad U.S. domestic capex |
+| Top holdings | Schneider 9.27%, Eaton 9.26%, Johnson Controls 8.46%, ABB 7.82%, Quanta 7.74% | Deere 3.59%, Nucor 3.43%, Fastenal 3.36%, Emerson 3.27%, Parker-Hannifin 3.08% |
+| Holdings / top-10 conc. | 128 / ≈59.8% | 102 / ≈31.7% |
+| Geography | Global (European names) | U.S.-only |
+| Expense ratio | ~0.56%–0.70% (sources conflict) | 0.47% |
+| 12-mo volatility | ~10.6% | ~7.7% |
+
+**Conclusion:** The Council was right that the plan's *label* was wrong, but the *GRID ticker was correct*. GRID fits both the electrification thesis and the project's non-U.S. mandate (holds European industrials); PAVE is 100% U.S. and would work against ex-U.S. diversification. **Decision: keep GRID; correct only its name/description.** Size within the 0%–5% thematic-tilt cap as equity risk (top-10 ≈60%). Still to confirm before trading: GRID's exact expense ratio on the First Trust fund page.
+
+### Updated Files (Sep 23, 2026)
+
+| File | Change |
+|---|---|
+| `reports/investment_plan_full.md` | Position 5 rewritten with verified GRID holdings/concentration/expense range; verification note resolved (keep GRID, correct the label) |
+| `reports/investment_plan_model_council_revised.md` | Product controls section marked verified with GRID/PAVE outcome |
+| `AGENTS.md` | This findings section added |
+
+---
+
 ## Future Work
 
 Items queued for future research, development, or implementation. Not yet scoped or scheduled.

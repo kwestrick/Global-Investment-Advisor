@@ -1,0 +1,14 @@
+symbol,theme,category
+XLE,U.S. energy benchmark,U.S. sector benchmark
+XLI,U.S. industrials benchmark,U.S. sector benchmark
+XLF,U.S. financials benchmark,U.S. sector benchmark
+URA,Uranium and nuclear fuel,Commodity theme
+COPX,Copper miners,Commodity theme
+PICK,Global metals and mining,Commodity theme
+WOOD,Global timber and forestry,Commodity theme
+FAN,Wind energy,Energy transition
+TAN,Solar energy,Energy transition
+GRID,Electric grid infrastructure,Infrastructure
+PAVE,U.S. infrastructure benchmark,U.S. theme benchmark
+ITA,U.S. aerospace and defense benchmark,U.S. sector benchmark
+DFEN,U.S. aerospace and defense leveraged proxy,High-risk proxy

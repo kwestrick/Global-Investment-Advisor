@@ -452,15 +452,17 @@ Within this allocation, **Japan merits attention** (EWJ conviction 3.61):
 
 **Conviction rationale (GRID: macro tailwind 4.0 / 5.0, catalyst score 3.8 / 5.0 — top infrastructure ETF):** The global electricity grid must absorb a massive and accelerating surge in demand: electric vehicles, AI data centers, heat pumps, and industrial electrification are all layering new load on infrastructure built for a different era. The IEA estimates $21 trillion in grid investment is required globally through 2050. Unlike many "energy transition" trades, **grid investment is not optional and is not ideologically contested** — every government, left or right, is pushing it because grid failure is politically catastrophic.
 
-GRID (First Trust Nasdaq Clean Edge Smart Grid & Infrastructure Index Fund) holds companies building, upgrading, and managing smart-grid, advanced metering, energy storage, and clean-power delivery infrastructure. Holdings include Eaton, Quanta Services, Hubbell, ABB, and similar companies — not speculative startups.
+GRID (First Trust NASDAQ Clean Edge Smart Grid Infrastructure Index Fund) holds companies building, upgrading, and managing smart-grid, advanced metering, energy storage, and clean-power delivery infrastructure. As of the September 23, 2026 verification, its top holdings were Schneider Electric (9.27%), Eaton (9.26%), Johnson Controls (8.46%), ABB (7.82%), and Quanta Services (7.74%) — established industrials, not speculative startups.
 
-> **Ticker verification required before any trade.** GRID (First Trust) is frequently confused with **PAVE** (Global X U.S. Infrastructure Development ETF), which covers broader domestic infrastructure including roads, bridges, and utilities. Verify the sponsor name, fund name, expense ratio, and top-10 holdings before placing any order. If broader U.S. infrastructure is the intent, compare GRID, PAVE, and IFRA before deciding.
+> **Product identity verified (Sep 23, 2026).** The Model Council correctly flagged that this position was previously *described* using PAVE's name. The verification confirmed the **GRID ticker is correct** for the electrification / grid-buildout thesis and that GRID also fits the project's non-U.S. mandate — it holds European names such as Schneider Electric and ABB, whereas **PAVE** (Global X U.S. Infrastructure Development ETF) is 100% U.S. and would work against ex-U.S. diversification. **Decision: keep GRID; the earlier error was the label, not the ticker.** Choose PAVE only if consciously switching the thesis to broad U.S. capex, in which case it belongs in the U.S. equity sleeve, not a global tilt.
+>
+> Note GRID's concentration: 128 holdings but top-10 ≈ 59.8% (vs. PAVE's ~31.7%), 12-month volatility ~10.6% (vs. PAVE ~7.7%). Size it as equity risk within the 0%–5% thematic-tilt cap. Expense-ratio sources conflict (~0.56% vs. ~0.70%) — confirm on the First Trust fund page before trading.
 
 **Why now:** Global transformer shortages are already a multi-year supply constraint. The backlog for large power transformers at companies like GE Vernova and ABB stretches 3–4 years. The revenue is visible and growing regardless of which political party controls any given country's energy policy.
 
 **How to acquire:**
 
-Ticker: **GRID** — First Trust Nasdaq Clean Edge Smart Grid & Infrastructure Index Fund (expense ratio: ~0.65%). Verify sponsor, name, and holdings before any purchase.
+Ticker: **GRID** — First Trust NASDAQ Clean Edge Smart Grid Infrastructure Index Fund (expense ratio conflicting across sources: ~0.56%–0.70%; confirm on the First Trust fund page before any purchase).
 
 1. Purchase directly through any brokerage account. Ticker GRID trades on NYSE Arca.
 2. GRID is not typically available in Wealthfront's Classic portfolio. Use a separate brokerage for this allocation.

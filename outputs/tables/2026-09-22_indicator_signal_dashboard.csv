@@ -1,0 +1,8 @@
+indicator,raw_value,signal,implication
+COP/USD 30-day trend,-2% COP gain,bearish,COP allocation attractiveness
+COP/USD 90-day trend,8.4% COP gain,bearish,COP trend confirmation
+US Dollar Index (DXY) 30-day,0.8% USD index change,neutral_usd,USD vs international positioning
+US CPI YoY,3.4%,moderate,Inflation regime: bond/equity/commodity mix
+SPY vs VEA 60-day momentum,SPY 5.6% vs VEA 1.9%,neutral,US vs developed-market relative weight
+VWO vs SPY 60-day momentum,VWO 4.2% vs SPY 5.6%,neutral,EM vs US relative weight
+Colombia TES 10Y real yield,5.7% (Fisher),attractive,Colombia fixed-income attractiveness
