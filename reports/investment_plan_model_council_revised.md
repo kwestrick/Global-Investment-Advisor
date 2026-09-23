@@ -327,9 +327,11 @@ The USD portfolio should be built from broad, liquid, low-cost U.S.-listed ETFs.
 
 Before execution:
 
-- ✅ **Verified (Sep 23, 2026):** GRID is the First Trust NASDAQ Clean Edge Smart Grid Infrastructure Index Fund; top holdings Schneider Electric (9.27%), Eaton (9.26%), Johnson Controls (8.46%), ABB (7.82%), Quanta Services (7.74%); 128 holdings, top-10 ≈ 59.8%; expense ratio conflicting (~0.56%–0.70%). **Decision: keep the GRID ticker** — the prior error was the description (PAVE's name), not the ticker. GRID fits both the electrification thesis and the non-U.S. mandate (holds European industrials); PAVE is 100% U.S.
-- GRID vs. PAVE: PAVE is broader U.S. capex, 102 holdings, top-10 ≈ 31.7%, lower volatility (~7.7% vs. ~10.6%), 0.47% expense ratio. Use PAVE only if switching to a U.S. capex thesis, in which case it belongs in the U.S. equity sleeve.
-- Still to confirm before trading: GRID's exact expense ratio on the First Trust fund page.
+- ✅ **Verified (Sep 23, 2026):** GRID is the First Trust NASDAQ Clean Edge Smart Grid Infrastructure Index Fund; top holdings Eaton, Quanta Services, Johnson Controls, ABB, Schneider Electric (each ~7.7%–8.4%); ~128–146 holdings, top-10 ≈ 55%–60%, non-diversified. **Decision: keep the GRID ticker** — the prior error was the description (PAVE's name), not the ticker.
+- ✅ **Expense ratio locked at 0.56%** (Cbonds, Investing.com, Yahoo, MarketXLS). The old ~0.70% was a 2010–2013 legacy expense cap, not the current ratio.
+- ✅ **Look-through:** ~60% Industrials (rest Utilities + IT); ~39% U.S. / ~61% ex-U.S. (Europe-heavy: Switzerland, France, Germany, Italy, U.K.; plus Canada, South Korea, Brazil). The ex-U.S. weight satisfies the non-U.S. mandate; PAVE (100% U.S.) does not.
+- ✅ **Tilt-cap sizing finalized:** size GRID in the lower half of the 0%–5% band (~3%–4%), counted as concentrated single-theme equity risk.
+- **Broad-infra alternatives (different role):** IGF (S&P Global Infrastructure, ~76 holdings, top-10 ~38%, ER ~0.42%, defensive utilities/transport/energy) and NFRA (STOXX Global Broad, ~217 holdings, ER 0.47%, broadest) are income-oriented core infrastructure, not substitutes for GRID's electrification growth tilt. Use them only for a separate defensive sleeve.
 - Compare INDA with lower-cost India alternatives such as FLIN.
 - Quantify India exposure inside VWO before adding any India-specific tilt.
 - Quantify Japan exposure inside VEA before adding EWJ.

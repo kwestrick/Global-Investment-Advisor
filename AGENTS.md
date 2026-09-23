@@ -762,15 +762,33 @@ Reviewed `reports/investment_plan_model_council_revised.md` (revised by Claude O
 | Expense ratio | ~0.56%–0.70% (sources conflict) | 0.47% |
 | 12-mo volatility | ~10.6% | ~7.7% |
 
-**Conclusion:** The Council was right that the plan's *label* was wrong, but the *GRID ticker was correct*. GRID fits both the electrification thesis and the project's non-U.S. mandate (holds European industrials); PAVE is 100% U.S. and would work against ex-U.S. diversification. **Decision: keep GRID; correct only its name/description.** Size within the 0%–5% thematic-tilt cap as equity risk (top-10 ≈60%). Still to confirm before trading: GRID's exact expense ratio on the First Trust fund page.
+**Conclusion:** The Council was right that the plan's *label* was wrong, but the *GRID ticker was correct*. GRID fits both the electrification thesis and the project's non-U.S. mandate (holds European industrials); PAVE is 100% U.S. and would work against ex-U.S. diversification. **Decision: keep GRID; correct only its name/description.**
+
+### 3. GRID Look-Through, Expense Ratio, and Tilt-Cap Sizing (finalized Sep 23, 2026)
+
+- **Expense ratio: 0.56%** (locked) — confirmed across Cbonds, Investing.com, Yahoo Finance, MarketXLS. The older ~0.70% figure was a 2010–2013 legacy expense cap, not the current net ratio.
+- **Sector:** ~60% Industrials; remainder Utilities + Information Technology. Equipment/capex growth tilt, not a regulated-utility income play.
+- **Country:** ~39% U.S. / ~61% ex-U.S. Europe-heavy (Switzerland, France, Germany, Italy, U.K.) plus Canada, South Korea, Brazil. The ex-U.S. weight is what satisfies the project's non-U.S. mandate.
+- **Concentration:** ~128–146 holdings, top-10 ≈ 55%–60%, non-diversified.
+- **Tilt-cap sizing finalized:** lower half of the 0%–5% band (**~3%–4%**), counted fully as concentrated single-theme equity risk. Supersedes the legacy 10% weight in the plan's Position 5 header.
+
+### 4. Broad Global Infrastructure Alternatives (IGF, NFRA) — Different Role, Not Substitutes
+
+| Fund | Scope | Holdings | Top-10 | U.S. | Expense | Character |
+|---|---|---:|---:|---:|---:|---|
+| GRID | Smart-grid / electrification | ~128–146 | ~55%–60% | ~39% | 0.56% | Concentrated equipment/capex growth tilt |
+| IGF | S&P Global Infrastructure | ~76 | ~38% | ~37% | ~0.42% | Defensive utilities/transport/energy (~40/40/20), ~2.7% yield |
+| NFRA | STOXX Global Broad Infrastructure | ~217 | low | ~41% | 0.47% | Broadest; adds communications + rails, ~2.8% yield |
+
+IGF and NFRA are income-oriented core infrastructure (regulated utilities, toll roads, pipelines, rails) that behave defensively — closer to a bond-substitute sleeve. They are **not** substitutes for GRID's electrification growth thesis; use them only if a separate defensive infrastructure sleeve is desired.
 
 ### Updated Files (Sep 23, 2026)
 
 | File | Change |
 |---|---|
-| `reports/investment_plan_full.md` | Position 5 rewritten with verified GRID holdings/concentration/expense range; verification note resolved (keep GRID, correct the label) |
-| `reports/investment_plan_model_council_revised.md` | Product controls section marked verified with GRID/PAVE outcome |
-| `AGENTS.md` | This findings section added |
+| `reports/investment_plan_full.md` | Position 5 rewritten with verified GRID holdings, sector/country look-through, locked 0.56% expense ratio, IGF/NFRA comparison table, and finalized 3%–4% tilt sizing |
+| `reports/investment_plan_model_council_revised.md` | Product controls marked verified: GRID/PAVE outcome, look-through, locked expense ratio, tilt sizing, IGF/NFRA note |
+| `AGENTS.md` | This findings section added (Council assessment + GRID look-through, expense ratio, tilt sizing, IGF/NFRA) |
 
 ---
 
