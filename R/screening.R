@@ -83,20 +83,25 @@ create_country_etf_universe <- function() {
 }
 
 create_theme_etf_universe <- function() {
+  # expense_ratio_pct, tilt_cap_min_pct, tilt_cap_max_pct, tilt_cap_notes:
+  # populated only where a figure has been independently verified against
+  # current fund data (see AGENTS.md "Analytical Findings" log for sourcing
+  # and date). NA_real_/NA_character_ means not yet verified -- do not
+  # backfill with assumed or memorized figures.
   tibble::tribble(
-    ~symbol, ~theme, ~category,
-    "XLE", "U.S. energy benchmark", "U.S. sector benchmark",
-    "XLI", "U.S. industrials benchmark", "U.S. sector benchmark",
-    "XLF", "U.S. financials benchmark", "U.S. sector benchmark",
-    "URA", "Uranium and nuclear fuel", "Commodity theme",
-    "COPX", "Copper miners", "Commodity theme",
-    "PICK", "Global metals and mining", "Commodity theme",
-    "WOOD", "Global timber and forestry", "Commodity theme",
-    "FAN", "Wind energy", "Energy transition",
-    "TAN", "Solar energy", "Energy transition",
-    "GRID", "Electric grid infrastructure", "Infrastructure",
-    "PAVE", "U.S. infrastructure benchmark", "U.S. theme benchmark",
-    "ITA", "U.S. aerospace and defense benchmark", "U.S. sector benchmark",
-    "DFEN", "U.S. aerospace and defense leveraged proxy", "High-risk proxy"
+    ~symbol, ~theme, ~category, ~expense_ratio_pct, ~tilt_cap_min_pct, ~tilt_cap_max_pct, ~tilt_cap_notes,
+    "XLE", "U.S. energy benchmark", "U.S. sector benchmark", NA_real_, NA_real_, NA_real_, NA_character_,
+    "XLI", "U.S. industrials benchmark", "U.S. sector benchmark", NA_real_, NA_real_, NA_real_, NA_character_,
+    "XLF", "U.S. financials benchmark", "U.S. sector benchmark", NA_real_, NA_real_, NA_real_, NA_character_,
+    "URA", "Uranium and nuclear fuel", "Commodity theme", NA_real_, NA_real_, NA_real_, NA_character_,
+    "COPX", "Copper miners", "Commodity theme", NA_real_, NA_real_, NA_real_, NA_character_,
+    "PICK", "Global metals and mining", "Commodity theme", NA_real_, NA_real_, NA_real_, NA_character_,
+    "WOOD", "Global timber and forestry", "Commodity theme", NA_real_, NA_real_, NA_real_, NA_character_,
+    "FAN", "Wind energy", "Energy transition", NA_real_, NA_real_, NA_real_, NA_character_,
+    "TAN", "Solar energy", "Energy transition", NA_real_, NA_real_, NA_real_, NA_character_,
+    "GRID", "Electric grid infrastructure", "Infrastructure", 0.56, 3, 4, "Verified 2026-09-23. Finalized at 4% (top of 3-4% band) in Phase 2 allocation table; ~128-146 holdings, top-10 ~55-60%, non-diversified, ~60% Industrials, ~39% US/~61% ex-US. Treat as concentrated single-theme equity risk, not a bond/income substitute.",
+    "PAVE", "U.S. infrastructure benchmark", "U.S. theme benchmark", 0.47, NA_real_, NA_real_, "Verified 2026-09-23 for comparison only; not held. 100% U.S., ~102 holdings, top-10 ~31.7% -- broad U.S. capex, not the electrification/grid thesis GRID targets.",
+    "ITA", "U.S. aerospace and defense benchmark", "U.S. sector benchmark", NA_real_, NA_real_, NA_real_, NA_character_,
+    "DFEN", "U.S. aerospace and defense leveraged proxy", "High-risk proxy", NA_real_, NA_real_, NA_real_, NA_character_
   )
 }

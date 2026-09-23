@@ -319,24 +319,26 @@ The USD ETF portfolio runs **in parallel with and independently of** the COP res
 
 ### Target Allocation
 
+**Rebuilt Sep 23, 2026** to reflect GRID's finalized 3%–4% tilt-cap sizing (see Position 5). The 6 percentage points freed from Infrastructure's legacy 10% weight were redistributed proportionally across the other six sleeves — no single sleeve was arbitrarily favored.
+
 | Asset Class | Target % | Target $ (current base) | Monthly DCA | Vehicle |
 |---|---|---|---|---|
-| Bonds / Ladder | 25% | $87,449 | $1,300 | VBTLX or bond ladder |
-| U.S. Large Cap | 20% | $69,959 | $1,040 | SPY or VTI |
-| Emerging Markets | 15% | $52,469 | $780 | VWO or INDA |
-| International Developed | 15% | $52,469 | $780 | VEA |
-| Infrastructure | 10% | $34,979 | $520 | GRID |
-| Cash Reserve | 10% | $34,979 | $520 | HYSA / Money Market |
-| Commodities / Transition | 5% | $17,490 | $260 | COPX or URA |
+| Bonds / Ladder | 27% | $94,434 | $1,404 | VBTLX or bond ladder |
+| U.S. Large Cap | 21% | $73,449 | $1,092 | SPY or VTI |
+| Emerging Markets | 16% | $55,961 | $832 | VWO or INDA |
+| International Developed | 16% | $55,961 | $832 | VEA |
+| Cash Reserve | 11% | $38,473 | $572 | HYSA / Money Market |
+| Commodities / Transition | 5% | $17,488 | $260 | COPX or URA |
+| Infrastructure | 4% | $13,990 | $208 | GRID |
 | **Total** | **100%** | **$349,755** | **$5,200** | |
 
-*Investable base = $309,908 liquid + $39,847 current investments = $349,755. Cash reserve target keeps $34,979 in liquid accounts, reducing the effective "deployable" amount.*
+*Investable base = $309,908 liquid + $39,847 current investments = $349,755. Cash reserve target keeps $38,473 in liquid accounts, reducing the effective "deployable" amount. Proportional scaling factor applied to the other six sleeves: 96/90 ≈ 1.067, then rounded to whole percentage points (rounding introduces ±$1–2K noise versus exact proportional dollars — immaterial at this precision).*
 
 ---
 
-### Position 1: Bonds / Bond Ladder (25% — $87,449)
+### Position 1: Bonds / Bond Ladder (27% — $94,434)
 
-**Conviction rationale:** Bonds serve two roles in this portfolio: income generation and drawdown buffering. With U.S. CPI at 3.4% and the Fed holding rates elevated, intermediate-term yields (4.0–4.5%) offer real yields near zero to modestly positive — not compelling on a standalone basis, but essential portfolio ballast given the guaranteed-income context. The 25% allocation is deliberately higher than typical equity-heavy portfolios because: (1) the income streams are already equity-like in their growth characteristics, and (2) the disability context means the ability to tolerate a large equity drawdown is more constrained than for a healthy 64-year-old.
+**Conviction rationale:** Bonds serve two roles in this portfolio: income generation and drawdown buffering. With U.S. CPI at 3.4% and the Fed holding rates elevated, intermediate-term yields (4.0–4.5%) offer real yields near zero to modestly positive — not compelling on a standalone basis, but essential portfolio ballast given the guaranteed-income context. The 27% allocation (up from a legacy 25%, after the Sep 23 GRID-driven table rebuild) is deliberately higher than typical equity-heavy portfolios because: (1) the income streams are already equity-like in their growth characteristics, and (2) the disability context means the ability to tolerate a large equity drawdown is more constrained than for a healthy 64-year-old. This is a range, not a precise optimum — the Model Council left the exact bond weight unresolved (10%–25% range) pending a bond/TIPS drawdown study; treat 27% as a working figure to revisit alongside that analysis.
 
 **Why now:** Not acutely attractive at current yields, but appropriate as structural allocation. Do not extend duration aggressively — U.S. inflation risk remains two-sided.
 
@@ -363,7 +365,7 @@ The USD ETF portfolio runs **in parallel with and independently of** the COP res
 
 ---
 
-### Position 2: U.S. Large Cap (20% — $69,959)
+### Position 2: U.S. Large Cap (21% — $73,449)
 
 **Conviction rationale (score: baseline 3.0):** The U.S. large cap is not the highest-conviction position — it is the anchor. The S&P 500 currently trades at ~21x forward earnings, above its 30-year average but not obviously in bubble territory. U.S. corporate earnings growth is resilient, and the technology-heavy index benefits from global network effects regardless of where the user lives. The 20% weight is deliberately smaller than a typical U.S.-centric portfolio, reflecting the view that international equities offer better forward risk/reward at current relative valuations.
 
@@ -382,14 +384,14 @@ The USD ETF portfolio runs **in parallel with and independently of** the COP res
 
 *Via self-directed brokerage (Fidelity or Schwab — preferred):*
 1. Log into your brokerage account.
-2. Place a recurring monthly investment for VTI or SPY ($1,040/month).
+2. Place a recurring monthly investment for VTI or SPY ($1,092/month).
 3. Enable automatic investing or set a calendar reminder for a fixed purchase date each month.
 
 > Do not use Wealthfront's automated investing account for this allocation. The robo-advisor's model will conflict with the manual sleeve architecture defined here.
 
 ---
 
-### Position 3: Emerging Markets — India Tilt (15% — $52,469)
+### Position 3: Emerging Markets — India Tilt (16% — $55,961)
 
 **Conviction rationale (INDA: 3.75 / 5.0 — highest in universe):** This is the portfolio's single highest-conviction position outside Colombia. India is the only major economy combining: (1) the world's fastest-growing large economy (~7% real GDP growth projected through 2028), (2) a working-age demographic expansion continuing through 2045 (vs. China and Europe contracting), (3) active manufacturing diversification investment from U.S. and European multinationals ("China+1"), and (4) a liquid, well-regulated equity market accessible via liquid U.S.-listed ETFs.
 
@@ -424,7 +426,7 @@ VWO (score 3.72) provides the broader EM alternative, holding India, Taiwan, Chi
 
 ---
 
-### Position 4: International Developed Markets (15% — $52,469)
+### Position 4: International Developed Markets (16% — $55,961)
 
 **Conviction rationale (VEA: 3.65 / 5.0):** European and Japanese equities trade at significant valuation discounts to U.S. equities on every standard metric (P/E, P/B, EV/EBITDA). VEA is the simplest vehicle: it covers all developed-market non-U.S. equities in a single, low-cost fund with ~$100B+ in assets and a 0.05% expense ratio.
 
@@ -444,11 +446,11 @@ Within this allocation, **Japan merits attention** (EWJ conviction 3.61):
 
 *EWJ (iShares MSCI Japan) — optional Japan tilt:*
 - Ticker **EWJ**, expense ratio 0.50%.
-- Buy directly through a brokerage. If using EWJ for 5% of portfolio (~$17,500), the remaining 10% stays in VEA.
+- Buy directly through a brokerage. If using EWJ for 5% of portfolio (~$17,500), the remaining 11% stays in VEA.
 
 ---
 
-### Position 5: Global Electric Grid Infrastructure (10% — $34,979)
+### Position 5: Global Electric Grid Infrastructure (4% — $13,990)
 
 **Conviction rationale (GRID: macro tailwind 4.0 / 5.0, catalyst score 3.8 / 5.0 — top infrastructure ETF):** The global electricity grid must absorb a massive and accelerating surge in demand: electric vehicles, AI data centers, heat pumps, and industrial electrification are all layering new load on infrastructure built for a different era. The IEA estimates $21 trillion in grid investment is required globally through 2050. Unlike many "energy transition" trades, **grid investment is not optional and is not ideologically contested** — every government, left or right, is pushing it because grid failure is politically catastrophic.
 
@@ -462,7 +464,7 @@ GRID (First Trust NASDAQ Clean Edge Smart Grid Infrastructure Index Fund) holds 
 
 > **Product identity verified (Sep 23, 2026).** The Model Council correctly flagged that this position was previously *described* using PAVE's name. The verification confirmed the **GRID ticker is correct** for the electrification / grid-buildout thesis and that GRID also fits the project's non-U.S. mandate (see country look-through above), whereas **PAVE** (Global X U.S. Infrastructure Development ETF) is 100% U.S. and would work against ex-U.S. diversification. **Decision: keep GRID; the earlier error was the label, not the ticker.** Choose PAVE only if consciously switching the thesis to broad U.S. capex, in which case it belongs in the U.S. equity sleeve, not a global tilt.
 >
-> **Tilt-cap sizing (finalized):** Because GRID is concentrated (top-10 ≈ 55%–60%), non-diversified, ~60% Industrials, and higher-volatility (~10.6% 12-mo vs. PAVE ~7.7%), size it in the **lower half of the 0%–5% thematic-tilt band — roughly 3%–4%** — and count it fully as equity risk, not as a defensive or bond-substitute sleeve. This supersedes the legacy 10% weight in the header of this position.
+> **Tilt-cap sizing (finalized):** Because GRID is concentrated (top-10 ≈ 55%–60%), non-diversified, ~60% Industrials, and higher-volatility (~10.6% 12-mo vs. PAVE ~7.7%), size it in the **lower half of the 0%–5% thematic-tilt band.** The table above now uses **4%** — the upper end of that band, chosen so the freed weight could be redistributed to the other six sleeves in whole percentage points (see the Sep 23 rebuild note in Section 6). This supersedes the legacy 10% weight this position previously carried.
 
 **Why now:** Global transformer shortages are already a multi-year supply constraint. The backlog for large power transformers at companies like GE Vernova and ABB stretches 3–4 years. The revenue is visible and growing regardless of which political party controls any given country's energy policy.
 
@@ -472,7 +474,7 @@ Ticker: **GRID** — First Trust NASDAQ Clean Edge Smart Grid Infrastructure Ind
 
 1. Purchase directly through any brokerage account. Ticker GRID trades on NYSE Arca.
 2. GRID is not typically available in Wealthfront's Classic portfolio. Use a separate brokerage for this allocation.
-3. Set a recurring monthly investment of ~$520/month.
+3. Set a recurring monthly investment of ~$208/month (4% of the $5,200 monthly DCA).
 4. **Broad global infrastructure alternatives (different role — not substitutes for GRID):**
 
    | Fund | Index / scope | Holdings | Top-10 | U.S. weight | Expense | Character |
@@ -481,11 +483,13 @@ Ticker: **GRID** — First Trust NASDAQ Clean Edge Smart Grid Infrastructure Ind
    | **IGF** (iShares Global Infrastructure) | S&P Global Infrastructure | ~76 | ~38% | ~37% | ~0.42% | Defensive "tollbooth" utilities/transport/energy (~40/40/20), ~2.7% yield |
    | **NFRA** (FlexShares STOXX Global Broad Infrastructure) | STOXX Global Broad Infrastructure | ~217 | low | ~41% | 0.47% | Broadest/most diversified; adds communications + rails, ~2.8% yield |
 
-   These serve a **different purpose** than GRID. IGF and NFRA are diversified, income-oriented core infrastructure (regulated utilities, toll roads, pipelines, rails) that behave defensively — closer to a bond-substitute income sleeve. GRID is a concentrated growth play on grid/electrification capex beneficiaries. If the intent is the electrification thesis, keep GRID; if the intent is defensive infrastructure income, IGF or NFRA belongs in a separate sleeve, not this thematic tilt.
+   These serve a **different purpose** than GRID. IGF and NFRA are diversified, income-oriented core infrastructure (regulated utilities, toll roads, pipelines, rails) that behave defensively — closer to a bond-substitute income sleeve. GRID is a concentrated growth play on grid/electrification capex beneficiaries.
+
+   **Decision (evaluated Sep 23, 2026): do not add a dedicated IGF/NFRA sleeve now.** The 0%–10% combined thematic-tilt band is already 9% committed (GRID 4% + Commodities/Transition 5%), IGF/NFRA's core holdings substantially overlap with what VEA/VWO already hold, and they are still equity funds — not a true substitute for the bond sleeve's defensive role. See the full reasoning in `reports/investment_plan_model_council_revised.md`. Revisit only if a specific income need beyond guaranteed income and the bond sleeve emerges.
 
 ---
 
-### Position 6: Cash Reserve (10% — $34,979)
+### Position 6: Cash Reserve (11% — $38,473)
 
 **Rationale:** Cash is not a residual — it is a deliberate position. Given a monthly cash flow deficit of $827 and periodic large one-time expenses (travel, Colombia trips, medical equipment), maintaining a dedicated liquid reserve within the investable portfolio prevents forced selling of other positions at inopportune times.
 
@@ -499,11 +503,11 @@ At current interest rates (approximately 4.5–5.0% on High-Yield Savings Accoun
 | Wealthfront Cash Account | ~5.0% APY | Already integrated with portfolio |
 | Vanguard Federal Money Market (VMFXX) | ~5.2% | Slightly higher yield; fund, not FDIC |
 
-**How to manage:** This portion essentially already exists in the $310K liquid reserve. Do not "invest" the cash reserve into an ETF account — keep it in the Wealthfront Cash Account or a HYSA where it is immediately accessible. The allocation tracking is notional (10% of investable base = ~$35K earmarked as the liquid buffer within the broader reserve).
+**How to manage:** This portion essentially already exists in the $310K liquid reserve. Do not "invest" the cash reserve into an ETF account — keep it in the Wealthfront Cash Account or a HYSA where it is immediately accessible. The allocation tracking is notional (11% of investable base = ~$38K earmarked as the liquid buffer within the broader reserve).
 
 ---
 
-### Position 7: Commodities / Energy Transition (5% — $17,490)
+### Position 7: Commodities / Energy Transition (5% — $17,488)
 
 **Conviction rationale:** A small commodity/transition allocation provides inflation hedging and exposure to the physical materials required for decarbonization. This is not a core position — it is a satellite allocation with higher volatility and a specific thematic thesis.
 

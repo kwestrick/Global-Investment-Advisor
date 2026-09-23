@@ -331,7 +331,18 @@ Before execution:
 - ✅ **Expense ratio locked at 0.56%** (Cbonds, Investing.com, Yahoo, MarketXLS). The old ~0.70% was a 2010–2013 legacy expense cap, not the current ratio.
 - ✅ **Look-through:** ~60% Industrials (rest Utilities + IT); ~39% U.S. / ~61% ex-U.S. (Europe-heavy: Switzerland, France, Germany, Italy, U.K.; plus Canada, South Korea, Brazil). The ex-U.S. weight satisfies the non-U.S. mandate; PAVE (100% U.S.) does not.
 - ✅ **Tilt-cap sizing finalized:** size GRID in the lower half of the 0%–5% band (~3%–4%), counted as concentrated single-theme equity risk.
-- **Broad-infra alternatives (different role):** IGF (S&P Global Infrastructure, ~76 holdings, top-10 ~38%, ER ~0.42%, defensive utilities/transport/energy) and NFRA (STOXX Global Broad, ~217 holdings, ER 0.47%, broadest) are income-oriented core infrastructure, not substitutes for GRID's electrification growth tilt. Use them only for a separate defensive sleeve.
+- **Broad-infra alternatives (different role):** IGF (S&P Global Infrastructure, ~76 holdings, top-10 ~38%, ER ~0.42%, defensive utilities/transport/energy) and NFRA (STOXX Global Broad, ~217 holdings, ER 0.47%, broadest) are income-oriented core infrastructure, not substitutes for GRID's electrification growth tilt.
+
+### Does a dedicated IGF/NFRA sleeve belong in the four-bucket framework? (Evaluated Sep 23, 2026 — decision: not now)
+
+Considered adding IGF or NFRA as a defensive-infrastructure sleeve, either inside the "Defensive long-term assets" bucket or as a second thematic tilt alongside GRID. **Decision: do not add a dedicated sleeve at this time.** Reasoning:
+
+1. **No thematic-tilt headroom.** The "Thematic equity tilts" sleeve is capped at 0%–10% combined. GRID (4%, finalized above) plus the Commodities/Transition sleeve (COPX/URA, 5%) already commit 9% of that 10% band. Adding IGF/NFRA would either push past the Council's own combined-tilt ceiling or force trimming GRID/commodities without a clear ranking rationale for why defensive infrastructure income should displace the electrification or copper/uranium theses.
+2. **Limited diversification benefit.** IGF/NFRA's core holdings — regulated utilities, toll roads, pipelines, telecom — substantially overlap with what VEA and VWO already hold as part of their broad developed- and emerging-market allocations. A dedicated sleeve would mostly re-weight exposure already present in the core sleeves rather than add a materially new risk factor.
+3. **Not a true bond substitute.** IGF/NFRA carry lower volatility than broad equities but are still equity funds with equity-level drawdown risk in a genuine risk-off event (both funds fell materially in the 2020 and 2022 drawdowns). The "Defensive long-term assets" bucket is better served by actual fixed income (bonds/TIPS) given this household's risk-budget logic, where $7,488/month in guaranteed income already substitutes for some bond ballast — diluting that logic further with equity income funds does not improve the defensive properties of the bucket.
+4. **No explicit income need identified.** IGF/NFRA's ~2.7%–2.8% yield is attractive only if there is a stated income requirement beyond the guaranteed income floor and the existing bond sleeve. No such need has been identified in this household's cash-flow profile.
+
+**Revisit if:** a specific income need emerges beyond guaranteed income and bond yield, or if GRID's concentration/volatility profile becomes a standalone concern that a broader, lower-volatility infrastructure fund would meaningfully address (at that point, treat it as a swap within the existing 0%–10% thematic-tilt band, not an addition to it).
 - Compare INDA with lower-cost India alternatives such as FLIN.
 - Quantify India exposure inside VWO before adding any India-specific tilt.
 - Quantify Japan exposure inside VEA before adding EWJ.

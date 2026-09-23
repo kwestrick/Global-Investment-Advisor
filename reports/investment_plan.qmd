@@ -298,22 +298,25 @@ Also deploy the liquid reserve ($309K less ~$20K COP set-aside = ~$289K deployab
 ```{r phase2-allocation-table}
 investable <- 309908 + 39847  # current investable base
 
+# Rebuilt Sep 23, 2026: GRID's tilt-cap sizing finalized at 4% (top of the
+# 3%-4% band). The 6pp freed from its legacy 10% weight was redistributed
+# proportionally across the other six sleeves, then rounded to whole points.
 tibble(
-  `Asset Class`    = c("U.S. Large Cap", "International Developed", "Emerging Markets",
-                        "Bonds / Ladder", "Infrastructure", "Commodities / Transition",
-                        "Cash Reserve"),
-  Vehicle          = c("SPY or VTI", "VEA", "VWO or INDA",
-                       "VBTLX or bond ladder", "GRID", "COPX or URA", "HYSA / Money Market"),
-  `Target %`       = c(20, 15, 15, 25, 10, 5, 10),
-  `Target $ (now)` = round(c(20, 15, 15, 25, 10, 5, 10) / 100 * investable),
-  `Monthly $ DCA`  = round(c(20, 15, 15, 25, 10, 5, 10) / 100 * 5200)
+  `Asset Class`    = c("Bonds / Ladder", "U.S. Large Cap", "Emerging Markets",
+                        "International Developed", "Cash Reserve",
+                        "Commodities / Transition", "Infrastructure"),
+  Vehicle          = c("VBTLX or bond ladder", "SPY or VTI", "VWO or INDA",
+                       "VEA", "HYSA / Money Market", "COPX or URA", "GRID"),
+  `Target %`       = c(27, 21, 16, 16, 11, 5, 4),
+  `Target $ (now)` = round(c(27, 21, 16, 16, 11, 5, 4) / 100 * investable),
+  `Monthly $ DCA`  = round(c(27, 21, 16, 16, 11, 5, 4) / 100 * 5200)
 ) |>
   gt() |>
   tab_header(
     title    = "Phase 2 Target Allocation",
     subtitle = paste0("Investable base ≈ $",
                       format(round(investable / 1000), big.mark = ","), "K  |  ",
-                      "Monthly DCA = $5,200")
+                      "Monthly DCA = $5,200  |  Rebuilt Sep 23, 2026 (GRID sized at 4%)")
   ) |>
   fmt_currency(columns = c(`Target $ (now)`, `Monthly $ DCA`), decimals = 0) |>
   fmt_percent(columns = `Target %`, scale_values = FALSE, decimals = 0) |>
@@ -572,19 +575,35 @@ returns but can pressure export-heavy earnings domestically.
 **Conviction: Leading theme ETF by macro tailwind (4.0) and catalyst strength (3.8)**
 
 The global electricity grid requires an estimated $20+ trillion in investment through 2050.
-GRID gives exposure to companies building transmission, distribution, and grid modernization
-infrastructure across the U.S., Europe, and Asia. This theme is:
+GRID (First Trust Nasdaq Clean Edge Smart Grid Infrastructure Index Fund) gives exposure to
+companies building transmission, distribution, and grid modernization infrastructure —
+top holdings include Eaton, Quanta Services, Johnson Controls, ABB, and Schneider Electric
+(each roughly 7.5%–8.5%). This theme is:
 
 - **Policy-driven** (IRA in U.S., Green Deal in Europe, India grid expansion)
 - **Geopolitically resilient** — grid investment is a domestic priority in every major economy
-- **Earnings visible** — utility-style regulated returns with growth optionality
+- **Earnings visible** — equipment/capex growth (~60% Industrials), not a regulated-utility
+  income play
+- **Genuinely non-U.S.** — verified look-through (Sep 23, 2026) shows ~39% U.S. / ~61% ex-U.S.,
+  Europe-heavy (Switzerland, France, Germany, Italy, U.K.) plus Canada, South Korea, and Brazil
 
-**Risk:** Interest rate sensitivity (infrastructure companies carry significant debt). GRID is
-more volatile than a pure utility ETF. Regulatory risk in European markets.
+**Verified product identity (Sep 23, 2026):** GRID was previously *described* in this plan using
+PAVE's name (Global X U.S. Infrastructure Development ETF). The ticker itself was always correct;
+only the label was wrong. PAVE is 100% U.S. and would work against the non-U.S. mandate — GRID is
+the right vehicle for this thesis. Expense ratio confirmed at 0.56%.
+
+**Risk:** Concentrated and non-diversified — ~128–146 holdings with the top 10 at ~55%–60% of
+assets. 12-month volatility (~10.6%) runs above PAVE's (~7.7%). Interest rate sensitivity
+(infrastructure companies carry significant debt). Regulatory risk in European markets.
+
+**Sizing (finalized Sep 23, 2026):** Given the concentration and volatility, GRID is capped at
+**4% of the portfolio** — the upper end of a 3%–5% thematic-tilt band — and treated fully as
+equity risk, not as a defensive or income sleeve. Broader, more diversified global-infrastructure
+funds (IGF, NFRA) exist but serve a different, more defensive role — see the note in Section 6.
 
 ### Why not U.S. Large Cap as the core position?
 
-The S&P 500 is not excluded — it remains 20% of the Phase 2 target. However, the starting
+The S&P 500 is not excluded — it remains 21% of the Phase 2 target. However, the starting
 position is effectively 89% cash/liquid (which shadows USD performance). The marginal
 investment dollar adds more diversification and return potential in non-U.S. assets at
 current valuations. U.S. large cap will be built systematically in Phase 2 via SPY/VTI.

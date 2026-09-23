@@ -782,13 +782,50 @@ Reviewed `reports/investment_plan_model_council_revised.md` (revised by Claude O
 
 IGF and NFRA are income-oriented core infrastructure (regulated utilities, toll roads, pipelines, rails) that behave defensively — closer to a bond-substitute sleeve. They are **not** substitutes for GRID's electrification growth thesis; use them only if a separate defensive infrastructure sleeve is desired.
 
+### 5. Allocation Table Rebuilt for GRID's 4% Tilt-Cap (finalized Sep 23, 2026)
+
+Position 5's header still carried the legacy 10% weight after the tilt-cap finding above was recorded. Reconciled it across the full Phase 2 allocation:
+
+- **GRID finalized at 4%** (top of the 3%–4% band, chosen so the freed weight redistributes to whole percentage points).
+- The **6 percentage points freed from the legacy 10%** were redistributed **proportionally** across the other six sleeves (scale factor 96/90 ≈ 1.067, then rounded to whole points) — no sleeve was arbitrarily favored.
+
+| Asset Class | Old % | New % | New $ (base $349,755) | New Monthly DCA |
+|---|---:|---:|---:|---:|
+| Bonds / Ladder | 25% | **27%** | $94,434 | $1,404 |
+| U.S. Large Cap | 20% | **21%** | $73,449 | $1,092 |
+| Emerging Markets | 15% | **16%** | $55,961 | $832 |
+| International Developed | 15% | **16%** | $55,961 | $832 |
+| Cash Reserve | 10% | **11%** | $38,473 | $572 |
+| Commodities / Transition | 5% | 5% (unchanged) | $17,488 | $260 |
+| Infrastructure (GRID) | 10% | **4%** | $13,990 | $208 |
+
+Updated in both `reports/investment_plan_full.md` (Section 6 table + all seven Position headers/dollar figures) and `reports/investment_plan.qmd` (the `phase2-allocation-table` code chunk and the "Why GRID" narrative). Re-rendered `reports/investment_plan.html` successfully. The bond weight (27%) remains a working figure, not a resolved figure — the Model Council left the exact bond/TIPS weight open pending a drawdown study.
+
+### 6. IGF/NFRA Defensive-Infrastructure Sleeve — Evaluated, Not Added (Sep 23, 2026)
+
+Evaluated whether a small IGF or NFRA sleeve belongs in the four-bucket framework. **Decision: no, not at this time.** Reasoning:
+
+1. The 0%–10% combined thematic-tilt band is already 9% committed (GRID 4% + Commodities/Transition 5%) — one point of headroom, not enough to justify a new position without displacing an existing thesis.
+2. IGF/NFRA's core holdings (regulated utilities, toll roads, pipelines, telecom) substantially overlap with what VEA and VWO already hold — limited marginal diversification.
+3. IGF/NFRA are still equity funds with real drawdown risk (both fell materially in 2020 and 2022) — not a genuine substitute for the bond sleeve's defensive role, especially given $7,488/month guaranteed income already substitutes for some bond ballast.
+4. No specific income need beyond guaranteed income and the existing bond sleeve has been identified to justify the ~2.7%–2.8% yield pickup.
+
+**Revisit if:** a specific income need emerges, or GRID's concentration/volatility becomes a standalone concern — treat any future addition as a swap within the existing thematic-tilt band, not an addition to it.
+
+### 7. GRID Reference Data Added to ETF Universe (Sep 23, 2026)
+
+Added `expense_ratio_pct`, `tilt_cap_min_pct`, `tilt_cap_max_pct`, and `tilt_cap_notes` columns to `create_theme_etf_universe()` in `R/screening.R`. Only GRID (0.56%, tilt cap 3–4%) and PAVE (0.47%, comparison-only, not held) are populated; all other tickers carry `NA` until independently verified — do not backfill with memorized figures. Regenerated `data/external/theme_etf_universe_20260923.csv` from the updated function. Prior dated snapshots (`_20260921.csv`, `_20260922.csv`) were left untouched per the project's snapshot convention.
+
 ### Updated Files (Sep 23, 2026)
 
 | File | Change |
 |---|---|
-| `reports/investment_plan_full.md` | Position 5 rewritten with verified GRID holdings, sector/country look-through, locked 0.56% expense ratio, IGF/NFRA comparison table, and finalized 3%–4% tilt sizing |
-| `reports/investment_plan_model_council_revised.md` | Product controls marked verified: GRID/PAVE outcome, look-through, locked expense ratio, tilt sizing, IGF/NFRA note |
-| `AGENTS.md` | This findings section added (Council assessment + GRID look-through, expense ratio, tilt sizing, IGF/NFRA) |
+| `reports/investment_plan_full.md` | Position 5 rewritten with verified GRID holdings, sector/country look-through, locked 0.56% expense ratio, IGF/NFRA comparison table, and finalized 3%–4% tilt sizing; Section 6 allocation table and all seven Position headers/dollar figures rebuilt around GRID's 4% weight; IGF/NFRA "not added" decision recorded |
+| `reports/investment_plan_model_council_revised.md` | Product controls marked verified: GRID/PAVE outcome, look-through, locked expense ratio, tilt sizing, IGF/NFRA note; added full IGF/NFRA four-bucket evaluation with "not now" decision and reasoning |
+| `reports/investment_plan.qmd` | `phase2-allocation-table` chunk and "Why GRID" narrative rebuilt to match; re-rendered `reports/investment_plan.html` |
+| `R/screening.R` | `create_theme_etf_universe()` extended with expense ratio and tilt-cap columns; GRID and PAVE populated |
+| `data/external/theme_etf_universe_20260923.csv` | New dated snapshot reflecting the schema change |
+| `AGENTS.md` | This findings section added (Council assessment + GRID look-through, expense ratio, tilt sizing, IGF/NFRA, allocation rebuild) |
 
 ---
 

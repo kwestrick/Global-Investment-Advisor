@@ -1,0 +1,14 @@
+symbol,theme,category,expense_ratio_pct,tilt_cap_min_pct,tilt_cap_max_pct,tilt_cap_notes
+XLE,U.S. energy benchmark,U.S. sector benchmark,NA,NA,NA,NA
+XLI,U.S. industrials benchmark,U.S. sector benchmark,NA,NA,NA,NA
+XLF,U.S. financials benchmark,U.S. sector benchmark,NA,NA,NA,NA
+URA,Uranium and nuclear fuel,Commodity theme,NA,NA,NA,NA
+COPX,Copper miners,Commodity theme,NA,NA,NA,NA
+PICK,Global metals and mining,Commodity theme,NA,NA,NA,NA
+WOOD,Global timber and forestry,Commodity theme,NA,NA,NA,NA
+FAN,Wind energy,Energy transition,NA,NA,NA,NA
+TAN,Solar energy,Energy transition,NA,NA,NA,NA
+GRID,Electric grid infrastructure,Infrastructure,0.56,3,4,"Verified 2026-09-23. Finalized at 4% (top of 3-4% band) in Phase 2 allocation table; ~128-146 holdings, top-10 ~55-60%, non-diversified, ~60% Industrials, ~39% US/~61% ex-US. Treat as concentrated single-theme equity risk, not a bond/income substitute."
+PAVE,U.S. infrastructure benchmark,U.S. theme benchmark,0.47,NA,NA,"Verified 2026-09-23 for comparison only; not held. 100% U.S., ~102 holdings, top-10 ~31.7% -- broad U.S. capex, not the electrification/grid thesis GRID targets."
+ITA,U.S. aerospace and defense benchmark,U.S. sector benchmark,NA,NA,NA,NA
+DFEN,U.S. aerospace and defense leveraged proxy,High-risk proxy,NA,NA,NA,NA
