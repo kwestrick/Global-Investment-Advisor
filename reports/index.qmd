@@ -21,15 +21,25 @@ library(gt)
 library(scales)
 
 # ── Data ──────────────────────────────────────────────────────────────────────
-accounts <- read_csv("data/processed/2026-09-21_accounts_from_banktivity.csv",
+# Always load the most recently dated snapshot so this page doesn't go stale
+# after each refresh without a manual path edit. Accounts/spending come from
+# the Banktivity QIF import (scripts/04_quarterly_wealth_dashboard.R) and only
+# change when a new QIF export is processed.
+latest_file <- function(dir, pattern) {
+  f <- list.files(dir, pattern = pattern, full.names = TRUE) |> sort(decreasing = TRUE)
+  if (length(f) == 0) stop("No file found matching '", pattern, "' in ", dir)
+  f[1]
+}
+
+accounts <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_accounts_from_banktivity\\.csv$"),
                      show_col_types = FALSE)
-nw_stmt  <- read_csv("data/processed/2026-09-21_net_worth_statement.csv",
+nw_stmt  <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_net_worth_statement\\.csv$"),
                      show_col_types = FALSE) |> filter(!is.na(balance))
-alloc    <- read_csv("outputs/tables/2026-09-21_ranked_allocation_recommendation.csv",
+alloc    <- read_csv(latest_file("outputs/tables", "^\\d{4}-\\d{2}-\\d{2}_ranked_allocation_recommendation\\.csv$"),
                      show_col_types = FALSE)
-signals  <- read_csv("outputs/tables/2026-09-21_indicator_signal_dashboard.csv",
+signals  <- read_csv(latest_file("outputs/tables", "^\\d{4}-\\d{2}-\\d{2}_indicator_signal_dashboard\\.csv$"),
                      show_col_types = FALSE)
-spending <- read_csv("data/processed/2026-09-21_spending_by_category.csv",
+spending <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_spending_by_category\\.csv$"),
                      show_col_types = FALSE)
 
 # ── Constants ─────────────────────────────────────────────────────────────────

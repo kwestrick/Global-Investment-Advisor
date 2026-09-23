@@ -23,15 +23,23 @@ library(gt)
 library(scales)
 
 # ── Data ──────────────────────────────────────────────────────────────────────
-signals  <- read_csv("outputs/tables/2026-09-21_indicator_signal_dashboard.csv",
+# Always load the most recently dated snapshot so this report doesn't go stale
+# after each refresh without a manual path edit.
+latest_file <- function(dir, pattern) {
+  f <- list.files(dir, pattern = pattern, full.names = TRUE) |> sort(decreasing = TRUE)
+  if (length(f) == 0) stop("No file found matching '", pattern, "' in ", dir)
+  f[1]
+}
+
+signals  <- read_csv(latest_file("outputs/tables", "^\\d{4}-\\d{2}-\\d{2}_indicator_signal_dashboard\\.csv$"),
                      show_col_types = FALSE)
-cop_rank <- read_csv("outputs/tables/2026-09-21_cop_vehicle_ranking.csv",
+cop_rank <- read_csv(latest_file("outputs/tables", "^\\d{4}-\\d{2}-\\d{2}_cop_vehicle_ranking\\.csv$"),
                      show_col_types = FALSE)
-alloc    <- read_csv("outputs/tables/2026-09-21_ranked_allocation_recommendation.csv",
+alloc    <- read_csv(latest_file("outputs/tables", "^\\d{4}-\\d{2}-\\d{2}_ranked_allocation_recommendation\\.csv$"),
                      show_col_types = FALSE)
-country  <- read_csv("data/processed/country_opportunity_screen_20260921.csv",
+country  <- read_csv(latest_file("data/processed", "^country_opportunity_screen_\\d{8}\\.csv$"),
                      show_col_types = FALSE)
-theme_sc <- read_csv("data/processed/theme_opportunity_screen_20260921.csv",
+theme_sc <- read_csv(latest_file("data/processed", "^theme_opportunity_screen_\\d{8}\\.csv$"),
                      show_col_types = FALSE)
 
 # ── Constants ─────────────────────────────────────────────────────────────────

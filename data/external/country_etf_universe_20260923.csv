@@ -1,0 +1,36 @@
+symbol,country_or_region,category
+SPY,United States,Benchmark
+VEA,Developed markets ex-U.S.,Benchmark
+VWO,Emerging markets,Benchmark
+EWJ,Japan,Country ETF
+EWU,United Kingdom,Country ETF
+EWG,Germany,Country ETF
+EWQ,France,Country ETF
+EWI,Italy,Country ETF
+EWP,Spain,Country ETF
+EWN,Netherlands,Country ETF
+EWL,Switzerland,Country ETF
+EWC,Canada,Country ETF
+EWA,Australia,Country ETF
+EWS,Singapore,Country ETF
+EWH,Hong Kong,Country ETF
+EWY,South Korea,Country ETF
+EWT,Taiwan,Country ETF
+INDA,India,Country ETF
+MCHI,China,Country ETF
+EWZ,Brazil,Country ETF
+EWW,Mexico,Country ETF
+ECH,Chile,Country ETF
+EZA,South Africa,Country ETF
+TUR,Turkey,Country ETF
+KSA,Saudi Arabia,Country ETF
+UAE,United Arab Emirates,Country ETF
+QAT,Qatar,Country ETF
+ARGT,Argentina,Country ETF
+EPOL,Poland,Country ETF
+GREK,Greece,Country ETF
+THD,Thailand,Country ETF
+EWM,Malaysia,Country ETF
+EIDO,Indonesia,Country ETF
+EPHE,Philippines,Country ETF
+VNM,Vietnam,Country ETF

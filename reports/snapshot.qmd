@@ -23,13 +23,22 @@ library(gt)
 library(scales)
 
 # ── Data ──────────────────────────────────────────────────────────────────────
-accounts    <- read_csv("data/processed/2026-09-21_accounts_from_banktivity.csv",
+# Always load the most recently dated snapshot. These files come from the
+# Banktivity QIF import (scripts/04_quarterly_wealth_dashboard.R) and only
+# change when a new QIF export is processed.
+latest_file <- function(dir, pattern) {
+  f <- list.files(dir, pattern = pattern, full.names = TRUE) |> sort(decreasing = TRUE)
+  if (length(f) == 0) stop("No file found matching '", pattern, "' in ", dir)
+  f[1]
+}
+
+accounts    <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_accounts_from_banktivity\\.csv$"),
                         show_col_types = FALSE)
-spending    <- read_csv("data/processed/2026-09-21_spending_by_category.csv",
+spending    <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_spending_by_category\\.csv$"),
                         show_col_types = FALSE)
-nw_stmt     <- read_csv("data/processed/2026-09-21_net_worth_statement.csv",
+nw_stmt     <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_net_worth_statement\\.csv$"),
                         show_col_types = FALSE) |> filter(!is.na(balance))
-large_items <- read_csv("data/processed/2026-09-21_large_one_time_items.csv",
+large_items <- read_csv(latest_file("data/processed", "^\\d{4}-\\d{2}-\\d{2}_large_one_time_items\\.csv$"),
                         show_col_types = FALSE)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
